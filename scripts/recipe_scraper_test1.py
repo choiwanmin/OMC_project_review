@@ -20,7 +20,6 @@ def int_in_str(text):
 
 def run():
     for item in items:
-        # try:
         # 게시물 링크
         recipe_link = item.select('div.common_sp_thumb a')[0].get('href').strip()
         recipe_link = recipe_link.split('/')[-1]
@@ -29,6 +28,10 @@ def run():
         # 레시피 타이틀
         recipe_title = item.select('div.common_sp_caption div.common_sp_caption_tit.line2')[0].text.strip()
         
+        for :
+            res = requests.get(recipe_link)
+            soup = BeautifulSoup(res.text, 'html.parser')
+
         # 별점
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_star img'):
             star = item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_star img')
@@ -47,14 +50,13 @@ def run():
         else:
             review_count = 0
 
-        # if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer'):
-        views_count = item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer')[0].text.strip()
-        views_count = views_count.split(' ')[-1]
-        views_count = int_in_str(views_count)
-        # else:
-        #     views_count = 0
-    # except IndexError as e:
-    #     review_count = 0
+        if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer'):
+            views_count = item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer')[0].text.strip()
+            views_count = views_count.split(' ')[-1]
+            views_count = int_in_str(views_count)
+        else:
+            views_count = 0
+
 
         print(recipe_link)
         print(recipe_title)
