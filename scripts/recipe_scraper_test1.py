@@ -27,10 +27,6 @@ def run():
 
         # 레시피 타이틀
         recipe_title = item.select('div.common_sp_caption div.common_sp_caption_tit.line2')[0].text.strip()
-        
-        for :
-            res = requests.get(recipe_link)
-            soup = BeautifulSoup(res.text, 'html.parser')
 
         # 별점
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_star img'):
