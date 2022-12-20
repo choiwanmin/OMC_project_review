@@ -39,8 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # apps
     'omc',
+
+    # extensions
     'django_extensions',
+
+    # allauth
     'django.contrib.sites',
     'allauth',
     'allauth.account',
