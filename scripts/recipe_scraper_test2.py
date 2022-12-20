@@ -26,82 +26,78 @@ def remove_bracket(text):
             result += i
     return result
 
+
+def soup_element_none(soup, selector, name):
+    soup_element = soup.select(selector)
+    elements_dict = {
+        'None': None,
+        '0_text_strip': lambda s: s[0].text.strip(),
+        'rep_split': lambda s: s[0].text.replace(" ","").strip().split('#')[1:],
+        '0_src_strip': lambda s: s[0].get('src').strip(),
+    }
+    if soup_element:
+        return elements_dict[name](soup_element)
+    else:
+        return elements_dict['None']
+
 def run():
     for item in items:
-        details = soup.select("#contents_area")
-        detail.select('div.view_step div.view_step_cont.media')
         # 게시물 링크
         recipe_link = item.select('div.common_sp_thumb a')[0].get('href').strip()
-        recipe_link = recipe_link.split('/')[-1]
+        recipe_link = recipe_link.split('/')[-1] # 만개의레시피 아이디
         recipe_link = 'https://www.10000recipe.com/recipe/' + recipe_link
-        print(recipe_link)
+        # print(recipe_link)
 
-        # 레시피 타이틀
+        # 레시피 타이틀 
         recipe_title = item.select('div.common_sp_caption div.common_sp_caption_tit.line2')[0].text.strip()
-        print(recipe_title)
         #------------------상세페이지-----------------------#
         res = requests.get(recipe_link)
         soup = BeautifulSoup(res.text,"html.parser")
 
-        details = soup.select("#contents_area")
-        for detail in details :
-            #썸네일 이미지
-            image = detail.select('div.view2_pic div.centeredcrop img')[0].get("src").strip()
-            print(image)
-            
-            #요리 설명
-            if detail.select('div.view2_summary_in'):
-                explain = detail.select('div.view2_summary_in')[0].text.strip() 
-            else:
-                explain = None
-            print(explain)
-            
-            #음식 양, 조리 시간, 조리 난이도
-            if detail.select('span.view2_summary_info1'):
-                cook_amount = detail.select('span.view2_summary_info1')[0].text.strip()
-            else:
-                cook_amount = None
-            cook_time = detail.select('span.view2_summary_info2')[0].text.strip()
-            cook_level = detail.select('span.view2_summary_info3')[0].text.strip()
-            print(cook_amount)        
-            print(cook_time)        
-            print(cook_level)        
+        detail = soup.select("#contents_area")[0]
+        recipe_sequence_length = len(detail.select('div.view_step div.view_step_cont.media'))
+        if recipe_sequence_length == 0:
+            continue
+        #썸네일 이미지
+        image = detail.select('div.view2_pic div.centeredcrop img')[0].get("src").strip()
+        # print(image)
+        
+        #요리 설명
+        explain = soup_element_none(detail, 'div.view2_summary_in', '0_text_strip')
+        
+        # print(explain)
+        
+        #음식 양, 조리 시간, 조리 난이도
+        cook_amount = soup_element_none(detail, 'span.view2_summary_info1', '0_text_strip')
+        cook_time = soup_element_none(detail, 'span.view2_summary_info2' ,'0_text_strip')
+        cook_level= soup_element_none(detail, 'span.view2_summary_info3' ,'0_text_strip')
 
-            #상세 재료
-            # 재료 카테고리, 재료 명, 재료 단위
-            ingredient_category = []
-            ingredient_name = []
-            ingredient_unit = []
-            ingredient_ul = detail.select('div.ready_ingre3 ul')
-            for i in ingredient_ul:
-                for n in range(len(i.select('li'))):
-                    ingredient_category.append(remove_bracket(i.select('b')[0].text.strip()))
-                    ingredient_li = i.select('li')[n].text.replace("구매"," ").replace(' ','').split()
-                    ingredient_name.append(ingredient_li[0])
-                    if len(ingredient_li) == 2:
-                        ingredient_unit.append(ingredient_li[1])
-                    else:
-                        ingredient_unit.append('적당량')
-            print(ingredient_category)
-            print(ingredient_name)
-            print(ingredient_unit)
+        #상세 재료
+        # 재료 카테고리, 재료 명, 재료 단위
+        ingredient_category = []
+        ingredient_name = []
+        ingredient_unit = []
+        ingredient_ul = detail.select('div.ready_ingre3 ul')
+        for i in ingredient_ul:
+            for n in range(len(i.select('li'))):
+                ingredient_category.append(remove_bracket(i.select('b')[0].text.strip()))
+                ingredient_li = i.select('li')[n].text.replace("구매"," ").replace(' ','').split()
+                ingredient_name.append(ingredient_li[0])
+                if len(ingredient_li) == 2:
+                    ingredient_unit.append(ingredient_li[1])
+                else:
+                    ingredient_unit.append('적당량')
 
-            # 조리순서 - 조리순서 사진
-            recipe_sequence = []
-            recipe_thumbnail = []
-            for i in range(len(detail.select('div.view_step div.view_step_cont.media'))):
-                recipe = detail.select('div.view_step div.view_step_cont.media')[i].text.strip()
-                thumbnail = detail.select(f'div.view_step div.view_step_cont.media.step{i+1} img')[0].get('src').strip()
-                recipe_sequence.append(recipe)
-                recipe_thumbnail.append(thumbnail)
-            print(recipe_sequence)
-            print(recipe_thumbnail)
-            
-            if detail.select('div.view_step div.view_tag'):
-                hash_tag = detail.select('div.view_step div.view_tag')[0].text.replace(" ","").strip().split('#')[1:]
-            else:
-                hash_tag = None
-            print(hash_tag)
+        # 조리순서 - 조리순서 사진
+        recipe_sequence = []
+        recipe_thumbnail = []
+        for i in range(recipe_sequence_length):
+            recipe = detail.select('div.view_step div.view_step_cont.media')[i].text.strip()
+            thumbnail = soup_element_none(detail, f'div.view_step div.view_step_cont.media.step{i+1} img', '0_src_strip')
+            recipe_sequence.append(recipe)
+            recipe_thumbnail.append(thumbnail)
+        
+        hash_tag = soup_element_none(detail, 'div.view_step div.view_tag', 'rep_split')
 
         # 별점
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_star img'):
@@ -110,10 +106,9 @@ def run():
             for s in star:
                 if s.get('src')[-5].strip().isdigit() == False:
                     star_count += 1
-                    star = float(star_count)
+            star = float(star_count)
         else:
             star = 0
-        print(star)
         
         # 리뷰 갯수
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_ea'):
@@ -122,7 +117,6 @@ def run():
         else:
             review_count = 0
         
-        print(review_count)
 
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer'):
             views_count = item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer')[0].text.strip()
@@ -130,5 +124,4 @@ def run():
             views_count = int_in_str(views_count)
         else:
             views_count = 0
-        print(views_count)
         
