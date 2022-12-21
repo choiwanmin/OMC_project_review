@@ -25,32 +25,32 @@ def run():
             # print(man_cat,n.text)
             if man_cat[0] == 'cat4' and n.text != '전체':
                 category1.append([int(man_cat[1]),n.text.strip()])
-                # if (CategoryT.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
-                #     CategoryT(
-                #         index=int(man_cat[1]),
-                #         name=n.text.strip()
-                #     ).save()
+                if (CategoryT.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
+                    CategoryT(
+                        index=int(man_cat[1]),
+                        name=n.text.strip()
+                    ).save()
             elif man_cat[0] == 'cat2' and n.text != '전체':
                 category2.append([int(man_cat[1]),n.text])
-                # if (CategoryS.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
-                #     CategoryS(
-                #         index=int(man_cat[1]),
-                #         name=n.text.strip()
-                #     ).save()
+                if (CategoryS.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
+                    CategoryS(
+                        index=int(man_cat[1]),
+                        name=n.text.strip()
+                    ).save()
             elif man_cat[0] == 'cat3' and n.text != '전체':
                 category3.append([int(man_cat[1]),n.text])
-                # if (CategoryI.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
-                #     CategoryI(
-                #         index=int(man_cat[1]),
-                #         name=n.text.strip()
-                #     ).save()
+                if (CategoryI.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
+                    CategoryI(
+                        index=int(man_cat[1]),
+                        name=n.text.strip()
+                    ).save()
             elif man_cat[0] == 'cat1' and n.text != '전체':
                 category4.append([int(man_cat[1]),n.text])
-                # if (CategoryM.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
-                #     CategoryM(
-                #         index=int(man_cat[1]),
-                #         name=n.text.strip()
-                #     ).save()
+                if (CategoryM.objects.filter(index__iexact=int(man_cat[1])).count() == 0):
+                    CategoryM(
+                        index=int(man_cat[1]),
+                        name=n.text.strip()
+                    ).save()
     print('category1 :', len(category1))
     print('category2 :', len(category2))
     print('category3 :', len(category3))
