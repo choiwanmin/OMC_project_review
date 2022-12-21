@@ -50,9 +50,12 @@ class Recipe(models.Model):
     categoryIId = models.ForeignKey(CategoryI, on_delete=models.SET_NULL, null=True, blank=True)
     categoryMId = models.ForeignKey(CategoryM, on_delete=models.SET_NULL, null=True, blank=True)
 
+<<<<<<< HEAD
     def __str__(self):
         return f'recipe || {self.name}'
 
+=======
+>>>>>>> c3dbaeff7be9f51d2670099a200f01e514016caa
 
 class Ingredient(models.Model):
     type = models.CharField(max_length=30)
@@ -60,9 +63,12 @@ class Ingredient(models.Model):
     volume = models.CharField(max_length=30)
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
+<<<<<<< HEAD
     def __str__(self):
         return f'ingredient || {self.type} || {self.name}'
 
+=======
+>>>>>>> c3dbaeff7be9f51d2670099a200f01e514016caa
 
 class RecipeOrder(models.Model):
     number = models.IntegerField()
@@ -70,14 +76,20 @@ class RecipeOrder(models.Model):
     thumbnail = models.URLField(null=True, blank=True)
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
+<<<<<<< HEAD
     def __str__(self):
         return f'order{self.recipeId}-{self.number} || {self.description}'
 
+=======
+>>>>>>> c3dbaeff7be9f51d2670099a200f01e514016caa
 
 class RecipeHashTag(models.Model):
     description = models.CharField(max_length=30)
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
+<<<<<<< HEAD
     def __str__(self):
         return f'hashTag || {self.recipeId}-{self.description}'
+=======
+>>>>>>> c3dbaeff7be9f51d2670099a200f01e514016caa
 
