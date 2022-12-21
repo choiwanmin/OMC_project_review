@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 from omc.models import Recipe,Ingredient,RecipeOrder,RecipeHashTag
 import json
 import os
-from OMC_PJT import settings
+from user_agent import generate_user_agent
+import time
+import traceback
 
 res = requests.get("https://www.10000recipe.com/recipe/list.html", timeout=3)
 
@@ -48,22 +50,28 @@ def soup_element_none(soup, selector, name):
 
 def json_default(value):
     if isinstance(value, Recipe):
-        return value.pk
+        return value.mangaeId
 
 def run():
-    json_index = 0
-    for k in range(1,11):
+    page_num = 1
+    while True:
+        json_index = 0
         error_json = {}
         error_json['error_type'] = []
         error_json['error_recipe'] = []
+        error_json['traceback'] = []
         page_json = {}
         page_json['table'] = {}
         page_json['table']['recipe'] = []
         page_json['table']['ingredient'] = []
         page_json['table']['recipe_order'] = []
         page_json['table']['hashtag'] = []
-        res = requests.get(f"https://www.10000recipe.com/recipe/list.html?order=reco&page={k}")
+        res = requests.get(f"https://www.10000recipe.com/recipe/list.html?order=reco&page={page_num}")
         soup = BeautifulSoup(res.text, 'html.parser')
+        # if len(soup.select('#contents_area_full ul div.result_none')) != 0:
+        #     break
+        if page_num > 100:
+            break
         items = soup.select('#contents_area_full ul ul li.common_sp_list_li')
         for item in items:
             try:
@@ -79,7 +87,8 @@ def run():
                 recipe_title = item.select('div.common_sp_caption div.common_sp_caption_tit.line2')[0].text.strip()
                 data['name'] = recipe_title                                 
                 #------------------상세페이지-----------------------#
-                res = requests.get(recipe_link, timeout=3)
+                headers = {'User-Agent' : generate_user_agent(os='win', device_type='desktop')}
+                res = requests.get(recipe_link, timeout=3, headers=headers)
                 soup = BeautifulSoup(res.text,"html.parser")
 
                 detail = soup.select("#contents_area")[0]
@@ -166,8 +175,8 @@ def run():
                 recipe = Recipe.objects.filter(link__iexact=recipe_link)[0]
                 # recipe = Recipe.objects.get(link=recipe_link)
                 
+                page_json['table']['ingredient'].append([])
                 if Ingredient.objects.filter(recipeId=recipe).count() == 0:
-                    page_json['table']['ingredient'].append([])
                     for idx in range(len(ingredient_category)):
                         igrnt = {
                             'type': ingredient_category[idx],
@@ -179,8 +188,8 @@ def run():
                         Ingredient(**igrnt).save()
                         page_json['table']['ingredient'][json_index].append(igrnt)
 
+                page_json['table']['recipe_order'].append([])
                 if RecipeOrder.objects.filter(recipeId=recipe).count() == 0:
-                    page_json['table']['recipe_order'].append([])
                     for i in range(recipe_sequence_length):
                         order = {
                             'number': i+1,
@@ -202,16 +211,32 @@ def run():
                             RecipeHashTag(**hash_tag).save()
                             page_json['table']['hashtag'][json_index].append(hash_tag)
                 json_index += 1
+            except IndexError as e:
+                print(e)
+                print(recipe_title)
+                error_json['error_type'].append(e)
+                error_json['error_recipe'].append(recipe_title)
+                error_json['traceback'].append(traceback.format_exc())
+                json_index += 1
+            except requests.exceptions.ConnectionError as e:
+                error_json['error_type'].append(e)
+                error_json['error_recipe'].append(recipe_title)
+                error_json['traceback'].append('')
+                print("connection aborted by the server ..")
+                time.sleep(5)
+                print("====restart====")
+                continue
             except Exception as e:
                 print(e)
                 print(recipe_title)
                 error_json['error_type'].append(e)
                 error_json['error_recipe'].append(recipe_title)
+                error_json['traceback'].append(traceback.format_exc())
                 json_index += 1
-        print(page_json)
-        print(error_json)
-        with open(os.path.abspath(f'./scripts/jsons/page{k}.json'),'w', encoding='utf-8') as f:
+                
+        with open(os.path.abspath(f'./scripts/jsons/page{page_num}.json'),'w', encoding='utf-8') as f:
             json.dump(page_json, f, ensure_ascii=False, indent=4, default=json_default)
-        with open(os.path.abspath(f'./scripts/jsons/page{k}_error.json'),'w', encoding='utf-8') as f:
+        with open(os.path.abspath(f'./scripts/jsons/page{page_num}_error.json'),'w', encoding='utf-8') as f:
             json.dump(error_json, f, ensure_ascii=False, indent=4, default=json_default)
+        page_num += 1
                     
