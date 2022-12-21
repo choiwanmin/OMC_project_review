@@ -20,5 +20,6 @@ from omc.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
-    path('accounts/', include('allauth.urls'))
+    path('accounts/', include('allauth.urls')),
+    path('recipe/', include('omc.urls')),
 ]
