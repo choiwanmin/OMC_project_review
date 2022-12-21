@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from omc.models import Recipe
 
 res = requests.get("https://www.10000recipe.com/recipe/list.html")
 
@@ -13,7 +14,7 @@ def int_in_str(text):
     else:
         text = list(text)
         result = ''
-        for x in text:
+        for x in text:    
             if x.isdigit() == True:
                 result += x
         return int(result)
@@ -42,14 +43,17 @@ def soup_element_none(soup, selector, name):
 
 def run():
     for item in items:
+        data = {}
         # 게시물 링크
         recipe_link = item.select('div.common_sp_thumb a')[0].get('href').strip()
-        recipe_link = recipe_link.split('/')[-1] # 만개의레시피 아이디
+        recipe_link = recipe_link.split('/')[-1] # 만개의레시피 아이디, int로 DB에 저장
+        data['mangaeId'] = recipe_link
         recipe_link = 'https://www.10000recipe.com/recipe/' + recipe_link
-        # print(recipe_link)
+        data['link'] = recipe_link
 
-        # 레시피 타이틀 
+        # 레시피 타이틀
         recipe_title = item.select('div.common_sp_caption div.common_sp_caption_tit.line2')[0].text.strip()
+        data['name'] = recipe_title                                 
         #------------------상세페이지-----------------------#
         res = requests.get(recipe_link)
         soup = BeautifulSoup(res.text,"html.parser")
@@ -60,17 +64,22 @@ def run():
             continue
         #썸네일 이미지
         image = detail.select('div.view2_pic div.centeredcrop img')[0].get("src").strip()
+        data['thumbnail'] = image
         # print(image)
         
         #요리 설명
         explain = soup_element_none(detail, 'div.view2_summary_in', '0_text_strip')
+        data['description'] = explain
         
         # print(explain)
         
         #음식 양, 조리 시간, 조리 난이도
         cook_amount = soup_element_none(detail, 'span.view2_summary_info1', '0_text_strip')
+        data['amount'] = cook_amount
         cook_time = soup_element_none(detail, 'span.view2_summary_info2' ,'0_text_strip')
+        data['time'] = cook_time
         cook_level= soup_element_none(detail, 'span.view2_summary_info3' ,'0_text_strip')
+        data['level'] = cook_level
 
         #상세 재료
         # 재료 카테고리, 재료 명, 재료 단위
@@ -110,13 +119,15 @@ def run():
         else:
             star = 0
         
+        data['star'] = star
+
         # 리뷰 갯수
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_ea'):
             review_count = item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_rv_ea')[0].text.strip()
             review_count = int_in_str(review_count)
         else:
             review_count = 0
-        
+        data['reviewCount'] = review_count
 
         if item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer'):
             views_count = item.select('div.common_sp_caption div.common_sp_caption_rv span.common_sp_caption_buyer')[0].text.strip()
@@ -124,4 +135,10 @@ def run():
             views_count = int_in_str(views_count)
         else:
             views_count = 0
+        data['viewCount'] = views_count
+
+        if Recipe.objects.filter(link__iexact=recipe_link).count() == 0:
+            Recipe(**data).save()
+            print("#########################")
+            print(recipe_title,"저장했다 찬혁아")
         
