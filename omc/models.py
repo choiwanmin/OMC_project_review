@@ -22,7 +22,7 @@ class CategoryM(models.Model):
 
 
 class Recipe(models.Model):
-    mangaeId = models.CharField()
+    mangaeId = models.CharField(max_length=100)
     link = models.URLField()
     name = models.CharField(max_length=200)
     thumbnail = models.URLField(null=True, blank=True)
