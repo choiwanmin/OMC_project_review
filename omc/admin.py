@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Recipe, RecipeOrder, Ingredient
+from . import models
+import inspect
 
 # Register your models here.
-admin.site.register(Ingredient)
-admin.site.register(Recipe)
-admin.site.register(RecipeOrder)
+for name, obj in inspect.getmembers(models):
+    if inspect.isclass(obj):
+        admin.site.register(obj)
