@@ -130,6 +130,7 @@ dmypy.json
 
 # user add
 env_info.py
+scripts/jsons/
 
 ## db migrate
 omc/migrations/
