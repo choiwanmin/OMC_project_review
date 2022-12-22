@@ -9,9 +9,9 @@ def run():
         for keys in json_data['update_keys']:
             recipe = Recipe.objects.filter(mangaeId__iexact=keys['mangaeId'])
             recipe.update(
-                categoryTId=CategoryT.objects.get(pk=keys['categoryTId']),
-                categorySId=CategoryS.objects.get(pk=keys['categorySId']),
-                categoryIId=CategoryI.objects.get(pk=keys['categoryIId']),
-                categoryMId=CategoryM.objects.get(pk=keys['categoryMId']),
+                categoryTId=CategoryT.objects.get(index=keys['categoryTId']),
+                categorySId=CategoryS.objects.get(index=keys['categorySId']),
+                categoryIId=CategoryI.objects.get(index=keys['categoryIId']),
+                categoryMId=CategoryM.objects.get(index=keys['categoryMId']),
             )
         f.close()

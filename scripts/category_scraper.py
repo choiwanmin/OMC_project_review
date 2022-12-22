@@ -12,16 +12,12 @@ def run():
     categoryS = CategoryS.objects.all()
     categoryI = CategoryI.objects.all()
     categoryM = CategoryM.objects.all()
-    timeout = 5
+    timeout = 10
     for catT in categoryT:
-        if catT.pk==1:
-            continue
         data = {}
         data['update_keys'] = []
         for catS in categoryS:
             for catI in categoryI:
-                if catT.pk ==1 and catS.pk == 1 and catI.pk <= 4:
-                    continue
                 for catM in categoryM:
                     url = f'https://www.10000recipe.com/recipe/list.html?q=&query=&cat1={catM.index}&cat2={catS.index}&cat3={catI.index}&cat4={catT.index}&order=date&page=1'
                     res = requests.get(url, timeout=timeout)
@@ -54,6 +50,12 @@ def run():
                                 if recipe:
                                     recipe.update(categoryTId=catT,categorySId=catS, categoryIId=catI, categoryMId=catM)
                             page += 1
+
+                        except ConnectionResetError as e:
+                            print("connection aborted by the server ..")
+                            time.sleep(5)
+                            print("====restart====")
+                            continue
                         except requests.exceptions.ConnectTimeout as e:
                             print('connection timeout ...')
                             timeout += 1
@@ -74,9 +76,9 @@ def run():
                     # print(f'category M : {catM.index} 종료')
                 print(f'category I : {catI.index} 종료')
             print(f'category S : {catS.index} 종료')
+            with open(os.path.abspath(f'./scripts/jsons/category/catT{catT.index}-catS{catS.index}.json'),'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
         print(f'category T : {catT.index} 종료')
-        with open(os.path.abspath(f'./scripts/jsons/catT{catT.pk}.json'),'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
 
 
 

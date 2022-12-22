@@ -53,13 +53,14 @@ def json_default(value):
         return value.mangaeId
 
 def run():
-    page_num = 1
+    page_num = 101
     while True:
         json_index = 0
         error_json = {}
         error_json['error_type'] = []
         error_json['error_recipe'] = []
         error_json['traceback'] = []
+        error_json['error_recipe_mid'] = []
         page_json = {}
         page_json['table'] = {}
         page_json['table']['recipe'] = []
@@ -68,9 +69,7 @@ def run():
         page_json['table']['hashtag'] = []
         res = requests.get(f"https://www.10000recipe.com/recipe/list.html?order=reco&page={page_num}")
         soup = BeautifulSoup(res.text, 'html.parser')
-        # if len(soup.select('#contents_area_full ul div.result_none')) != 0:
-        #     break
-        if page_num > 100:
+        if len(soup.select('#contents_area_full ul div.result_none')) != 0:
             break
         items = soup.select('#contents_area_full ul ul li.common_sp_list_li')
         for item in items:
@@ -172,10 +171,13 @@ def run():
                 if Recipe.objects.filter(link__iexact=recipe_link).count() == 0:
                     Recipe(**data).save()
                 page_json['table']['recipe'].append(data)
+                page_json['table']['ingredient'].append([])
+                page_json['table']['recipe_order'].append([])
+                page_json['table']['hashtag'].append([])
+
                 recipe = Recipe.objects.filter(link__iexact=recipe_link)[0]
                 # recipe = Recipe.objects.get(link=recipe_link)
                 
-                page_json['table']['ingredient'].append([])
                 if Ingredient.objects.filter(recipeId=recipe).count() == 0:
                     for idx in range(len(ingredient_category)):
                         igrnt = {
@@ -188,7 +190,6 @@ def run():
                         Ingredient(**igrnt).save()
                         page_json['table']['ingredient'][json_index].append(igrnt)
 
-                page_json['table']['recipe_order'].append([])
                 if RecipeOrder.objects.filter(recipeId=recipe).count() == 0:
                     for i in range(recipe_sequence_length):
                         order = {
@@ -200,7 +201,6 @@ def run():
                         RecipeOrder(**order).save()
                         page_json['table']['recipe_order'][json_index].append(order)
 
-                page_json['table']['hashtag'].append([])
                 if hash_tag != None:
                     if RecipeHashTag.objects.filter(recipeId=recipe).count() == 0:
                         for i in hash_tag:
@@ -216,11 +216,13 @@ def run():
                 print(recipe_title)
                 error_json['error_type'].append(e)
                 error_json['error_recipe'].append(recipe_title)
+                error_json['error_recipe_mid'].append(recipe_link)
                 error_json['traceback'].append(traceback.format_exc())
-                json_index += 1
+                json_index = len(page_json['table']['ingredient'])
             except requests.exceptions.ConnectionError as e:
                 error_json['error_type'].append(e)
                 error_json['error_recipe'].append(recipe_title)
+                error_json['error_recipe_mid'].append(recipe_link)
                 error_json['traceback'].append('')
                 print("connection aborted by the server ..")
                 time.sleep(5)
@@ -231,12 +233,13 @@ def run():
                 print(recipe_title)
                 error_json['error_type'].append(e)
                 error_json['error_recipe'].append(recipe_title)
+                error_json['error_recipe_mid'].append(recipe_link)
                 error_json['traceback'].append(traceback.format_exc())
                 json_index += 1
                 
-        with open(os.path.abspath(f'./scripts/jsons/page{page_num}.json'),'w', encoding='utf-8') as f:
+        with open(os.path.abspath(f'./scripts/jsons/page/page{page_num}.json'),'w', encoding='utf-8') as f:
             json.dump(page_json, f, ensure_ascii=False, indent=4, default=json_default)
-        with open(os.path.abspath(f'./scripts/jsons/page{page_num}_error.json'),'w', encoding='utf-8') as f:
+        with open(os.path.abspath(f'./scripts/jsons/page/page{page_num}_error.json'),'w', encoding='utf-8') as f:
             json.dump(error_json, f, ensure_ascii=False, indent=4, default=json_default)
         page_num += 1
                     
