@@ -66,7 +66,7 @@ class Ingredient(models.Model):
 
 class RecipeOrder(models.Model):
     number = models.IntegerField()
-    description = models.URLField()
+    description = models.CharField(max_length=2000)
     thumbnail = models.URLField(null=True, blank=True)
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
