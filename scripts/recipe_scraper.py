@@ -53,8 +53,11 @@ def json_default(value):
         return value.mangaeId
 
 def run():
-    page_num = 101
+    page_num = 1
     while True:
+        if os.path.isfile(f'./scripts/jsons/page/page{page_num}.json'):
+            page_num += 1
+            continue
         json_index = 0
         error_json = {}
         error_json['error_type'] = []
@@ -87,7 +90,7 @@ def run():
                 data['name'] = recipe_title                                 
                 #------------------상세페이지-----------------------#
                 headers = {'User-Agent' : generate_user_agent(os='win', device_type='desktop')}
-                res = requests.get(recipe_link, timeout=3, headers=headers)
+                res = requests.get(recipe_link, timeout=5, headers=headers)
                 soup = BeautifulSoup(res.text,"html.parser")
 
                 detail = soup.select("#contents_area")[0]

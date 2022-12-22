@@ -4,7 +4,7 @@ from omc.models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM
 
 
 def run():
-    with open(os.path.abspath(f'./scripts/jsons/catT1.json'),'r', encoding='utf-8') as f:
+    with open(os.path.abspath(f'./scripts/jsons/category/catT1.json'),'r', encoding='utf-8') as f:
         json_data = json.load(f)
         for keys in json_data['update_keys']:
             recipe = Recipe.objects.filter(mangaeId__iexact=keys['mangaeId'])

@@ -14,10 +14,12 @@ def run():
     categoryM = CategoryM.objects.all()
     timeout = 10
     for catT in categoryT:
-        data = {}
-        data['update_keys'] = []
         for catS in categoryS:
             for catI in categoryI:
+                if os.path.isfile(f'./scripts/jsons/category/catT{catT.index}-catS{catS.index}-catI{catI.index}.json'):
+                    continue
+                data = {}
+                data['update_keys'] = []
                 for catM in categoryM:
                     url = f'https://www.10000recipe.com/recipe/list.html?q=&query=&cat1={catM.index}&cat2={catS.index}&cat3={catI.index}&cat4={catT.index}&order=date&page=1'
                     res = requests.get(url, timeout=timeout)
@@ -27,6 +29,7 @@ def run():
                     while len(soup.select('#contents_area_full ul div.result_none')) == 0:
                         try:
                             if page >= 2:
+                                time.sleep(0.2)
                                 headers = {'User-Agent' : generate_user_agent(os='win', device_type='desktop')}
                                 url = f'https://www.10000recipe.com/recipe/list.html?q=&query=&cat1={catM.index}&cat2={catS.index}&cat3={catI.index}&cat4={catT.index}&order=date&page={page}'
                                 res = requests.get(url, timeout=timeout, headers=headers)
@@ -51,6 +54,7 @@ def run():
                                     recipe.update(categoryTId=catT,categorySId=catS, categoryIId=catI, categoryMId=catM)
                             page += 1
 
+                        
                         except ConnectionResetError as e:
                             print("connection aborted by the server ..")
                             time.sleep(5)
@@ -68,16 +72,16 @@ def run():
                             print("====restart====")
                             continue
                         except Exception as e :
-                            print('error occured ...')
+                            print(e, 'error occured ...')
                             time.sleep(5)
                             print("===restart===")
                             continue
 
                     # print(f'category M : {catM.index} 종료')
                 print(f'category I : {catI.index} 종료')
+                with open(os.path.abspath(f'./scripts/jsons/category/catT{catT.index}-catS{catS.index}-catI{catI.index}.json'),'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=4)
             print(f'category S : {catS.index} 종료')
-            with open(os.path.abspath(f'./scripts/jsons/category/catT{catT.index}-catS{catS.index}.json'),'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=4)
         print(f'category T : {catT.index} 종료')
 
 
