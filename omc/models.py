@@ -36,7 +36,7 @@ class CategoryM(models.Model):
 class Recipe(models.Model):
     mangaeId = models.CharField(max_length=100)
     link = models.URLField()
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=400)
     thumbnail = models.URLField(null=True, blank=True)
     description = models.CharField(null=True, blank=True, max_length=2000)
     amount = models.CharField(null=True, blank=True, max_length=30)
@@ -56,7 +56,7 @@ class Recipe(models.Model):
 
 class Ingredient(models.Model):
     type = models.CharField(max_length=30)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=150)
     volume = models.CharField(max_length=30)
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
