@@ -12,7 +12,10 @@ def run():
     categoryS = CategoryS.objects.all()
     categoryI = CategoryI.objects.all()
     categoryM = CategoryM.objects.all()
+    timeout = 5
     for catT in categoryT:
+        if catT.pk==1:
+            continue
         data = {}
         data['update_keys'] = []
         for catS in categoryS:
@@ -21,7 +24,7 @@ def run():
                     continue
                 for catM in categoryM:
                     url = f'https://www.10000recipe.com/recipe/list.html?q=&query=&cat1={catM.index}&cat2={catS.index}&cat3={catI.index}&cat4={catT.index}&order=date&page=1'
-                    res = requests.get(url, timeout=3)
+                    res = requests.get(url, timeout=timeout)
                     soup = BeautifulSoup(res.text, 'html.parser')
                     items = soup.select('#contents_area_full ul ul li.common_sp_list_li div.common_sp_thumb a')
                     page = 1
@@ -30,7 +33,7 @@ def run():
                             if page >= 2:
                                 headers = {'User-Agent' : generate_user_agent(os='win', device_type='desktop')}
                                 url = f'https://www.10000recipe.com/recipe/list.html?q=&query=&cat1={catM.index}&cat2={catS.index}&cat3={catI.index}&cat4={catT.index}&order=date&page={page}'
-                                res = requests.get(url, timeout=5, headers=headers)
+                                res = requests.get(url, timeout=timeout, headers=headers)
                                 soup = BeautifulSoup(res.text, 'html.parser')
                                 items = soup.select('#contents_area_full ul ul li.common_sp_list_li div.common_sp_thumb a')
                                 
@@ -43,20 +46,32 @@ def run():
                                 data['update_keys'].append(
                                 {
                                     'mangaeId' : recipe_link,
-                                    'categoryTId' : catT.pk,
-                                    'categorySId' : catS.pk,
-                                    'categoryIId' : catI.pk,
-                                    'categoryMId' : catM.pk,
+                                    'categoryTId' : catT.index,
+                                    'categorySId' : catS.index,
+                                    'categoryIId' : catI.index,
+                                    'categoryMId' : catM.index,
                                 })
                                 if recipe:
                                     recipe.update(categoryTId=catT,categorySId=catS, categoryIId=catI, categoryMId=catM)
                             page += 1
-                        except:
+                        except requests.exceptions.ConnectTimeout as e:
+                            print('connection timeout ...')
+                            timeout += 1
+                            time.sleep(5)
+                            print('====restart====')
+                            continue
+                        except requests.exceptions.ConnectionError as e:
                             print("connection aborted by the server ..")
                             time.sleep(5)
                             print("====restart====")
                             continue
-                    print(f'category M : {catM.index} 종료')
+                        except Exception as e :
+                            print('error occured ...')
+                            time.sleep(5)
+                            print("===restart===")
+                            continue
+
+                    # print(f'category M : {catM.index} 종료')
                 print(f'category I : {catI.index} 종료')
             print(f'category S : {catS.index} 종료')
         print(f'category T : {catT.index} 종료')
