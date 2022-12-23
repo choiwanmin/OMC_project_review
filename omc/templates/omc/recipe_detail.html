@@ -6,35 +6,63 @@
 <div class="container px-4 px-lg-5">
     <!-- Heading Row-->
     <div class="row gx-4 gx-lg-5 align-items-center my-5">
-        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
-        <div class="col-lg-5">
-            <h1 class="font-weight-light">Business Name or Tagline</h1>
-            <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components. Feel free to use this template for any project you want!</p>
+        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="{{ recipe.thumbnail }}" alt="..." /></div>
+            <div class="col-lg-5">
+                <h1 class="font-weight-light"> {{ recipe.name }} </h1>
+                <p>{{ recipe.description }}</p>
+                {% if recipe.amount == None %}
+                <div></div>
+                {% else %}
+                <i style="font-size: 20pt;" class="bi bi-people-fill">{{ recipe.amount }}</i>
+                {% endif %}
+
+                {% if recipe.time == None %}
+                <div></div>
+                {% else %}
+                <i style="font-size: 20pt;" class="class=bi bi-alarm-fill">{{ recipe.time }}</i>
+                {% endif %}
+
+                {% if recipe.level == None %}
+                <div></div>
+                {% else %}
+                <i style="font-size: 20pt;" class="bi bi-question-square-fill">{{ recipe.level }}</i>
+                {% endif %}
+            </div>
         </div>
-    </div>
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
             <!-- Post preview-->
             <div class="post-preview">
-                <a href="post.html">
-                    <h2 class="post-title" style="font-family: 'Segoe UI';">Man must explore, and this is exploration at its greatest</h2>
-                    <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
-                </a>
+                <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;">재료 - Ingredients </h2>
+                <h3 class="post-subtitle">[재료] </h3>
+                <div class="row">
+                    <!-- for 문 ingredients_types -->
+                    {% for types in ingredients_types %}
+                    <div class="col" style="height: auto; width: 100%; border:1px solid rgb(64, 0, 255);" >
+                    <h3>{{ types.type }}</h3>
+                        <table>
+                            {% for ingrt in ingredients %}
+                            {% if ingrt.type == types.type %}
+                                <tr>
+                                    <td>{{ingrt.name}}</td>
+                                    <td>{{ingrt.volume}}</td>
+                                </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                    {% endfor %}
+                </div>
                 <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 24, 2022
+                    재료 준비 끝!
                 </p>
             </div>
             <!-- Divider-->
             <hr class="my-4" />
             <!-- Post preview-->
             <div class="post-preview">
-                <a href="post.html"><h2 class="post-title">I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.</h2></a>
+                <h2 class="post-title">조리 순서</h2>
                 <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 18, 2022
                 </p>
             </div>
             <!-- Divider-->
