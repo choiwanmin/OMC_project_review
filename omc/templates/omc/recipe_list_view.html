@@ -1,0 +1,96 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block head %}
+<link href="{% static 'css/recipe_list_view.css' %}" rel="stylesheet" />
+{% endblock head %}
+
+{% block title %}
+    Recipe List
+{% endblock title %}
+
+{% block content %}
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        {% if recipe_list.exists %}
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            {% for recipe in recipe_list %}
+            <div class="col mb-5">
+                <div class="card">
+                    <!-- Recipe image-->
+                    <img class="card-img-top" src="{{ recipe.thumbnail }}" alt="..." style="height: 210px;"/>
+                    <!-- Recipe details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Recipe name-->
+                            <div class="row" style="min-height: 80px; vertical-align: middle;">
+                                <h5 class="fw-bolder" style="word-break: keep-all; text-overflow: elipsis;">{{ recipe.name | truncatechars:20 }}</h5>
+                            </div>
+                            
+                            <!-- Recipe star, review_count, views_count-->
+                            <div class="row">
+                                <div style="width: auto;">
+                                    <div  class="star_rating" style="color:#aaa9a9; width: max-content; position: relative;">
+                                        <div style="color:#f98221;width:calc({{recipe.star}}% * 20); padding: 0;position: absolute;display: flex;top: 0;left: 0;overflow: hidden;">
+                                            <span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span>
+                                        </div>
+                                        <div style="padding: 0;">
+                                            <span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"><span>조회수 {{ recipe.viewCount }} <span style="color: darkgrey;">({{ recipe.reviewCount }})</span></span></div>
+                        </div>
+                    </div>
+                    <!-- Recipe actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}">상세 레시피</a></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- pagination -->
+        <nav aria-label="Pagination">
+            <hr class="my-0" />
+            <ul class="pagination justify-content-center my-4">
+                <!-- 이전 페이지 -->
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.previous_page_number }}"
+                        tabindex="-1">Prev</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="btn btn-outline-success mt-auto fw-bolder" href="#" tabindex="-1">Prev</a>
+                </li>
+                {% endif %}
+                <!-- 페이지 번호로 출력 -->
+                {% for i in pages %}
+                    <li {% if page_obj.number == i %} class="active" {% endif %}>
+                        <a role="button" class="btn btn-outline-warning mt-auto fw-bolder" href="/recipe?ordering={{ current_order }}&page={{i}}">{{i}}</a>
+                    </li>
+                {% endfor %}
+                <!-- 다음 페이지 -->
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <button class="btn">
+                        <a class="btn btn-outline-success mt-auto fw-bolder" href="#">Next</a>
+                    </button>
+                    
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    
+</section>
+{% endblock content %}
