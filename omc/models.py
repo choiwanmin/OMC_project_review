@@ -81,6 +81,9 @@ class Recipe(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    def get_absolute_url(self):
+        return f'/recipe/{self.pk}'
+
 
 class Ingredient(models.Model):
     type = models.CharField(max_length=30)
