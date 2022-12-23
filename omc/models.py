@@ -13,7 +13,7 @@ class UserIngredient(models.Model):
 
 class Icebox(models.Model):
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
-    userIngredientId = models.ManyToManyField(UserIngredient, blank=False, null=True)
+    userIngredientId = models.ManyToManyField(UserIngredient, blank=True)
     createAt = models.DateTimeField(auto_now_add=True, verbose_name='재료추가시간')
     
     def __str__(self):
