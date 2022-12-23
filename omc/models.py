@@ -1,12 +1,40 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+class UserIngredient(models.Model):
+    type = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return f'{self.type} || {self.name}'
+
+
+class Icebox(models.Model):
+    userId = models.ForeignKey(User, on_delete=models.CASCADE)
+    userIngredientId = models.ManyToManyField(UserIngredient, on_delete=models.CASCADE)
+    createAt = models.DateTimeField(auto_now_add=True, verbose_name='재료추가시간')
+    
+    def __str__(self):
+        return f'{self.userId} || {self.userIngredientId} || {self.createAt}'
+
+
+class UserCustomIngredient(models.Model):
+    iceBoxId = models.ForeignKey(Icebox,on_delete=models.CASCADE)
+    type = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return f'{self.iceBoxId} || {self.type} || {self.name}'
+
+
 class CategoryT(models.Model):
     index = models.CharField(max_length=30)
     name = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'cat T || {self.name}'
+        return f'{self.name}'
 
 
 class CategoryS(models.Model):
@@ -14,7 +42,7 @@ class CategoryS(models.Model):
     name = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'cat S || {self.name}'
+        return f'{self.name}'
 
 
 class CategoryI(models.Model):
@@ -22,7 +50,7 @@ class CategoryI(models.Model):
     name = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'cat I || {self.name}'
+        return f'{self.name}'
 
 
 class CategoryM(models.Model):
@@ -30,7 +58,7 @@ class CategoryM(models.Model):
     name = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'catM || {self.name}'
+        return f'{self.name}'
 
 
 class Recipe(models.Model):
@@ -51,7 +79,7 @@ class Recipe(models.Model):
     categoryMId = models.ForeignKey(CategoryM, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f'recipe || {self.name}'
+        return f'{self.name}'
 
 
 class Ingredient(models.Model):
@@ -61,7 +89,7 @@ class Ingredient(models.Model):
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'ingredient || {self.type} || {self.name}'
+        return f'{self.type} || {self.name}'
 
 
 class RecipeOrder(models.Model):
@@ -71,7 +99,7 @@ class RecipeOrder(models.Model):
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'order{self.recipeId}-{self.number} || {self.description}'
+        return f'{self.recipeId}-{self.number} || {self.description}'
 
 
 class RecipeHashTag(models.Model):
@@ -79,5 +107,5 @@ class RecipeHashTag(models.Model):
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'hashTag || {self.recipeId}-{self.description}'
+        return f'{self.recipeId}-{self.description}'
 
