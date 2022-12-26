@@ -10,9 +10,73 @@
 {% endblock title %}
 
 {% block content %}
-<!-- Section-->
-<section class="py-5">
+<!-- 카테고리 상단바 -->
+<section class="category">
     <div class="container px-4 px-lg-5 mt-5">
+        <table class="category-table table-sm table-responsive px-4 px-lg-5 mt-5">
+            <colgroup>
+                <col width="60px">
+                <col width="auto">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th>종류별</th>
+                    <td>
+                        <nav class="nav nav-pills flex-column flex-sm-row mt-2" style="font-size: 1rem;">
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                            {% for category in category_t %}
+                            <form action="/omc/recipe_list_view.html" method="post">
+                                <input type="hidden" name="catt" value="">
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                            </form>
+                            {% endfor %}
+                        </nav>
+                    </td>
+                </tr>
+                <tr>
+                    <th>상황별</th>
+                    <td>
+                        <nav class="nav nav-pills flex-column flex-sm-row mt-2">
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                            {% for category in category_s %}
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                            {% endfor %}
+                        </nav>
+                    </td>
+                </tr>
+                <tr>
+                    <th>재료별</th>
+                    <td>
+                        <nav class="nav nav-pills flex-column flex-sm-row mt-2">
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                            {% for category in category_i %}
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                            {% endfor %}
+                        </nav>
+            
+                    </td>
+                </tr>
+                <tr>
+                    <th>방법별</th>
+                    <td>
+                        <nav class="nav nav-pills flex-column flex-sm-row mt-2">
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                            {% for category in category_m %}
+                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                            {% endfor %}
+                        </nav>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<!-- Section-->
+<section class="py-3">
+    {% if search_info %}
+        <small class="text-muted px-4 px-lg-5 mt-2">{{ search_info }}</small>
+    {% endif %}
+    <div class="container px-4 px-lg-5 mt-1">
         {% if recipe_list.exists %}
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for recipe in recipe_list %}
@@ -71,9 +135,15 @@
                 {% endif %}
                 <!-- 페이지 번호로 출력 -->
                 {% for i in pages %}
-                    <li {% if page_obj.number == i %} class="active" {% endif %}>
-                        <a role="button" class="btn btn-outline-warning mt-auto fw-bolder" href="/recipe?ordering={{ current_order }}&page={{i}}">{{i}}</a>
-                    </li>
+                    {% if search_word %}
+                        <li {% if page_obj.number == i %} class="active" {% endif %}>
+                            <a role="button" class="btn btn-outline-warning mt-auto fw-bolder" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}">{{i}}</a>
+                        </li>
+                    {% else %}
+                        <li {% if page_obj.number == i %} class="active" {% endif %}>
+                            <a role="button" class="btn btn-outline-warning mt-auto fw-bolder" href="/recipe/?ordering={{ current_order }}&page={{i}}">{{i}}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
                 <!-- 다음 페이지 -->
                 {% if page_obj.has_next %}
@@ -82,10 +152,7 @@
                 </li>
                 {% else %}
                 <li class="page-item disabled">
-                    <button class="btn">
                         <a class="btn btn-outline-success mt-auto fw-bolder" href="#">Next</a>
-                    </button>
-                    
                 </li>
                 {% endif %}
             </ul>

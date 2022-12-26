@@ -4,7 +4,7 @@
     }
     }
 @media (min-width: 576px) {
-    div.card-body.p-4 div.text-center div.row div div.star_rating {left:80%;} 
+    div.card-body.p-4 div.text-center div.row div div.star_rating {left:80%;}
 }
 @media (min-width: 768px) {
     div.card-body.p-4 div.text-center div.row div div.star_rating {left:60%;} 

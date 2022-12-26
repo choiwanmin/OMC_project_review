@@ -5,8 +5,8 @@
     <div class="container px-lg-5 ">
         <a class="navbar-brand" href="/">OMC</a>
         <form class="d-flex justify-content-center">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" size="60">
-            <a class="btn btn-outline-success" type="submit">Search</a>
+            <input id="search-input" class="form-control me-2" type="text" placeholder="Search" aria-label="Search" size="60">
+            <button class="btn btn-outline-success" type="button" onclick="searchPost()">Search</button>
         </form>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -51,5 +51,23 @@
     </div>
     </div>
 </div>
+
+<script>
+    function searchPost() {
+        let searchValue = document.getElementById('search-input').value.trim();
+        if (searchValue.length > 1) {
+            location.href = '/recipe/search/' + searchValue + '/';
+        }
+        else {
+            alert('검색어('+searchValue+')가 너무 짧습니다.');
+        }
+    };
+    document.getElementById('search-input').addEventListener('keyup',function(event)
+    {
+        if (event.key == 'Enter'){
+            searchPost()
+        }
+    });
+</script>
 
 
