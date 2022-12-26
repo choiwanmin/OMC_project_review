@@ -43,5 +43,4 @@ class RefrigeratorList(TemplateView):
     def get_context_data(self, **kwargs):
         context=super(RefrigeratorList, self).get_context_data()
         context['ingredients']=Ingredient.objects.all().order_by('pk')[:5]
-        print(context)
         return context
