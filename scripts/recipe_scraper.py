@@ -207,6 +207,8 @@ def run():
                 if hash_tag != None:
                     if RecipeHashTag.objects.filter(recipeId=recipe).count() == 0:
                         for i in hash_tag:
+                            if len(i.encode('utf-8'))>30:
+                                continue
                             hash_tag = {
                                 'description':i,
                                 'recipeId':recipe,
