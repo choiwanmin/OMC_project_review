@@ -1,75 +1,109 @@
 {% extends 'partials/base.html' %}
+{% load static %}
+
 
 {% block content %}
 
-<!-- Main Content-->
-<div class="container px-4 px-lg-5">
-    <!-- Heading Row-->
-    <div class="row gx-4 gx-lg-5 align-items-center my-5">
-        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
-        <div class="col-lg-5">
-            <h1 class="font-weight-light">Business Name or Tagline</h1>
-            <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components. Feel free to use this template for any project you want!</p>
+<section class="py-5">
+    <!-- Main Content-->
+    <div class="container px-4 px-lg-5">
+        {% if category_t %}
+        <p><small>{{ category_t.name }} > {{ category_s.name }} > {{ category_i.name }} > {{ category_m.name }}</small></p>
+        {% else %}
+        <p>카테고리 분류 없음</p>
+        {% endif %}
+        <!-- Heading Row-->
+        <div class="row gx-4 gx-lg-5 justify-content-center my-3 bg-light p-5">
+            <div style = "width: 500px; height: 400px;" class = "col-lg-7">
+                <img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 400px; height: 400px; object-fit:cover;" src="{{ recipe.thumbnail }}" alt="..." />
+            </div>
+            <div class="col-lg-5">
+                <h1 class="font-weight-light"> {{ recipe.name }} </h1>
+                {% if recipe.description != None %}
+                <p title="{{ recipe.description }}">{{ recipe.description | truncatechars:200}}</p>
+                {% endif %}
+                <div class="row">
+                    {% if recipe.amount != None %}
+                    <i style="font-size: 20pt;" class="bi bi-people-fill">&nbsp;&nbsp;{{ recipe.amount }}</i>
+                    {% endif %}
+                    {% if recipe.time != None %}
+                    <i style="font-size: 20pt;" class="bi bi-alarm-fill">&nbsp;&nbsp;{{ recipe.time }}</i>
+                    {% endif %}
+                    {% if recipe.level != None %}
+                    <i style="font-size: 20pt;" class="bi bi-question-square-fill">&nbsp;&nbsp;{{ recipe.level }}</i>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- Divider-->
+        <hr class="my-4" />
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-11 col-lg-9 col-xl-8">
+                <!-- Post preview-->
+                <div class="post-preview p-5 bg-light">
+                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Ingredients</cite> </h2>
+                    <div class="row">
+                        <!-- for 문 ingredients_types -->
+                        {% for types in ingredients_types %}
+                        <div class="col">
+                            <table class="table">
+                                <thead class="table-dark">
+                                    <th>{{ types.type }}</th>
+                                    <th>용량</th>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for ingrt in ingredients %}
+                                    {% if ingrt.type == types.type %}
+                                        <tr>
+                                            <td>{{ingrt.name}}</td>
+                                            <td>{{ingrt.volume}}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Divider-->
+                <hr class="my-4" />
+                <!-- Post preview-->
+                <div class="post-preview bg-light p-5">
+                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Recipe</cite></h2>
+                    <!-- for 문 recipe_order -->
+                    {% for n in recipe_order %}
+                    <div class="row">
+                        <h1><i class="bi bi-{{ n.number }}-square-fill"></i></h1>
+                        <p class="col-lg-6" style="word-break: keep-all;">{{ n.description }}</p>
+                        <div class="col-lg-6">
+                            <img class="img-fluid rounded mb-4 mb-lg-0 img-thumbnail" src="{{ n.thumbnail }}" alt="..." />
+                        </div>
+                    </div>
+                    <hr class="my-4"/>
+                    {% endfor %}
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+                <!-- Post preview-->
+                <div class="post-preview">
+                        <h2 class="post-title">해시태그</h2>
+                        {% for tag in recipehastags %}
+                        <a href="#"><span class = "badge badge-pill bg-dark">{{ tag.description }}</span></a>
+                        {% endfor %}
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+                <!-- Pager-->
+                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="javascript:history.back()" onclick="goBack()">← 뒤로가기</a></div>
+                <script>
+                    function goBack() {
+                      window.history.back();
+                    }
+                </script>
+            </div>
         </div>
     </div>
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-            <!-- Post preview-->
-            <div class="post-preview">
-                <a href="post.html">
-                    <h2 class="post-title" style="font-family: 'Segoe UI';">Man must explore, and this is exploration at its greatest</h2>
-                    <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
-                </a>
-                <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 24, 2022
-                </p>
-            </div>
-            <!-- Divider-->
-            <hr class="my-4" />
-            <!-- Post preview-->
-            <div class="post-preview">
-                <a href="post.html"><h2 class="post-title">I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.</h2></a>
-                <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 18, 2022
-                </p>
-            </div>
-            <!-- Divider-->
-            <hr class="my-4" />
-            <!-- Post preview-->
-            <div class="post-preview">
-                <a href="post.html">
-                    <h2 class="post-title">Science has not yet mastered prophecy</h2>
-                    <h3 class="post-subtitle">We predict too much for the next year and yet far too little for the next ten.</h3>
-                </a>
-                <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on August 24, 2022
-                </p>
-            </div>
-            <!-- Divider-->
-            <hr class="my-4" />
-            <!-- Post preview-->
-            <div class="post-preview">
-                <a href="post.html">
-                    <h2 class="post-title">Failure is not an option</h2>
-                    <h3 class="post-subtitle">Many say exploration is part of our destiny, but it’s actually our duty to future generations.</h3>
-                </a>
-                <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on July 8, 2022
-                </p>
-            </div>
-            <!-- Divider-->
-            <hr class="my-4" />
-            <!-- Pager-->
-            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
-        </div>
-    </div>
-</div>
+</section>
 {% endblock content %}
