@@ -1,0 +1,65 @@
+<script>
+    const refListApp = {
+        delimiters: ['[[',']]'],
+        data() {
+            return {
+                userIngredients:[
+                    {% for i in ingredients %}
+                    {name: "{{i.name}}", type:"{{i.type}}"},
+                    {% endfor %}
+                ],
+                userIngredientTypes:[
+                    {% for i in ingredients_types %}
+                    {type:"{{i.type}}"},
+                    {% endfor %}
+                ],
+                modals:[this.$refs.modals],
+                addedIngredients:[
+                    {% for i in ingredients_types %}
+                    [],
+                    {% endfor %}
+                ]
+            }
+        },
+        created(){
+        },
+        methods:{
+            applyIngredients(idx) {
+                this.addedIngredients[idx] = []
+                Array.from(this.$refs.modal[idx].getElementsByClassName('btn')).forEach((ing, index) => {
+                    if (ing.classList.contains('active')){
+                        this.addedIngredients[idx].push({name: ing.innerText, idx: index})
+                    }
+                })
+            },
+            removeBtn(idx,idx_added, ingredient){
+                this.addedIngredients[idx].splice(idx_added, 1)
+                this.$refs.modal[idx].getElementsByClassName('btn')[ingredient.idx].classList.remove('active')
+            },
+            notApplyIngredients(idx){
+                for (let ing of this.$refs.modal[idx].getElementsByClassName('btn')){
+                    ing.classList.remove('active')
+                }
+                for (let ing of this.addedIngredients[idx]){
+                    this.$refs.modal[idx].getElementsByClassName('btn')[ing.idx].classList.add('active')
+                }
+            },
+            ingredientFilter(currType){
+                return this.userIngredients.filter(i => i.type == currType)
+            },
+            resetAddedIngredients(){
+                var reset;
+                reset = confirm('모두 삭제하시겠습니까??')
+                if (reset){
+                    for (let i in this.addedIngredients){
+                        this.addedIngredients[i] = []
+                    }
+                    for (let ing in this.$refs.ingbtn){
+                        ing.classList.remove('active')
+                    }
+                }
+            },
+        },
+    }
+    Vue.createApp(refListApp).mount('#ref_list')
+</script>

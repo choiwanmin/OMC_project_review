@@ -1,7 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+
+class User(AbstractUser):
+    CHOICE_GENDER=((0, ""), (1, "남자"), (2,"여자"))
+    gender = models.BooleanField(blank=False, default=0, choices=CHOICE_GENDER, verbose_name='gender')
+    CHOICE_AGEGROUP = (('10', '10~19세'), ('20', '20~29세'), ('30', '30~39세'), ('40', '40~49세'), ('50', '50~59세'), ('60', '60~69세'), ('70', '70~79세'), ('80', '80~89세'), ('90', '90~99세'),)
+    ageGroup = models.CharField(max_length=2, choices=CHOICE_AGEGROUP, verbose_name='age_group')
+    CHOICE_HOUSEHOLDSIZE = (('1', '1인 가구'), ('2', '2인 가구'), ('3', '3인 가구'), ('4', '4인 가구'), ('5', '5인 가구'), ('6', '6인 가구'), ('7', '7인 가구'), ('8', '8인 가구'), ('9', '9인 가구'), ('10', '10인 가구 이상'),)
+    householdSize = models.CharField(max_length=3, choices=CHOICE_HOUSEHOLDSIZE, verbose_name='household_size')
+
 
 class UserIngredient(models.Model):
     type = models.CharField(max_length=30)
@@ -106,9 +115,14 @@ class RecipeOrder(models.Model):
 
 
 class RecipeHashTag(models.Model):
-    description = models.CharField(max_length=30)
+    description = models.SlugField(max_length=30, allow_unicode=True)
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.recipeId}-{self.description}'
+    
+    def get_absolute_url(self):
+        return f'/recipe/tag/{self.slug}/'
 
+    class Meta:
+        verbose_name_plural = 'RecipeHashTags'

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
-from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag
+from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
 # from .forms import CategoryForm
 
 # Create your views here.
@@ -42,11 +42,31 @@ class RecipeList(ListView):
 
         return context
 
-class Recipe_detail(DetailView):
-	model = Recipe
+class RecipeDetail(DetailView):
+    model = Recipe
+    template_name = 'omc/recipe_detail.html'
 
-class Refrigerator_list(TemplateView):
-    template_name = 'omc/refrigerator_list.html'
+    def get_context_data(self, **kwargs):
+        context = super(RecipeDetail,self).get_context_data()
+        context['ingredients'] = Ingredient.objects.filter(recipeId=context['recipe'].pk)
+        context['ingredients_types'] = Ingredient.objects.filter(recipeId=context['recipe'].pk).values_list('type').distinct().values('type')
+        context['recipehastags'] = RecipeHashTag.objects.filter(recipeId=context['recipe'].pk)
+        context['recipe_order'] = RecipeOrder.objects.filter(recipeId=context['recipe'].pk)
+        if context['recipe'].categoryTId != None:
+            context['category_t'] = CategoryT.objects.get(pk=context['recipe'].categoryTId_id)
+            context['category_s'] = CategoryS.objects.get(pk=context['recipe'].categorySId_id)
+            context['category_i'] = CategoryI.objects.get(pk=context['recipe'].categoryIId_id)
+            context['category_m'] = CategoryM.objects.get(pk=context['recipe'].categoryMId_id)
+        return context
+
+class RefrigeratorList(TemplateView):
+    template_name = 'omc/refrigerator_list_view.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(RefrigeratorList, self).get_context_data()
+        context['ingredients'] = UserIngredient.objects.all()
+        context['ingredients_types'] = UserIngredient.objects.all().values_list('type').distinct().values('type')
+        return context
 
 class RecipeSearch(RecipeList):
     paginate_by = 40
