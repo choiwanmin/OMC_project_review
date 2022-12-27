@@ -44,7 +44,6 @@ class RecipeDetail(DetailView):
         context['ingredients_types'] = Ingredient.objects.filter(recipeId=context['recipe'].pk).values_list('type').distinct().values('type')
         context['recipehastags'] = RecipeHashTag.objects.filter(recipeId=context['recipe'].pk)
         context['recipe_order'] = RecipeOrder.objects.filter(recipeId=context['recipe'].pk)
-        #여기에다 if 문 처리. get 했을때 Null이 아닐때만 context에 넣어주는걸로 변경. 그러면 html에서 exists 했을때 Null이면 False 반환 하겠지
         if context['recipe'].categoryTId != None:
             context['category_t'] = CategoryT.objects.get(pk=context['recipe'].categoryTId_id)
             context['category_s'] = CategoryS.objects.get(pk=context['recipe'].categorySId_id)
