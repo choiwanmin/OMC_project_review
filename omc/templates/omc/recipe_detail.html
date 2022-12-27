@@ -11,7 +11,12 @@
 <div class="container px-4 px-lg-5">
     <!-- Heading Row-->
     <div class="row gx-4 gx-lg-5 justify-content-center my-5">
-        <p>카테고리 태그 들고오기</p>
+        {% if category_t %}
+        <p>{{ category_t.name }} > {{ category_s.name }} > {{ category_i.name }} > {{ category_m.name }}</p>
+        {% else %}
+        <p>카테고리 분류 없음</p>
+        {% endif %}
+        <!-- <p>{{ category_t.name }} > {{ category_s.name }} > {{ category_i.name }} > {{ category_m.name }}</p> -->
         <div style = "width: 500px; height: 400px;" class = "col-lg-7"><img class="img-fluid rounded-3 mb-4 mb-lg-0" style="width: 400px; height: 400px; object-fit:cover;" src="{{ recipe.thumbnail }}" alt="..." /></div>
             <div class="col-lg-5">
                 <h1 class="font-weight-light"> {{ recipe.name }} </h1>
