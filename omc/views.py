@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
-from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM
-from django.db.models import Q
+from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag
 # from .forms import CategoryForm
 
 # Create your views here.
@@ -55,9 +54,27 @@ class RecipeSearch(RecipeList):
 
     def get_queryset(self):
         q = self.kwargs['q']
-        recipe_list = Recipe.objects.filter(
-            Q(name__contains=q) # | Q(tags__name__contains=q) | Q(content__contains=q)
-        ).distinct()
+
+        recipe_id_list = set()
+        recipe_lst = Recipe.objects.filter(name__contains=q).distinct()
+        for recipe in recipe_lst:
+            recipe_id_list.add(recipe.pk)
+
+        recipe_lst = Ingredient.objects.filter(name__contains=q).distinct()
+        for recipe in recipe_lst:
+            recipe_id_list.add(recipe.recipeId.pk)
+        
+        recipe_lst = RecipeOrder.objects.filter(description__contains=q).distinct()
+        for recipe in recipe_lst:
+            recipe_id_list.add(recipe.recipeId.pk)
+        
+        recipe_lst = RecipeHashTag.objects.filter(description__contains=q).distinct()
+        for recipe in recipe_lst:
+            recipe_id_list.add(recipe.recipeId.pk)
+
+        recipe_id_list = list(recipe_id_list)
+        recipe_list = Recipe.objects.filter(pk__in=recipe_id_list)
+
         return recipe_list
 
     def get_context_data(self, **kwargs):
