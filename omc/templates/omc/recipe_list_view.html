@@ -10,67 +10,69 @@
 {% endblock title %}
 
 {% block content %}
-<!-- 카테고리 상단바 -->
-<section class="category">
-    <div class="container px-4 px-lg-5 mt-5">
-        <table class="category-table table-sm table-responsive px-4 px-lg-5 mt-5">
-            <colgroup>
-                <col width="60px">
-                <col width="auto">
-            </colgroup>
-            <tbody>
-                <tr>
-                    <th>종류별</th>
-                    <td>
-                        <nav class="nav nav-pills flex-column flex-sm-row mt-2" style="font-size: 1rem;">
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
-                            {% for category in category_t %}
-                            <form action="/omc/recipe_list_view.html" method="post">
-                                <input type="hidden" name="catt" value="">
+{% if search_word is false  %}
+    <!-- 카테고리 상단바 -->
+    <section class="category">
+        <div class="container px-4 px-lg-5 mt-5">
+            <table class="category-table table-sm table-responsive px-4 px-lg-5 mt-5">
+                <colgroup>
+                    <col width="60px">
+                    <col width="auto">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>종류별</th>
+                        <td>
+                            <nav class="nav nav-pills flex-column flex-sm-row mt-2" style="font-size: 1rem;">
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                                {% for category in category_t %}
+                                <form action="/omc/recipe_list_view.html" method="post">
+                                    <input type="hidden" name="catt" value="">
+                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                                </form>
+                                {% endfor %}
+                            </nav>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>상황별</th>
+                        <td>
+                            <nav class="nav nav-pills flex-column flex-sm-row mt-2">
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                                {% for category in category_s %}
                                 <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
-                            </form>
-                            {% endfor %}
-                        </nav>
-                    </td>
-                </tr>
-                <tr>
-                    <th>상황별</th>
-                    <td>
-                        <nav class="nav nav-pills flex-column flex-sm-row mt-2">
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
-                            {% for category in category_s %}
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
-                            {% endfor %}
-                        </nav>
-                    </td>
-                </tr>
-                <tr>
-                    <th>재료별</th>
-                    <td>
-                        <nav class="nav nav-pills flex-column flex-sm-row mt-2">
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
-                            {% for category in category_i %}
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
-                            {% endfor %}
-                        </nav>
-            
-                    </td>
-                </tr>
-                <tr>
-                    <th>방법별</th>
-                    <td>
-                        <nav class="nav nav-pills flex-column flex-sm-row mt-2">
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
-                            {% for category in category_m %}
-                            <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
-                            {% endfor %}
-                        </nav>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+                                {% endfor %}
+                            </nav>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>재료별</th>
+                        <td>
+                            <nav class="nav nav-pills flex-column flex-sm-row mt-2">
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                                {% for category in category_i %}
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                                {% endfor %}
+                            </nav>
+                
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>방법별</th>
+                        <td>
+                            <nav class="nav nav-pills flex-column flex-sm-row mt-2">
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">전체</a>
+                                {% for category in category_m %}
+                                <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem;">{{ category }}</a>
+                                {% endfor %}
+                            </nav>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endif %}
 <!-- Section-->
 <section class="py-3">
     {% if search_info %}
