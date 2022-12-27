@@ -52,7 +52,6 @@ class RecipeDetail(DetailView):
         return context
 
 
-        
 class RefrigeratorList(TemplateView):
     template_name = 'omc/refrigerator_list_view.html'
     
