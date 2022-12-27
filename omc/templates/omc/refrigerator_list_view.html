@@ -13,132 +13,18 @@ Refrigerator List
 <div id="ref_list">
     <!-- Section-->
     <section class="py-5" >
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">가공/유제품</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
+        <div style="margin: 30px;" v-for="(ui,index) in userIngredientTypes">
+            <h2 class="fs-4 fw-bold">[[ui.type]]</h2>
+            <button class="btn" data-bs-toggle="modal" :data-bs-target="[['#staticBackdrop' + index]]">
                 <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
             </button>
-        </div>
-    
-        <hr class="my-4" />
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">채소</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-    
-        <hr class="my-4" />
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">해산물</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">육류</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">햄/소시지</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">곡물</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">곡물분말</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">면</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">콩/견과류</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">빵/떡</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">과일</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-            {% for i in ingredients %}
-            <button type="button" class="w-btn w-btn-gra3 w-btn-gra-anim" style="margin: 10px;" btn-lg>{{ i.name }}</button>
-            {% endfor %}
-        </div>
-        <hr class="my-4" />
-    
-        <div style="margin:30px">
-            <h2 class="fs-4 fw-bold">조미료/양념</h2>
-        </div>
-        <div style="margin:30px">
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                <a class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-            <button class="btn btn-outline-warning position-relative" style="margin: 10px;" v-for="(sauce,index) in sauceList">
-                [[ sauce.name ]]
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, sauce)">
+            <button class="btn btn-warning position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]">
+                [[ addedIng.name ]]
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
                     X
                 </span>
             </button>
+            <hr class="my-4"/>
         </div>
     
         <div style="text-align: center;">
@@ -150,7 +36,7 @@ Refrigerator List
             <div data-toggle="tooltip" title="재료 초기화">
                 <div style="margin:30px">
                     <button class="btn">
-                        <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-arrow-clockwise"></i></a>
+                        <a href="#!" class="text-primary" @click="resetAddedIngredients()"><i style="font-size: 40pt;" class="bi bi-arrow-clockwise"></i></a>
                     </button>
                 </div>
             </div>
@@ -158,22 +44,22 @@ Refrigerator List
     </div>
     
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true" v-for="(ui, index) in userIngredientTypes" :id="[['staticBackdrop' + index]]">
         <div class="modal-dialog modal-dialog modal-dialog-scrollable modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">재료</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-outline-warning" style="margin: 10px;" data-bs-toggle="button" v-for="ing in irgnts" ref="ingbtn">
+                <div class="modal-body" ref="modal">
+                    <button type="button" class="btn btn-outline-warning" style="margin: 10px;" data-bs-toggle="button" v-for="ing in ingredientFilter(ui.type)" ref="ingbtn">
                         [[ing.name]]
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" v-on:click="notApplyIngredients()"  data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" v-on:click="applyIngredients()" data-bs-dismiss="modal">적용</button>
+                    <button type="button" class="btn btn-secondary" v-on:click="notApplyIngredients(index)"  data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" v-on:click="applyIngredients(index)" data-bs-dismiss="modal">적용</button>
                 </div>
             </div>
         </div>
@@ -182,47 +68,6 @@ Refrigerator List
 {% endblock content %}
 {% block vuejs %}
 <script src="https://unpkg.com/vue@3"></script>
-<script>
-const refListApp = {
-    delimiters: ['[[',']]'],
-    data() {
-        return {
-            irgnts:[
-                {% for i in ingredients %}
-                {name: "{{i.name}}"},
-                {% endfor %}
-            ],
-            sauceList:[ ],
-        }
-    },
-    created(){
-        console.log('Vue Created')
-    },
-    methods:{
-        applyIngredients() {
-            this.sauceList = []
-            this.$refs.ingbtn.forEach((ing, index) => {
-                if (ing.classList.contains('active')){
-                    this.sauceList.push({name: ing.innerText, idx: index})
-                }
-            })
-        },
-        removeBtn(idx, ingredient){
-            this.sauceList.splice(idx,1)
-            this.$refs.ingbtn[ingredient.idx].classList.remove('active')
-        },
-        notApplyIngredients(){
-            for (let ing of this.$refs.ingbtn){
-                ing.classList.remove('active')
-            }
-            for (let ing of this.sauceList){
-                this.$refs.ingbtn[ing.idx].classList.add('active')
-            }
-        }
-    },
-}
-Vue.createApp(refListApp).mount('#ref_list')
-</script>
-
+{% include 'omc/refrigerator_list_vue.html' %}
 
 {% endblock vuejs %}

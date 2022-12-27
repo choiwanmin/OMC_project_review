@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, DetailView
-from .models import Recipe, Ingredient, RecipeOrder, RecipeHashTag
+from .models import Recipe, Ingredient, RecipeOrder, RecipeHashTag, UserIngredient
 
 # Create your views here.
 def index(requests):
@@ -50,6 +50,7 @@ class RefrigeratorList(TemplateView):
     template_name = 'omc/refrigerator_list_view.html'
     
     def get_context_data(self, **kwargs):
-        context=super(RefrigeratorList, self).get_context_data()
-        context['ingredients']=Ingredient.objects.all().order_by('pk')[:5]
+        context = super(RefrigeratorList, self).get_context_data()
+        context['ingredients'] = UserIngredient.objects.all()
+        context['ingredients_types'] = UserIngredient.objects.all().values_list('type').distinct().values('type')
         return context
