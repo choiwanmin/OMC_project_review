@@ -8,7 +8,6 @@
                     {name: "{{i.name}}", type:"{{i.type}}"},
                     {% endfor %}
                 ],
-                sauceList:[ ],
                 userIngredientTypes:[
                     {% for i in ingredients_types %}
                     {type:"{{i.type}}"},
@@ -30,12 +29,6 @@
                 Array.from(this.$refs.modal[idx].getElementsByClassName('btn')).forEach((ing, index) => {
                     if (ing.classList.contains('active')){
                         this.addedIngredients[idx].push({name: ing.innerText, idx: index})
-                    }
-                })
-                this.sauceList = []
-                this.$refs.ingbtn.forEach((ing, index) => {
-                    if (ing.classList.contains('active')){
-                        this.sauceList.push({name: ing.innerText, idx: index})
                     }
                 })
             },
