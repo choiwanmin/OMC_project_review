@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
 
     # apps
     'omc',
@@ -149,3 +150,6 @@ LOGIN_REDIRECT_URL = '/'
 
 # RDS
 pymysql.install_as_MySQLdb()
+
+# auth.user 변경 및 추가
+AUTH_USER_MODEL = 'omc.User'
