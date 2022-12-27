@@ -45,5 +45,12 @@ class RecipeDetail(DetailView):
         print(context)
         return context
 
+        
 class RefrigeratorList(TemplateView):
-    template_name = 'omc/refrigerator_list.html'
+    template_name = 'omc/refrigerator_list_view.html'
+    
+    def get_context_data(self, **kwargs):
+        context=super(RefrigeratorList, self).get_context_data()
+        context['ingredients']=Ingredient.objects.all().order_by('pk')[:5]
+        print(context)
+        return context
