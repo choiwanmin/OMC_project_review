@@ -40,10 +40,6 @@ class RecipeList(ListView):
             '재료별' : CategoryI.objects.all(),
             '방법별' : CategoryM.objects.all(),
         }
-        # context['category_t'] = CategoryT.objects.all()
-        # context['category_s'] = CategoryS.objects.all()
-        # context['category_i'] = CategoryI.objects.all()
-        # context['category_m'] = CategoryM.objects.all()
 
         return context
 
