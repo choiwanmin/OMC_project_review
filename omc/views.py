@@ -34,11 +34,16 @@ class RecipeList(ListView):
             pages = [x for x in range(page_no - 5, page_no + 6)]
 
         context.update({'pages': pages})
-
-        context['category_t'] = CategoryT.objects.all()
-        context['category_s'] = CategoryS.objects.all()
-        context['category_i'] = CategoryI.objects.all()
-        context['category_m'] = CategoryM.objects.all()
+        context['category'] = {
+            '종류별' : CategoryT.objects.all(),
+            '상황별' : CategoryS.objects.all(),
+            '재료별' : CategoryI.objects.all(),
+            '방법별' : CategoryM.objects.all(),
+        }
+        # context['category_t'] = CategoryT.objects.all()
+        # context['category_s'] = CategoryS.objects.all()
+        # context['category_i'] = CategoryI.objects.all()
+        # context['category_m'] = CategoryM.objects.all()
 
         return context
 
