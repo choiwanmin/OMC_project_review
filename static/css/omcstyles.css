@@ -12257,3 +12257,50 @@ border-radius: 0.25rem;
   opacity: 1;
   right: 0;
 }
+
+.search-button {
+border-radius: 5px;
+background-color: var(--bs-primary);
+border: none;
+color: #FFFFFF;
+text-align: center;
+text-decoration: none;
+width: 110px;
+transition: all 0.5s;
+cursor: pointer;
+margin: 5px;
+
+display: inline-block;
+font-weight: 400;
+line-height: 1.5;
+vertical-align: middle;
+padding: 0.375rem 0.75rem;
+font-size: 1rem;
+border-radius: 0.25rem;
+
+}
+
+.search-button span {
+cursor: pointer;
+display: inline-block;
+position: relative;
+transition: 0.5s;
+}
+
+.search-button span::after {
+content: '\00bb';
+position: absolute;
+opacity: 0;
+top: 0;
+right: -20px;
+transition: 0.5s;
+}
+
+.search-button:hover span {
+padding-right: 15px;
+}
+
+.search-button:hover span::after {
+opacity: 1;
+right: 0;
+}
