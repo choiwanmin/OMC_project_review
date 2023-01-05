@@ -1,26 +1,53 @@
 {% extends 'partials/base.html' %}
+{% load static %}
+{% block style %}
+<style>
+section.bg-sec{
+    position:relative;
+    width: 100%;
+    height: 100%;
+}
+
+section.bg-sec::before{
+    content:"";
+    width: 100%;
+    height: 100%;
+    background-image: url({% static 'assets/spaghetti.jpg' %});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    filter:brightness(50%);
+}
+</style>
+{% endblock style %}
 {% block content %}
 
 <div style="min-height: calc(100vh - 160px)">
 <!-- Header-->
-    <header class="py-5">
-        <div class="container px-lg-5">
-            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
-                <div class="m-4 m-lg-5">
-                    <h1 class="display-5 fw-bold">OMC</h1>
-                    <p class="fs-4">오늘의 메뉴 추천! 다양한 레시피를 활용해보세요</p>
-                    <a class="btn btn-primary btn-lg" href="#!">Call to action</a>
+    <header class="omc-bg-primary">
+        <div class="container px-lg-5 ">
+            <div class="p-2 p-lg-3  rounded-3 text-center">
+                <div class="m-4 m-lg-5 row">
+                    <div class="col-6"></br>
+                        <h1 class="display-5 fw-bold omc-text-primary">오늘의 메뉴 추천!</h1>
+                        <p class="fs-4 text-light"></br>다양한 레시피를 활용해보세요</p></br></br>
+                        <a class="btn btn-primary btn-lg" href="#!">레시피 보러가기 →</a>
+                    </div>
+                    <img src="{% static 'assets/vegetables.png' %}" class="col-6" style="width:50%;">
                 </div>
             </div>
         </div>
     </header>
     <!-- Page Content-->
-    <section class="pt-4">
+    <section class="py-5 bg-sec">
         <div class="container px-lg-5">
             <!-- Page Features-->
             <div class="row gx-lg-5">
-                <div class="col-lg-6 col-xxl-6 mb-5">
-                    <div class="card bg-light border-0 h-100">
+                <div class="col-lg-6 col-xxl-6 mt-4 mb-3">
+                    <div class="card border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-basket2"></i></div>
                             <h2 class="fs-4 fw-bold">나만의 냉장고</h2>
@@ -29,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-xxl-6 mb-5">
+                <div class="col-lg-6 col-xxl-6 mt-4 mb-3">
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="fa-solid fa-magnifying-glass"></i></div>

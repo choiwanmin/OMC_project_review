@@ -33,15 +33,15 @@
 --bs-gray-700: #495057;
 --bs-gray-800: #343a40;
 --bs-gray-900: #212529;
---bs-primary: #0d6efd;
---bs-secondary: #6c757d;
+--bs-primary: #38D0D7;
+--bs-secondary: #6c757d ;
 --bs-success: #198754;
 --bs-info: #0dcaf0;
 --bs-warning: #ffc107;
 --bs-danger: #dc3545;
 --bs-light: #f8f9fa;
 --bs-dark: #212529;
---bs-primary-rgb: 255, 131, 0;
+--bs-primary-rgb: 56, 208, 215;
 --bs-secondary-rgb: 108, 117, 125;
 --bs-success-rgb: 25, 135, 84;
 --bs-info-rgb: 13, 202, 240;
@@ -62,6 +62,7 @@
 --bs-body-line-height: 1.5;
 --bs-body-color: #212529;
 --bs-body-bg: #fff;
+--omc-body-bg: 41, 139, 148;
 }
 
 *,
@@ -2218,7 +2219,7 @@ color: #212529;
 background-color: #fff;
 border-color: #86b7fe;
 outline: 0;
-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+box-shadow: 0 0 0 0.25rem rgba(41, 139, 148, 0.25);
 }
 .form-control::-webkit-date-and-time-value {
 height: 1.5em;
@@ -3031,41 +3032,41 @@ opacity: 0.65;
 /* color 변경 */
 .btn-primary {
 color: #fff;
-background-color: #ff8300;
-border-color: #ff8300;
+background-color: #38D0D7;
+border-color: #38D0D7;
 }
 /* color 변경 */
 .btn-primary:hover {
 color: #fff;
-background-color: #e77331;
-border-color: #e77331;
+background-color: #35a0a5;
+border-color: #35a0a5;
 }
 /* color 변경 */
 .btn-check:focus + .btn-primary, .btn-primary:focus {
 color: #fff;
-background-color: #e77331;
-border-color: #e77331;
-box-shadow: 0 0 0 0.25rem rgba(231, 115, 49, 0.5);
+background-color: #35a0a5;
+border-color: #35a0a5;
+box-shadow: 0 0 0 0.25rem rgba(53, 160, 165, 0.5);
 }
 /* color 변경 */
 .btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
 color: #fff;
-background-color: #e77331;
-border-color: #e77331;
+background-color: #35a0a5;
+border-color: #35a0a5;
 }
 .btn-check:checked + .btn-primary:focus, .btn-check:active + .btn-primary:focus, .btn-primary:active:focus, .btn-primary.active:focus, .show > .btn-primary.dropdown-toggle:focus {
-box-shadow: 0 0 0 0.25rem rgba(231, 115, 49, 0.5);
+box-shadow: 0 0 0 0.25rem rgba(53, 160, 165, 0.5);
 }
 .btn-primary:disabled, .btn-primary.disabled {
 color: #fff;
-background-color: #ff8300;
-border-color: #ff8300;
+background-color: #38D0D7;
+border-color: #38D0D7;
 }
 
 .btn-secondary {
 color: #fff;
-background-color: #6c757d;
-border-color: #6c757d;
+background-color: #6c757d ;
+border-color: #6c757d  ;
 }
 .btn-secondary:hover {
 color: #fff;
@@ -3273,27 +3274,27 @@ border-color: #212529;
 }
 
 .btn-outline-primary {
-color: #0d6efd;
-border-color: #0d6efd;
+color: #38D0D7;
+border-color: #38D0D7;
 }
 .btn-outline-primary:hover {
 color: #fff;
-background-color: #0d6efd;
-border-color: #0d6efd;
+background-color: #38D0D7;
+border-color: #38D0D7;
 }
 .btn-check:focus + .btn-outline-primary, .btn-outline-primary:focus {
-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+box-shadow: 0 0 0 0.25rem rgba(53, 160, 165, 0.5);
 }
 .btn-check:checked + .btn-outline-primary, .btn-check:active + .btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show {
 color: #fff;
-background-color: #0d6efd;
-border-color: #0d6efd;
+background-color: #38D0D7;
+border-color: #38D0D7;
 }
 .btn-check:checked + .btn-outline-primary:focus, .btn-check:active + .btn-outline-primary:focus, .btn-outline-primary:active:focus, .btn-outline-primary.active:focus, .btn-outline-primary.dropdown-toggle.show:focus {
-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+box-shadow: 0 0 0 0.25rem rgba(53, 160, 165, 0.5);
 }
 .btn-outline-primary:disabled, .btn-outline-primary.disabled {
-color: #0d6efd;
+color: #38D0D7;
 background-color: transparent;
 }
 
@@ -12197,4 +12198,62 @@ justify-content: center;
 height: 4rem;
 width: 4rem;
 font-size: 2rem;
+}
+
+/* class add */
+.omc-text-primary {
+color: #e6cf83;
+}
+
+.omc-bg-primary {
+--bs-bg-opacity: 1;
+background-color: rgba(var(--omc-body-bg), var(--bs-bg-opacity)) !important;
+}
+
+
+.login-button {
+border-radius: 5px;
+background-color: var(--bs-primary);
+border: none;
+color: #FFFFFF;
+text-align: center;
+text-decoration: none;
+width: 80px;
+transition: all 0.5s;
+cursor: pointer;
+margin: 5px;
+
+display: inline-block;
+font-weight: 400;
+line-height: 1.5;
+vertical-align: middle;
+padding: 0.375rem 0.75rem;
+font-size: 1rem;
+border-radius: 0.25rem;
+
+}
+
+.login-button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.login-button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.login-button:hover span {
+  padding-right: 15px;
+}
+
+.login-button:hover span:after {
+  opacity: 1;
+  right: 0;
 }
