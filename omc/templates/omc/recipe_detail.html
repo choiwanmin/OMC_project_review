@@ -75,7 +75,11 @@
                     <!-- for 문 recipe_order -->
                     {% for n in recipe_order %}
                     <div class="row">
-                        <h1><i class="bi bi-{{ n.number }}-square-fill"></i></h1>
+                        {% if n.number < 10 %}
+                            <h3><button style="background-color: black; border-radius: 5px; color: white; cursor: default; padding-left: 2%; padding-right: 2%;"><b>{{ n.number }}</b></button></h3>
+                        {% else %}
+                            <h3><button style="background-color: black; border-radius: 5px; color: white; cursor: default;"><b>{{ n.number }}</b></button></h3>
+                        {% endif %}
                         <p class="col-lg-6" style="word-break: keep-all;">{{ n.description }}</p>
                         <div class="col-lg-6">
                             <img class="img-fluid rounded mb-4 mb-lg-0 img-thumbnail" src="{{ n.thumbnail }}" alt="..." />
