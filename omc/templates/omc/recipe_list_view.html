@@ -129,10 +129,17 @@
             <ul class="pagination justify-content-center my-4">
                 <!-- 이전 페이지 -->
                 {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.previous_page_number }}"
-                        tabindex="-1">Prev</a>
-                </li>
+                    {% if search_word %}
+                        <li class="page-item">
+                            <a class="btn btn-outline-success mt-auto fw-bolder" href="/recipe/search/{{ search_word }}/?page={{ page_obj.previous_page_number }}"
+                            tabindex="-1">Prev</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.previous_page_number }}"
+                                tabindex="-1">Prev</a>
+                        </li>
+                    {% endif %}
                 {% else %}
                 <li class="page-item disabled">
                     <a class="btn btn-outline-success mt-auto fw-bolder" href="#" tabindex="-1">Prev</a>
@@ -152,9 +159,15 @@
                 {% endfor %}
                 <!-- 다음 페이지 -->
                 {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.next_page_number }}">Next</a>
-                </li>
+                    {% if search_word %}
+                        <li class="page-item">
+                            <a class="btn btn-outline-success mt-auto fw-bolder" href="/recipe/search/{{ search_word }}/?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
                 {% else %}
                 <li class="page-item disabled">
                         <a class="btn btn-outline-success mt-auto fw-bolder" href="#">Next</a>
