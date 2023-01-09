@@ -21,51 +21,19 @@
                         <col width="auto">
                     </colgroup>
                     <tbody>
+                        {% for title, category in category.items %}
                         <tr>
-                            <th style="color: #ff8300;">종류별</th>
+                            <th style="color: #ff8300;">{{ title }}</th>
                             <td>
                                 <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
                                     <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</a>
-                                    {% for category in category_t %}
+                                    {% for category in category %}
                                     <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">{{ category }}</a>
                                     {% endfor %}
                                 </nav>
                             </td>
                         </tr>
-                        <tr>
-                            <th style="color: #ff8300;">상황별</th>
-                            <td>
-                                <nav class="nav nav-pills flex-column flex-sm-row">
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</a>
-                                    {% for category in category_s %}
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">{{ category }}</a>
-                                    {% endfor %}
-                                </nav>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="color: #ff8300;">재료별</th>
-                            <td>
-                                <nav class="nav nav-pills flex-column flex-sm-row">
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</a>
-                                    {% for category in category_i %}
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">{{ category }}</a>
-                                    {% endfor %}
-                                </nav>
-            
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="color: #ff8300;">방법별</th>
-                            <td>
-                                <nav class="nav nav-pills flex-column flex-sm-row">
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</a>
-                                    {% for category in category_m %}
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">{{ category }}</a>
-                                    {% endfor %}
-                                </nav>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
