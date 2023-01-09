@@ -78,7 +78,7 @@
         <small class="text-muted px-4 px-lg-5 mt-2">{{ search_info }}</small>
     {% endif %}
     <div class="container px-4 px-lg-5 mt-1">
-        {% if recipe_list.exists %}
+        {% if recipe_list %}
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for recipe in recipe_list %}
             <div class="col mb-5">

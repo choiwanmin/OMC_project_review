@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
 # from .forms import CategoryForm
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(requests):
@@ -75,31 +76,15 @@ class RecipeSearch(RecipeList):
     def get_queryset(self):
         q = self.kwargs['q']
 
-        recipe_id_list = set()
-        recipe_lst = Recipe.objects.filter(name__contains=q).distinct()
-        for recipe in recipe_lst:
-            recipe_id_list.add(recipe.pk)
-
-        recipe_lst = Ingredient.objects.filter(name__contains=q).distinct()
-        for recipe in recipe_lst:
-            recipe_id_list.add(recipe.recipeId.pk)
-        
-        recipe_lst = RecipeOrder.objects.filter(description__contains=q).distinct()
-        for recipe in recipe_lst:
-            recipe_id_list.add(recipe.recipeId.pk)
-        
-        recipe_lst = RecipeHashTag.objects.filter(description__contains=q).distinct()
-        for recipe in recipe_lst:
-            recipe_id_list.add(recipe.recipeId.pk)
-
-        recipe_id_list = list(recipe_id_list)
-        recipe_list = Recipe.objects.filter(pk__in=recipe_id_list)
-
-        return recipe_list
+        recipe_queryset = Recipe.objects.filter(name__contains=q)
+        irg_queryset = Recipe.objects.filter(ingredient__name__contains=q)
+        recipe_order_queryset = Recipe.objects.filter(recipeorder__description__contains=q)
+        hashtag_queryset = Recipe.objects.filter(recipehashtag__description__contains=q)
+        recipe_queryset = recipe_queryset.union(irg_queryset,recipe_order_queryset,hashtag_queryset).order_by('-viewCount')
+        return recipe_queryset
 
     def get_context_data(self, **kwargs):
         context = super(RecipeSearch, self).get_context_data(**kwargs)
-
         if not context.get('is_paginated', False):
             pages = [1]
         else:
