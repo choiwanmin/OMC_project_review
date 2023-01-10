@@ -25,12 +25,15 @@
                         <tr>
                             <th style="color: #ff8300;">{{ title }}</th>
                             <td>
-                                <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</a>
-                                    {% for category in category %}
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">{{ category }}</a>
-                                    {% endfor %}
-                                </nav>
+                                <form action="/recipe/category/00/" method="post">
+                                    {% csrf_token %}
+                                    <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
+                                        <button type="submit" name="cat_all_{{forloop.counter}}" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</button>
+                                        {% for cat in category %}
+                                        <button type="submit" name="cat" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;" value="{{ cat }}">{{ cat }}</button>
+                                        {% endfor %}
+                                    </nav>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
 # from .forms import CategoryForm
@@ -9,16 +9,22 @@ def index(requests):
     # recipe = recipe.objects.all().order_by("-")
     return render(requests,"index.html")
 
+# def category(request):
+#     if request.method == 'POST':
+#         cat = request.POST.get('cat', '')
+#         request.session['cat_name'] = cat
+#         request.session['cat_type'] = "cat"
+
+#         return redirect('/recipe/')
 
 class RecipeList(ListView):
     model = Recipe
     paginate_by = 40
     template_name = 'omc/recipe_list_view.html'
     ordering='pk'
-
+        
     def get_context_data(self, **kwargs):
         context = super(RecipeList, self).get_context_data(**kwargs)
-
         if not context.get('is_paginated', False):
             return context
 
@@ -111,3 +117,25 @@ class RecipeSearch(RecipeList):
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         context['search_word'] = q
         return context
+
+class RecipeCategory(RecipeList):
+    
+    def post(self,request, **kwargs):
+        print('post 함수 실행')
+        cat = request.POST.get('cat')
+        print(cat)
+
+        catt_pk = CategoryT.objects.filter(name=cat).values('pk')[0]['pk']
+        print(catt_pk)
+        
+        self.object_list = Recipe.objects.filter(categoryTId=catt_pk)
+        context = self.get_context_data(**kwargs)
+        context['recipe_list'] = Recipe.objects.filter(categoryTId=catt_pk).order_by('pk')
+        # print(request.get_host())
+        print(request.build_absolute_uri())
+        request.path_info = request.build_absolute_uri()[:-3] + str(catt_pk) + '/'
+        print(request.path_info)
+        # print(context.get('paginator').num_pages)
+        return render(request, self.template_name, context)
+        #redirect(f'/recipe/category/{catt_pk}')
+        # render(request, self.template_name, context)
