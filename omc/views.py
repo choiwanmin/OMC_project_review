@@ -20,6 +20,13 @@ class RecipeList(ListView):
         
     def get_context_data(self, **kwargs):
         context = super(RecipeList, self).get_context_data(**kwargs)
+        context['category'] = {
+            '종류별' : CategoryT.objects.all(),
+            '상황별' : CategoryS.objects.all(),
+            '재료별' : CategoryI.objects.all(),
+            '방법별' : CategoryM.objects.all(),
+        }
+        context['pages'] = [1]
         if not context.get('is_paginated', False):
             return context
 
@@ -36,13 +43,6 @@ class RecipeList(ListView):
             pages = [x for x in range(page_no - 5, page_no + 6)]
 
         context.update({'pages': pages})
-        context['category'] = {
-            '종류별' : CategoryT.objects.all(),
-            '상황별' : CategoryS.objects.all(),
-            '재료별' : CategoryI.objects.all(),
-            '방법별' : CategoryM.objects.all(),
-        }
-
         return context
 
 class RecipeDetail(DetailView):
@@ -90,7 +90,6 @@ def signup(request):
     
 class RecipeSearch(RecipeList):
     paginate_by = 40
-    # paginate_by = None
 
     def get_queryset(self):
         q = self.kwargs['q']
@@ -103,7 +102,9 @@ class RecipeSearch(RecipeList):
         return recipe_queryset
 
     def get_context_data(self, **kwargs):
-        context = super(RecipeSearch, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+
+
         if not context.get('is_paginated', False):
             pages = [1]
         else:
@@ -131,23 +132,55 @@ class RecipeSearch(RecipeList):
         return context
 
 class RecipeCategory(RecipeList):
-    
-    def post(self,request, **kwargs):
-        print('post 함수 실행')
-        cat = request.POST.get('cat')
-        print(cat)
+    paginate_by = 40
 
-        catt_pk = CategoryT.objects.filter(name=cat).values('pk')[0]['pk']
-        print(catt_pk)
+    def post(self,request, **kwargs):
+        current_url = request.build_absolute_uri().split('/')[-2]
+        categorys = {
+            'categoryTId': request.POST.get('cat1'),
+            'categorySId': request.POST.get('cat2'),
+            'categoryIId': request.POST.get('cat3'),
+            'categoryMId': request.POST.get('cat4'),
+        }
+
+        query_dict = {}
+        for idx, val in enumerate(categorys.items()):
+            key, value = val
+            if value is None:
+                category_url = current_url[idx*2:(idx*2)+2]
+                if category_url != '00':
+                    query_dict[key] = int(category_url)
+            else:
+                query_dict[key] = int(categorys[key])
         
-        self.object_list = Recipe.objects.filter(categoryTId=catt_pk)
-        context = self.get_context_data(**kwargs)
-        context['recipe_list'] = Recipe.objects.filter(categoryTId=catt_pk).order_by('pk')
-        # print(request.get_host())
-        print(request.build_absolute_uri())
-        request.path_info = request.build_absolute_uri()[:-3] + str(catt_pk) + '/'
-        print(request.path_info)
-        # print(context.get('paginator').num_pages)
+        self.object_list = Recipe.objects.filter(**query_dict)
+        context = super().get_context_data(**kwargs)
         return render(request, self.template_name, context)
-        #redirect(f'/recipe/category/{catt_pk}')
-        # render(request, self.template_name, context)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = {
+            '종류별' : CategoryT.objects.all(),
+            '상황별' : CategoryS.objects.all(),
+            '재료별' : CategoryI.objects.all(),
+            '방법별' : CategoryM.objects.all(),
+        }
+        context['pages']= [1]
+        if not context.get('is_paginated', False):
+            return context
+
+        paginator = context.get('paginator')
+        num_pages = paginator.num_pages
+        current_page = context.get('page_obj')
+        page_no = current_page.number
+
+        if num_pages <= 11 or page_no <= 6:  # case 1 and 2
+            pages = [x for x in range(1, min(num_pages + 1, 12))]
+        elif page_no > num_pages - 6:  # case 4
+            pages = [x for x in range(num_pages - 10, num_pages + 1)]
+        else:  # case 3
+            pages = [x for x in range(page_no - 5, page_no + 6)]
+
+        context.update({'pages': pages})
+        return context
