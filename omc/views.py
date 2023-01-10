@@ -12,14 +12,6 @@ def index(requests):
     # recipe = recipe.objects.all().order_by("-")
     return render(requests,"index.html")
 
-# def category(request):
-#     if request.method == 'POST':
-#         cat = request.POST.get('cat', '')
-#         request.session['cat_name'] = cat
-#         request.session['cat_type'] = "cat"
-
-#         return redirect('/recipe/')
-
 class RecipeList(ListView):
     model = Recipe
     paginate_by = 40
