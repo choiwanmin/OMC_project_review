@@ -102,30 +102,7 @@ class RecipeSearch(RecipeList):
         return recipe_queryset
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-
-        if not context.get('is_paginated', False):
-            pages = [1]
-        else:
-            paginator = context.get('paginator')
-            num_pages = paginator.num_pages
-            current_page = context.get('page_obj')
-            page_no = current_page.number
-
-            if num_pages <= 11 or page_no <= 6:  # case 1 and 2
-                pages = [x for x in range(1, min(num_pages + 1, 12))]
-            elif page_no > num_pages - 6:  # case 4
-                pages = [x for x in range(num_pages - 10, num_pages + 1)]
-            else:  # case 3
-                pages = [x for x in range(page_no - 5, page_no + 6)]
-            
-        context.update({'pages': pages})
-        context['category_t'] = CategoryT.objects.all()
-        context['category_s'] = CategoryS.objects.all()
-        context['category_i'] = CategoryI.objects.all()
-        context['category_m'] = CategoryM.objects.all()
-        
+        context = super().get_context_data(**kwargs)     
         q = self.kwargs['q']
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         context['search_word'] = q
@@ -134,7 +111,7 @@ class RecipeSearch(RecipeList):
 class RecipeCategory(RecipeList):
     paginate_by = 40
 
-    def post(self,request, **kwargs):
+    def post(self, request, **kwargs):
         current_url = request.build_absolute_uri().split('/')[-2]
         categorys = {
             'categoryTId': request.POST.get('cat1'),
@@ -154,33 +131,15 @@ class RecipeCategory(RecipeList):
                 query_dict[key] = int(categorys[key])
         
         self.object_list = Recipe.objects.filter(**query_dict)
-        context = super().get_context_data(**kwargs)
+        context = self.get_context_data(query_dict, **kwargs)
         return render(request, self.template_name, context)
 
-
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, query_dict, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category'] = {
-            '종류별' : CategoryT.objects.all(),
-            '상황별' : CategoryS.objects.all(),
-            '재료별' : CategoryI.objects.all(),
-            '방법별' : CategoryM.objects.all(),
-        }
-        context['pages']= [1]
-        if not context.get('is_paginated', False):
-            return context
-
-        paginator = context.get('paginator')
-        num_pages = paginator.num_pages
-        current_page = context.get('page_obj')
-        page_no = current_page.number
-
-        if num_pages <= 11 or page_no <= 6:  # case 1 and 2
-            pages = [x for x in range(1, min(num_pages + 1, 12))]
-        elif page_no > num_pages - 6:  # case 4
-            pages = [x for x in range(num_pages - 10, num_pages + 1)]
-        else:  # case 3
-            pages = [x for x in range(page_no - 5, page_no + 6)]
-
-        context.update({'pages': pages})
+        category_mapping = {'categoryTId':'종류별', 'categorySId':'상황별', 'categoryIId':'재료별', 'categoryMId':'방법별'}
+        selected_categorys = {}
+        for key, value in query_dict.items():
+            if value >= 1:
+                selected_categorys[category_mapping[key]] = context['category'][category_mapping[key]][value-1].name
+        context['selected_category'] = selected_categorys
         return context
