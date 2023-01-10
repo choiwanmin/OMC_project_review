@@ -30,6 +30,11 @@
     <section class="category">
         <div class="container px-4 px-lg-5 mt-1">
             <div class="card">
+                <small class="text-muted px-4 px-lg-5 mt-2">
+                    {% for cat, val in selected_category.items %}
+                    {% if forloop.counter > 1 %} > {% endif %}{{cat}}: {{val}}
+                    {% endfor%}
+                </small>
                 <table class="category-table table-sm table-responsive px-4 px-lg-5 mt-2">
                     <colgroup>
                         <col width="60px">
