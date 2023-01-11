@@ -93,6 +93,21 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return f'/recipe/{self.pk}'
 
+class Comment(models.Model):
+    content = models.TextField()
+    createAt = models.DateTimeField(auto_now_add=True, verbose_name='댓글생성시간')
+    modifiedAt = models.DateTimeField(auto_now=True, verbose_name='댓글수정시간')
+    recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Review(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    createAt = models.DateTimeField(auto_now_add=True, verbose_name='후기생성시간')
+    modifiedAt = models.DateTimeField(auto_now=True, verbose_name='후기수정시간')
+    recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    star = models.FloatField()
+
 
 class Ingredient(models.Model):
     type = models.CharField(max_length=30)
