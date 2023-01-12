@@ -111,3 +111,11 @@ class RecipeSearch(RecipeList):
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         context['search_word'] = q
         return context
+
+class RecipeRecommend(ListView):
+    model = Recipe
+    template_name = 'omc/recipe_recommend.html'
+    def get_context_data(self, **kwargs):
+        context = super(RecipeRecommend, self).get_context_data(**kwargs)
+        context['recommend'] = Recipe.objects.all()[:5]
+        return context
