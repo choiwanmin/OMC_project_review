@@ -41,8 +41,9 @@
             <div class="col-md-11 col-lg-9 col-xl-8">
                 <!-- Post preview-->
                 <div class="post-preview p-5 bg-light">
-                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Ingredients</cite> </h2>
-                    <div class="row">
+                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20; display: inline-block;"><cite>Ingredients</cite></h2>
+                    {% include 'partials/measure.html'%}
+                    <div class="row" style="margin-top: 1%;">
                         <!-- for 문 ingredients_types -->
                         {% for types in ingredients_types %}
                         <div class="col">
