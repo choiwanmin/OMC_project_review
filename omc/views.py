@@ -1,5 +1,8 @@
+
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
+# from omc.signup_form import UserForm
+from django.contrib.auth import authenticate, login
 from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
@@ -76,6 +79,23 @@ class RefrigeratorList(TemplateView):
         context['ingredients_types'] = UserIngredient.objects.all().values_list('type').distinct().values('type')
         return context
 
+
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+    # 사용자 인증
+            login(request, user) # 로그인
+            return redirect('/')
+    else:
+        form = UserForm()
+    return render(request, 'omc/signup_view.html', {'form': form})
+
+    
 class RecipeSearch(RecipeList):
     paginate_by = 40
     # paginate_by = None
