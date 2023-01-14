@@ -148,6 +148,20 @@
                     </div>
                 </div>
             </div>
+            {% if recipe.comment_set.exists %}
+                {% for comment in recipe.comment_set.iterator %}
+                <div id="comment-{{ comment.pk }}" class="col-md-11 col-lg-9 col-xl-8">
+                    <div class="media-body">
+                        <h5 class="mt-0"><b style="color: #939B62;">{{ comment.userId.nickname }}</b> &nbsp;&nbsp;
+                            <samll class="text-muted">{{ comment.createdAt }}</samll>
+                        </h5>
+                        <p>{{ comment.content | linebreaks}}</p>
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-4" />
+                </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 </section>
