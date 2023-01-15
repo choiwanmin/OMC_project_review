@@ -1,13 +1,14 @@
 
 from django.shortcuts import render, redirect, get_list_or_404
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 # from omc.signup_form import UserForm
 from django.contrib.auth import authenticate, login
-from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
+from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
 from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 def index(requests):
@@ -172,5 +173,15 @@ class NewComment(TemplateView):
                 comment.save()
                 
                 return redirect(recipe.get_absolute_url())
+        else:
+            raise PermissionDenied
+
+class UpdateComment(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().userId:
+            return super(UpdateComment, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied

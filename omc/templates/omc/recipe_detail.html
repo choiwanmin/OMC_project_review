@@ -168,7 +168,16 @@
                                 <span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span>
                             </div>
                         </div>
-                        <div class="text-muted" style="font-size: 0.8rem; float: right;">{{ comment.createdAt }}</div>
+                        <div style="font-size: 0.8rem; float: right;">
+                            {% if comment.createdAt != comment.modifiedAt %}
+                            <div class="text-muted" style="display: inline-block;">update: {{ comment.modifiedAt }}</div>
+                            {% else %}
+                            <div class="text-muted" style="display: inline-block;">{{ comment.createdAt }}</div>
+                            {% endif %}
+                            <a id="comment-{{ comment.pk }}-update" href="/recipe/update_comment/{{ comment.pk }}" style="text-decoration: none; color: gray;">&nbsp;수정</a>
+                            <span>|</span>
+                            <a href="#" style="text-decoration: none; color: gray;"> 삭제</a>
+                        </div>
                         {% if comment.thumbnail %}
                         <div class="row">
                             <a class="col-lg-2" href="{{ comment.thumbnail }}"><img src="{{ comment.thumbnail }}" style="width: 100px; height: 100px;"></a>

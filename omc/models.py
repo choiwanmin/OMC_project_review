@@ -196,6 +196,9 @@ class Comment(models.Model):
     star = models.IntegerField()
     thumbnail = models.URLField(null=True, blank=True)
 
+    def get_absolute_url(self):
+        return f'{self.recipeId.get_absolute_url()}#comment-{self.pk}'
+
 class Ingredient(models.Model):
     type = models.CharField(max_length=30)
     name = models.CharField(max_length=150)

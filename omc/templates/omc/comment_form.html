@@ -1,0 +1,19 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block title %}
+Edit Comment
+{% endblock title %}
+
+{% block content %}
+<section class="container">
+    <h1>Edit Comment</h1>
+    <hr>
+    <form method="post" id="comment-form">
+        {% csrf_token %}
+        {{ form }}
+        <br>
+        <button type="submit" class="btn btn-primary float-end">Submit</button>
+    </form>
+</section>
+{% endblock content %}
