@@ -10,33 +10,53 @@
 {% endblock title %}
 
 {% block content %}
+<script>
+    function submitForm(frm, btn, idx){
+        var changedValue = idx        
+        if (changedValue < 10){
+            changedValue = '0' + changedValue
+        }
+        var currentUrl = window.location.href
+        currentUrl = currentUrl.includes('category')? currentUrl.slice(-9,-1) : '00000000'
+        var index = btn.name.slice(-1)
+        index = (Number(index) - 1) * 2
+        currentUrl = currentUrl.substring(0, index) + changedValue + currentUrl.substring(index + 2);
+        frm.action = '/recipe/category/'+ currentUrl + '/'
+        return true
+    }
+</script>
 {% if search_word is false  %}
     <!-- 카테고리 상단바 -->
     <section class="category">
         <div class="container px-4 px-lg-5 mt-1">
             <div class="card">
+                <small class="text-muted px-4 px-lg-5 mt-2">
+                    {% for cat, val in selected_category.items %}
+                    {% if forloop.counter > 1 %} > {% endif %}{{cat}}: {{val}}
+                    {% endfor%}
+                </small>
                 <table class="category-table table-sm table-responsive px-4 px-lg-5 mt-2">
                     <colgroup>
                         <col width="60px">
                         <col width="auto">
                     </colgroup>
                     <tbody>
+                        <form action="/recipe/category/00000000/" method="post">
                         {% for title, category in category.items %}
                         <tr>
-                            <th style="color: #ff8300;">{{ title }}</th>
+                            <th style="color: #FFCB34;">{{ title }}</th>
                             <td>
-                                <form action="/recipe/category/00/" method="post">
-                                    {% csrf_token %}
-                                    <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
-                                        <button type="submit" name="cat_all_{{forloop.counter}}" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</button>
-                                        {% for cat in category %}
-                                        <button type="submit" name="cat" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;" value="{{ cat }}">{{ cat }}</button>
-                                        {% endfor %}
-                                    </nav>
-                                </form>
+                                {% csrf_token %}
+                                <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
+                                    <button type="submit" name="cat_all_{{forloop.counter}}" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;" value="00" onclick="submitForm(this.form, this, '0')">전체</button>
+                                    {% for cat in category %}
+                                    <button name="cat{{forloop.parentloop.counter}}" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;" value="{{ forloop.counter }}" onclick="submitForm(this.form, this,{{forloop.counter}})">{{ cat }}</button>
+                                    {% endfor %}
+                                </nav>
                             </td>
                         </tr>
                         {% endfor %}
+                        </form>
                     </tbody>
                 </table>
             </div>
@@ -83,7 +103,7 @@
                     </div>
                     <!-- Recipe actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}">상세 레시피</a></div>
+                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}" >상세 레시피</a></div>
                     </div>
                 </div>
             </div>
