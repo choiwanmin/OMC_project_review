@@ -143,3 +143,13 @@ class RecipeCategory(RecipeList):
                 selected_categorys[category_mapping[key]] = context['category'][category_mapping[key]][value-1].name
         context['selected_category'] = selected_categorys
         return context
+        #redirect(f'/recipe/category/{catt_pk}')
+        # render(request, self.template_name, context)
+
+class RecipeRecommend(ListView):
+    model = Recipe
+    template_name = 'omc/recipe_recommend.html'
+    def get_context_data(self, **kwargs):
+        context = super(RecipeRecommend, self).get_context_data(**kwargs)
+        context['recommend'] = Recipe.objects.all()[:5]
+        return context
