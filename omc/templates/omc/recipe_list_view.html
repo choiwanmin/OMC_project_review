@@ -44,7 +44,7 @@
                         <form action="/recipe/category/00000000/" method="post">
                         {% for title, category in category.items %}
                         <tr>
-                            <th style="color: #ff8300;">{{ title }}</th>
+                            <th style="color: #FFCB34;">{{ title }}</th>
                             <td>
                                 {% csrf_token %}
                                 <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
@@ -103,7 +103,7 @@
                     </div>
                     <!-- Recipe actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}">상세 레시피</a></div>
+                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}" >상세 레시피</a></div>
                     </div>
                 </div>
             </div>
