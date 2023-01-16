@@ -1,5 +1,5 @@
 
-from django.shortcuts import render, redirect, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 # from omc.signup_form import UserForm
 from django.contrib.auth import authenticate, login
@@ -162,7 +162,7 @@ class NewComment(TemplateView):
     template_name = 'new_comment'
     def post(self,request, pk):
         if request.user.is_authenticated:
-            recipe = get_list_or_404(Recipe, pk=pk)[0]
+            recipe = get_object_or_404(Recipe, pk=pk)
             print(recipe)
             
             comment_form = CommentForm(request.POST)
@@ -185,3 +185,12 @@ class UpdateComment(LoginRequiredMixin, UpdateView):
             return super(UpdateComment, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
+def delete_comment(request,pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    recipe = comment.recipeId
+    if request.user.is_authenticated and request.user == comment.userId:
+        comment.delete()
+        return redirect(recipe.get_absolute_url())
+    else:
+        raise PermissionDenied

@@ -12,4 +12,5 @@ urlpatterns = [
     path('recommend/', views.RecipeRecommend.as_view(), name='recipe_recommend'),
     path('<int:pk>/new_comment/', views.NewComment.as_view(), name='new_comment'),
     path('update_comment/<int:pk>/', views.UpdateComment.as_view(), name='update_comment'),
+    path('delete_comment/<int:pk>/', views.delete_comment, name='delete_comment'),
 ]

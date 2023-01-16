@@ -176,7 +176,23 @@
                             {% endif %}
                             <a id="comment-{{ comment.pk }}-update" href="/recipe/update_comment/{{ comment.pk }}" style="text-decoration: none; color: gray;">&nbsp;수정</a>
                             <span>|</span>
-                            <a href="#" style="text-decoration: none; color: gray;"> 삭제</a>
+                            <a href="#" style="text-decoration: none; color: gray;" data-bs-toggle="modal" data-bs-target="#comment-{{ comment.pk }}-delete"> 삭제</a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="comment-{{ comment.pk }}-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">댓글을 삭제하시겠습니까?</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">{{ comment.content | linebreaks }}</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                                            <a role="button" class="btn btn-danger" href="/recipe/delete_comment/{{ comment.pk }}">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {% if comment.thumbnail %}
                         <div class="row">
