@@ -4,7 +4,7 @@ from omc.models import Recipe, Ingredient, RecipeOrder, RecipeHashTag
 
 
 def run():
-    for page in range(1,201):
+    for page in range(513,514):
         with open(os.path.abspath(f'./scripts/jsons/page/page{page}.json'),'r', encoding='utf-8') as f:
             json_data = json.load(f)
             for recipe in json_data['table']['recipe']:
@@ -13,6 +13,8 @@ def run():
             for ingredients in json_data['table']['ingredient']:
                 if ingredients and Ingredient.objects.filter(recipeId=Recipe.objects.get(mangaeId=ingredients[0]['recipeId'])).count() == 0:
                     for i in ingredients:
+                        if i['name'] =='':
+                            continue
                         i['recipeId'] = Recipe.objects.get(mangaeId=i['recipeId'])
                         Ingredient(**i).save()
             for recipe_orders in json_data['table']['recipe_order']:
