@@ -33,15 +33,15 @@
 --bs-gray-700: #495057;
 --bs-gray-800: #343a40;
 --bs-gray-900: #212529;
---bs-primary: #38D0D7;
---bs-secondary: #6c757d ;
---bs-success: #198754;
---bs-info: #0dcaf0;
---bs-warning: #ffc107;
+--bs-primary: #FF7B54;
+--bs-secondary: #FFB26B ;
+--bs-success: #FFD56F;
+--bs-info: #939B62;
+--bs-warning: #198754;
 --bs-danger: #dc3545;
 --bs-light: #f8f9fa;
 --bs-dark: #212529;
---bs-primary-rgb: 56, 208, 215;
+--bs-primary-rgb: 255, 123, 84;
 --bs-secondary-rgb: 108, 117, 125;
 --bs-success-rgb: 25, 135, 84;
 --bs-info-rgb: 13, 202, 240;
@@ -62,7 +62,7 @@
 --bs-body-line-height: 1.5;
 --bs-body-color: #212529;
 --bs-body-bg: #fff;
---omc-body-bg: 41, 139, 148;
+--omc-body-bg: 255, 178, 107;
 }
 
 *,
@@ -3032,35 +3032,35 @@ opacity: 0.65;
 /* color 변경 */
 .btn-primary {
 color: #fff;
-background-color: #38D0D7;
-border-color: #38D0D7;
+background-color: #FF7B54 ;
+border-color: #FF7B54 ;
 }
 /* color 변경 */
 .btn-primary:hover {
 color: #fff;
-background-color: #35a0a5;
-border-color: #35a0a5;
+background-color: #FFB26B;
+border-color: #FFB26B;
 }
 /* color 변경 */
 .btn-check:focus + .btn-primary, .btn-primary:focus {
 color: #fff;
-background-color: #35a0a5;
-border-color: #35a0a5;
+background-color: #FFB26B;
+border-color: #FFB26B;
 box-shadow: 0 0 0 0.25rem rgba(53, 160, 165, 0.5);
 }
 /* color 변경 */
 .btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
 color: #fff;
-background-color: #35a0a5;
-border-color: #35a0a5;
+background-color: #FFB26B;
+border-color: #FFB26B;
 }
 .btn-check:checked + .btn-primary:focus, .btn-check:active + .btn-primary:focus, .btn-primary:active:focus, .btn-primary.active:focus, .show > .btn-primary.dropdown-toggle:focus {
 box-shadow: 0 0 0 0.25rem rgba(53, 160, 165, 0.5);
 }
 .btn-primary:disabled, .btn-primary.disabled {
 color: #fff;
-background-color: #38D0D7;
-border-color: #38D0D7;
+background-color: #FFB26B;
+border-color: #FFB26B;
 }
 
 .btn-secondary {
@@ -4049,7 +4049,7 @@ padding-bottom: 0.5rem;
 .navbar > .container-xl,
 .navbar > .container-xxl {
 display: flex;
-flex-wrap: inherit;
+/* flex-wrap: inherit; */
 align-items: center;
 justify-content: space-between;
 }
@@ -12265,7 +12265,7 @@ border: none;
 color: #FFFFFF;
 text-align: center;
 text-decoration: none;
-width: 110px;
+width: auto;
 transition: all 0.5s;
 cursor: pointer;
 margin: 5px;
