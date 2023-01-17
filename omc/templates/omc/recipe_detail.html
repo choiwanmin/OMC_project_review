@@ -89,6 +89,7 @@
                     <hr class="my-4"/>
                     {% endfor %}
                 </div>
+                {% if recipehastags %}
                 <!-- Divider-->
                 <hr class="my-4" />
                 <!-- Post preview-->
@@ -100,11 +101,13 @@
                 </div>
                 <!-- Divider-->
                 <hr class="my-4" />
+                {% else %} <br>
+                {% endif %}
                 <!-- Pager-->
                 <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="javascript:history.back()" onclick="goBack()">← 뒤로가기</a></div>
                 <script>
                     function goBack() {
-                      window.history.back();
+                        window.history.back();
                     }
                 </script>
             </div>
