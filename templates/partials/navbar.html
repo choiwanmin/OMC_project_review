@@ -8,12 +8,12 @@
             <button class="search-button" type="button" onclick="searchPost()"><i class="bi bi-search"></i></button>
             <!-- <button class="navbar-brand search-button" type="button" onclick="searchPost()"><span>Search</span></button> -->
         </form>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="background-color: #FF7B54;"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="background-color: #FF7B54;"><span class="navbar-toggler-icon"></span></button> -->
+        <div class="navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
-                    <a class="btn dropdown-toggle text-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="btn dropdown-toggle text-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="float: right;">
                         {{ user.nickname }}
                     </a>
                     <ul class="dropdown-menu">
