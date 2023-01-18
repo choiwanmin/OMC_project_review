@@ -1,5 +1,16 @@
+<style>
+    .text-info-list {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-info-rgb), var(--bs-text-opacity)) !important;
+    }
+    .text-info-list:hover {
+    --bs-text-opacity: 1;
+    color: rgb(255,255,255) !important;
+    }
+</style>
+
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#measureModal" style="display: inline-block; float: right;">
+<button type="button" class="btn btn-outline-info text-info-list" data-bs-toggle="modal" data-bs-target="#measureModal" style="display: inline-block; float: right;">
     계량법 안내
 </button>
 
