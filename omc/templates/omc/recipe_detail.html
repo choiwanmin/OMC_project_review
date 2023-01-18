@@ -140,10 +140,10 @@
                     <h5 class="card-header">Leave a Comment</h5>
                     <div class="card-body">
                         {% if user.is_authenticated %}
-                        <form id="comment-form" method="POST" action="{{ recipe.get_absolute_url }}/new_comment/">
+                        <form id="comment-form" method="POST" action="{{ recipe.get_absolute_url }}/new_comment/" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
-                                {{ comment_form }}
+                                {{ comment_form.as_p }}
                             </div>
                             <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Submit</button>
                         </form>
@@ -152,6 +152,11 @@
                             Log in and leave a comment
                         </a>
                         {% endif %}
+                        {% for message in messages %}
+                            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -196,7 +201,7 @@
                         </div>
                         {% if comment.thumbnail %}
                         <div class="row">
-                            <a class="col-lg-2" href="{{ comment.thumbnail }}"><img src="{{ comment.thumbnail }}" style="width: 100px; height: 100px;"></a>
+                            <a class="col-lg-2" href="{{ comment.thumbnail }}"><img src="https://omc-project.s3.ap-northeast-2.amazonaws.com/{{ comment.thumbnail }}" style="width: 100px; height: 100px;"></a>
                             <div class="col-lg-10">{{ comment.content | linebreaks}}</div>
                         </div>
                         {% else %}

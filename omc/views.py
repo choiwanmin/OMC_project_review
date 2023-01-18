@@ -9,6 +9,9 @@ from django.core.paginator import Paginator
 from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
+import boto3, uuid
+import env_info
+from django.contrib import messages
 
 # Create your views here.
 def index(requests):
@@ -160,18 +163,28 @@ class RecipeRecommend(ListView):
 
 class NewComment(TemplateView):
     template_name = 'new_comment'
+    s3_client = boto3.client(
+                    's3',
+                    aws_access_key_id=env_info.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=env_info.AWS_SECRET_ACCESS_KEY
+                )
     def post(self,request, pk):
         if request.user.is_authenticated:
             recipe = get_object_or_404(Recipe, pk=pk)
-            print(recipe)
-            
-            comment_form = CommentForm(request.POST)
+            comment_form = CommentForm(request.POST, request.FILES)
+            print(request.user)
             if comment_form.is_valid():
-                comment = comment_form.save(commit=False)
-                comment.recipeId = recipe
-                comment.userId = request.user
-                comment.save()
+                comment_form.cleaned_data['recipeId'] = recipe
+                comment_form.cleaned_data['userId'] = request.user
+                comment = comment_form.save(commit=True)
+                # comment.recipeId = recipe
+                # comment.userId = request.user
+                # print(comment)
+                # comment.save()
                 
+                return redirect(recipe.get_absolute_url())
+            else:
+                messages.warning(request, '올바른 파일 형식을 업로드해 주세요')
                 return redirect(recipe.get_absolute_url())
         else:
             raise PermissionDenied
@@ -194,3 +207,7 @@ def delete_comment(request,pk):
         return redirect(recipe.get_absolute_url())
     else:
         raise PermissionDenied
+
+
+def alert_message(request, message):
+    messages.warning(request, message)
