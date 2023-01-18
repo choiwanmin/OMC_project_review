@@ -1,10 +1,18 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 
+{% block style %}
+<style>
+    .bg-info-detail {
+    --bs-bg-opacity: 1;
+    /* background-color: rgba(var(--bs-info-rgb), var(--bs-bg-opacity)) !important; */
+    background-color: rgb(128, 128, 128) !important;
+    }
+</style>
+{% endblock style %}
 
 {% block content %}
-
-<section class="py-5">
+<section class="bg-light">
     <!-- Main Content-->
     <div class="container px-4 px-lg-5">
         {% if category_t %}
@@ -13,41 +21,42 @@
         <p>카테고리 분류 없음</p>
         {% endif %}
         <!-- Heading Row-->
-        <div class="row gx-4 gx-lg-5 justify-content-center my-3 bg-light p-5">
-            <div style = "width: 500px; height: 400px;" class = "col-lg-7">
+        <div class="row gx-4 gx-lg-5 justify-content-center my-3 bg-white p-5" style = "text-align: center;" >
+            <div class = "col-lg-7">
                 <img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 400px; height: 400px; object-fit:cover;" src="{{ recipe.thumbnail }}" alt="..." />
             </div>
-            <div class="col-lg-5">
-                <h1 class="font-weight-light"> {{ recipe.name }} </h1>
+            <div class="col-lg-5" style="margin: auto;">
+                <h3 class="font-weight-light text-primary" style="word-break: keep-all;"> {{ recipe.name }} </h3><br>
                 {% if recipe.description != None %}
-                <p title="{{ recipe.description }}">{{ recipe.description | truncatechars:200}}</p>
+                <p title="{{ recipe.description }}" style="word-break: keep-all;">{{ recipe.description | truncatechars:200}}</p>
                 {% endif %}
-                <div class="row">
+                <div class="row" style="color: rgb(163, 163, 163);">
                     {% if recipe.amount != None %}
-                    <i style="font-size: 20pt;" class="bi bi-people-fill">&nbsp;&nbsp;{{ recipe.amount }}</i>
+                    <div class="col"><i style="font-size: 40px;" class="bi bi-people-fill"></i><p>{{ recipe.amount }}</p></div>
                     {% endif %}
                     {% if recipe.time != None %}
-                    <i style="font-size: 20pt;" class="bi bi-alarm-fill">&nbsp;&nbsp;{{ recipe.time }}</i>
+                    <div class="col"><i style="font-size: 40px;" class="bi bi-hourglass-split"></i><p>{{ recipe.time }}</p></div>
                     {% endif %}
                     {% if recipe.level != None %}
-                    <i style="font-size: 20pt;" class="bi bi-question-square-fill">&nbsp;&nbsp;{{ recipe.level }}</i>
+                    <div class="col"><i style="font-size: 40px;" class="bi bi-star-fill"></i><p>{{ recipe.level }}</p></div>
                     {% endif %}
                 </div>
             </div>
         </div>
         <!-- Divider-->
-        <hr class="my-4" />
+        <hr class="row gx-4 gx-lg-5 my-4" />
         <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-11 col-lg-9 col-xl-8">
+            <div class="col-md-10">
                 <!-- Post preview-->
-                <div class="post-preview p-5 bg-light">
-                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Ingredients</cite> </h2>
-                    <div class="row">
+                <div class="post-preview p-5 bg-white">
+                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20; display: inline-block;"><cite>Ingredients</cite></h2>
+                    {% include 'partials/measure.html'%}
+                    <br><br><div class="row" style="margin-top: 1%;">
                         <!-- for 문 ingredients_types -->
                         {% for types in ingredients_types %}
                         <div class="col">
                             <table class="table">
-                                <thead class="table-dark">
+                                <thead class="table-secondary">
                                     <th>{{ types.type }}</th>
                                     <th>용량</th>
                                 </thead>
@@ -70,43 +79,141 @@
                 <!-- Divider-->
                 <hr class="my-4" />
                 <!-- Post preview-->
-                <div class="post-preview bg-light p-5">
-                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Recipe</cite></h2>
+                <div class="post-preview bg-white p-5">
+                    <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Recipe</cite></h2><br><br>
                     <!-- for 문 recipe_order -->
                     {% for n in recipe_order %}
                     <div class="row">
-                        {% if n.number < 10 %}
-                            <h3><button style="background-color: black; border-radius: 5px; color: white; cursor: default; padding-left: 2%; padding-right: 2%;"><b>{{ n.number }}</b></button></h3>
-                        {% else %}
-                            <h3><button style="background-color: black; border-radius: 5px; color: white; cursor: default;"><b>{{ n.number }}</b></button></h3>
-                        {% endif %}
+                        <div class="col-lg-1" style="padding-right: 0;">
+                            {% if n.number < 10 %}
+                                <!-- <h3><button style="background-color: white; border-radius: 5px; cursor: default; width: 40px;"><b>{{ n.number }}</b></button></h3> -->
+                                <button class="btn btn-outline-primary" style="pointer-events: none; cursor: default; width: 40px;">{{ n.number }}</button>
+                            {% else %}
+                                <!-- <h3><button style="background-color: white; border-radius: 5px; cursor: default; width: 40px; padding: 1px 2.5px;"><b>{{ n.number }}</b></button></h3> -->
+                                <button class="btn btn-outline-primary" style="pointer-events: none; cursor: default; width: 40px; padding: 0.375rem 2.5px;">{{ n.number }}</button>
+                            {% endif %}
+                        </div>
                         <p class="col-lg-6" style="word-break: keep-all;">{{ n.description }}</p>
-                        <div class="col-lg-6">
-                            <img class="img-fluid rounded mb-4 mb-lg-0 img-thumbnail" src="{{ n.thumbnail }}" alt="..." />
+                        <div class="col-lg-5">
+                            <img class="img-fluid rounded mb-4 mb-lg-0 img-thumbnail" src="{{ n.thumbnail }}" style="float: right;"/>
                         </div>
                     </div>
                     <hr class="my-4"/>
                     {% endfor %}
+                    {% if recipehastags %}
+                    {% for tag in recipehastags %}
+                    <!-- <a href="#"><span class="badge bg-info-detail">#{{ tag.description }}</span></a> -->
+                    <a href="#" role="button" class="badge btn btn-outline-info ">#{{ tag.description }}</a>
+                    {% endfor %}
+                    {% endif %}
                 </div>
+                {% comment %}
+                {% if recipehastags %}
                 <!-- Divider-->
                 <hr class="my-4" />
                 <!-- Post preview-->
-                <div class="post-preview">
-                        <h2 class="post-title">해시태그</h2>
-                        {% for tag in recipehastags %}
-                        <a href="#"><span class = "badge badge-pill bg-dark">{{ tag.description }}</span></a>
-                        {% endfor %}
+                <div class="post-preview bg-white p-5">
+                    <!-- <h2 class="post-title">해시태그</h2> -->
+                    {% for tag in recipehastags %}
+                    <a href="#"><span class = "badge badge-pill bg-dark">{{ tag.description }}</span></a>
+                    {% endfor %}
                 </div>
                 <!-- Divider-->
                 <hr class="my-4" />
+                {% else %} <br>
+                {% endif %}{% endcomment %}
                 <!-- Pager-->
-                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="javascript:history.back()" onclick="goBack()">← 뒤로가기</a></div>
+                <br><div class="d-flex justify-content-end mb-4"><a class="btn btn-info text-uppercase" style="color: white;" href="javascript:history.back()" onclick="goBack()">← 뒤로가기</a></div>
                 <script>
                     function goBack() {
-                      window.history.back();
+                        window.history.back();
                     }
                 </script>
             </div>
+        </div>
+    </div>
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div id="comment-area" class="col-md-11 col-lg-9 col-xl-8">
+                <!-- Comment Form -->
+                <div class="card my-4">
+                    <h5 class="card-header">Leave a Comment</h5>
+                    <div class="card-body">
+                        {% if user.is_authenticated %}
+                        <form id="comment-form" method="POST" action="{{ recipe.get_absolute_url }}/new_comment/" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ comment_form.as_p }}
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Submit</button>
+                        </form>
+                        {% else %}
+                        <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Log in and leave a comment
+                        </a>
+                        {% endif %}
+                        {% for message in messages %}
+                            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if recipe.comment_set.exists %}
+                {% for comment in recipe.comment_set.iterator %}
+                <div id="comment-{{ comment.pk }}" class="col-md-11 col-lg-9 col-xl-8">
+                    <div class="media-body">
+                        <h5 style="display: inline-block;"><b style="color: #939B62;">{{ comment.userId.nickname }}</b> &nbsp;&nbsp;</h5>
+                        <div  class="star_rating" style="color:#aaa9a9; width: max-content; position: relative; display: inline-block;">
+                            <div style="width:calc({{ comment.star }}% * 20); padding: 0;position: absolute;display: flex;top: 0;left: 0;overflow: hidden;">
+                                <span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span>
+                            </div>
+                            <div style="padding: 0;">
+                                <span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.8rem; float: right;">
+                            {% if comment.createdAt != comment.modifiedAt %}
+                            <div class="text-muted" style="display: inline-block;">update: {{ comment.modifiedAt }}</div>
+                            {% else %}
+                            <div class="text-muted" style="display: inline-block;">{{ comment.createdAt }}</div>
+                            {% endif %}
+                            <a id="comment-{{ comment.pk }}-update" href="/recipe/update_comment/{{ comment.pk }}" style="text-decoration: none; color: gray;">&nbsp;수정</a>
+                            <span>|</span>
+                            <a href="#" style="text-decoration: none; color: gray;" data-bs-toggle="modal" data-bs-target="#comment-{{ comment.pk }}-delete"> 삭제</a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="comment-{{ comment.pk }}-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">댓글을 삭제하시겠습니까?</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">{{ comment.content | linebreaks }}</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                                            <a role="button" class="btn btn-danger" href="/recipe/delete_comment/{{ comment.pk }}">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if comment.thumbnail %}
+                        <div class="row">
+                            <a class="col-lg-2" href="{{ comment.thumbnail }}"><img src="https://omc-project.s3.ap-northeast-2.amazonaws.com/{{ comment.thumbnail }}" style="width: 100px; height: 100px;"></a>
+                            <div class="col-lg-10">{{ comment.content | linebreaks}}</div>
+                        </div>
+                        {% else %}
+                        <p>{{ comment.content | linebreaks}}</p>
+                        {% endif %}
+                        
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-2" />
+                </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 </section>

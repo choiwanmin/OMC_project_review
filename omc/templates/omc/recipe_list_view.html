@@ -3,6 +3,17 @@
 
 {% block style %}
 <link href="{% static 'css/recipe_list_view.css' %}" rel="stylesheet" />
+<style>
+    .text-info-active {
+    --bs-text-opacity: 1;
+    color: rgb(255,255,255) !important;
+    }
+    .btn-outline-active {
+    color: #000;
+    background-color: #7f8656;
+    border-color: #7f8656;
+    }
+</style>
 {% endblock style %}
 
 {% block title %}
@@ -10,38 +21,98 @@
 {% endblock title %}
 
 {% block content %}
+<script>
+    function submitForm(frm, btn, idx){
+        var changedValue = idx        
+        if (changedValue < 10){
+            changedValue = '0' + changedValue
+        }
+        var currentUrl = window.location.href
+        currentUrl = currentUrl.includes('category')? currentUrl.slice(-9,-1) : '00000000'
+        var index = btn.name.slice(-1)
+        index = (Number(index) - 1) * 2
+        currentUrl = currentUrl.substring(0, index) + changedValue + currentUrl.substring(index + 2);
+        frm.action = '/recipe/category/'+ currentUrl + '/'
+        return true
+    }
+</script>
+{% if search_word is false  %}
+<section>
+    <div class="container px-4 px-lg-5 mt-1">
+        <div class="row justify-content-center">
+            <!-- <div > -->
+<!-- <nav class="navbar navbar-expand-lg bg-light py-1">
+    <div class="container px-lg-5 ">
+    <div class="container-fluid">
+        <div id="navbarSupportedContent">
+            <ul class="me-auto mb-2 mb-lg-0" style="padding: 0;"> -->
+                <form class="col" action="/recipe/category/00000000/" method="post">
+                {% for title, category in category.items %}
+                <li class="nav-item dropdown-center" style="display: inline-block; width: 24%;">
+                    <a class="nav-link dropdown-toggle text-info" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: center;">
+                        {{ title }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% csrf_token %}
+                        <li><button type="submit" name="cat_all_{{forloop.counter}}" class="dropdown-item" onclick="submitForm(this.form, this, '0')">전체</button></li>
+                        {% for cat in category %}
+                        <li><button type="submit" name="cat{{forloop.parentloop.counter}}" class="dropdown-item" value="{{ forloop.counter }}" onclick="submitForm(this.form, this,{{forloop.counter}})">{{ cat }}</button></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+                </form>
+            <!-- </ul>
+        </div>
+    </div></div>
+</nav> -->
+</div>
+</div>
+</div>
+</section>
+{% endif %}
+{% comment %}
 {% if search_word is false  %}
     <!-- 카테고리 상단바 -->
     <section class="category">
         <div class="container px-4 px-lg-5 mt-1">
             <div class="card">
+                <small class="text-muted px-4 px-lg-5 mt-2">
+                    {% for cat, val in selected_category.items %}
+                    {% if forloop.counter > 1 %} > {% endif %}{{cat}}: {{val}}
+                    {% endfor%}
+                </small>
                 <table class="category-table table-sm table-responsive px-4 px-lg-5 mt-2">
                     <colgroup>
                         <col width="60px">
                         <col width="auto">
                     </colgroup>
                     <tbody>
+                        <form action="/recipe/category/00000000/" method="post">
                         {% for title, category in category.items %}
                         <tr>
-                            <th style="color: #ff8300;">{{ title }}</th>
+                            <th style="color: #FFCB34;">{{ title }}</th>
                             <td>
+                                {% csrf_token %}
                                 <nav class="nav nav-pills flex-column flex-sm-row" style="font-size: 1rem;">
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">전체</a>
-                                    {% for category in category %}
-                                    <a class="flex-sm-fill text-sm-center nav-link" href="#" style="padding: 0.1rem 0.1rem; color: midnightblue;">{{ category }}</a>
+                                    <button type="submit" name="cat_all_{{forloop.counter}}" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;" value="00" onclick="submitForm(this.form, this, '0')">전체</button>
+                                    {% for cat in category %}
+                                    <button name="cat{{forloop.parentloop.counter}}" class="flex-sm-fill text-sm-center nav-link" style="padding: 0.1rem 0.1rem; color: midnightblue;" value="{{ forloop.counter }}" onclick="submitForm(this.form, this,{{forloop.counter}})">{{ cat }}</button>
                                     {% endfor %}
                                 </nav>
                             </td>
                         </tr>
                         {% endfor %}
+                        </form>
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
 {% endif %}
+{% endcomment %}
 <!-- Section-->
-<section class="py-3">
+<section>
     {% if search_info %}
         <small class="text-muted px-4 px-lg-5 mt-2">{{ search_info }}</small>
     {% endif %}
@@ -52,15 +123,16 @@
             <div class="col mb-5">
                 <div class="card">
                     <!-- Recipe image-->
-                    <img class="card-img-top" src="{{ recipe.thumbnail }}" alt="..." style="height: 210px;"/>
+                    <a href="{{ recipe.get_absolute_url }}"><img class="card-img-top" src="{{ recipe.thumbnail }}" style="height: 210px;"/></a>
                     <!-- Recipe details-->
                     <div class="card-body p-4">
                         <div class="text-center">
                             <!-- Recipe name-->
                             <div class="row" style="min-height: 80px; vertical-align: middle;">
-                                <h5 class="fw-bolder" style="word-break: keep-all; text-overflow: elipsis;">{{ recipe.name | truncatechars:20 }}</h5>
+                                <a href="{{ recipe.get_absolute_url }}" style="color: black; text-decoration: none;">
+                                    <h5 class="fw-bolder" style="word-break: keep-all; text-overflow: elipsis;">{{ recipe.name | truncatechars:20 }}</h5>
+                                </a>
                             </div>
-                            
                             <!-- Recipe star, review_count, views_count-->
                             <div class="row">
                                 <div style="width: auto;">
@@ -79,9 +151,9 @@
                         </div>
                     </div>
                     <!-- Recipe actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}">상세 레시피</a></div>
-                    </div>
+                    <!-- <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a role="button" class="btn btn-outline-success mt-auto fw-bolder" href="{{ recipe.get_absolute_url }}" >상세 레시피</a></div>
+                    </div> -->
                 </div>
             </div>
             {% endfor %}
@@ -99,29 +171,37 @@
                 {% if page_obj.has_previous %}
                     {% if search_word %}
                         <li class="page-item">
-                            <a class="btn btn-outline-success mt-auto fw-bolder" href="/recipe/search/{{ search_word }}/?page={{ page_obj.previous_page_number }}"
-                            tabindex="-1">Prev</a>
+                            <a class="btn text-info" href="/recipe/search/{{ search_word }}/?page={{ page_obj.previous_page_number }}" tabindex="-1">
+                                <i class="bi bi-chevron-double-left"></i></a>
                         </li>
                     {% else %}
                         <li class="page-item">
-                            <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.previous_page_number }}"
-                                tabindex="-1">Prev</a>
+                            <a class="btn text-info" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">
+                                <i class="bi bi-chevron-double-left"></i></a>
                         </li>
                     {% endif %}
                 {% else %}
                 <li class="page-item disabled">
-                    <a class="btn btn-outline-success mt-auto fw-bolder" href="#" tabindex="-1">Prev</a>
+                    <a class="btn text-info" href="#" tabindex="-1"><i class="bi bi-chevron-double-left"></i></a>
                 </li>
                 {% endif %}
                 <!-- 페이지 번호로 출력 -->
                 {% for i in pages %}
                     {% if search_word %}
                         <li {% if page_obj.number == i %} class="active" {% endif %}>
-                            <a role="button" class="btn btn-outline-warning mt-auto fw-bolder" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}">{{i}}</a>
+                            {% if i == page_obj.number %}
+                            <a role="button" class="btn btn-outline-active text-info-active" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
+                            {% else %}
+                            <a role="button" class="btn btn-outline-info" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
+                            {% endif %}
                         </li>
                     {% else %}
                         <li {% if page_obj.number == i %} class="active" {% endif %}>
-                            <a role="button" class="btn btn-outline-warning mt-auto fw-bolder" href="/recipe/?ordering={{ current_order }}&page={{i}}">{{i}}</a>
+                            {% if i == page_obj.number %}
+                            <a role="button" class="btn btn-outline-active text-info-active" href="/recipe/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
+                            {% else %}
+                            <a role="button" class="btn btn-outline-info" href="/recipe/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
+                            {% endif %}
                         </li>
                     {% endif %}
                 {% endfor %}
@@ -129,11 +209,11 @@
                 {% if page_obj.has_next %}
                     {% if search_word %}
                         <li class="page-item">
-                            <a class="btn btn-outline-success mt-auto fw-bolder" href="/recipe/search/{{ search_word }}/?page={{ page_obj.next_page_number }}">Next</a>
+                            <a class="btn text-info" href="/recipe/search/{{ search_word }}/?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-double-right"></i></a>
                         </li>
                     {% else %}
                         <li class="page-item">
-                            <a class="btn btn-outline-success mt-auto fw-bolder" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.next_page_number }}">Next</a>
+                            <a class="btn text-info" href="{% url 'omc:recipe_list_view' %}?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-double-right"></i></a>
                         </li>
                     {% endif %}
                 {% else %}
