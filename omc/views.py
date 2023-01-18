@@ -1,11 +1,17 @@
 
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, TemplateView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 # from omc.signup_form import UserForm
 from django.contrib.auth import authenticate, login
-from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
+from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
+from .forms import CommentForm
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
+import boto3, uuid
+import env_info
+from django.contrib import messages
 
 # Create your views here.
 def index(requests):
@@ -60,6 +66,7 @@ class RecipeDetail(DetailView):
             context['category_s'] = CategoryS.objects.get(pk=context['recipe'].categorySId_id)
             context['category_i'] = CategoryI.objects.get(pk=context['recipe'].categoryIId_id)
             context['category_m'] = CategoryM.objects.get(pk=context['recipe'].categoryMId_id)
+        context['comment_form'] = CommentForm
         return context
 
 class RefrigeratorList(TemplateView):
@@ -143,3 +150,64 @@ class RecipeCategory(RecipeList):
                 selected_categorys[category_mapping[key]] = context['category'][category_mapping[key]][value-1].name
         context['selected_category'] = selected_categorys
         return context
+        #redirect(f'/recipe/category/{catt_pk}')
+        # render(request, self.template_name, context)
+
+class RecipeRecommend(ListView):
+    model = Recipe
+    template_name = 'omc/recipe_recommend.html'
+    def get_context_data(self, **kwargs):
+        context = super(RecipeRecommend, self).get_context_data(**kwargs)
+        context['recommend'] = Recipe.objects.all()[:5]
+        return context
+
+class NewComment(TemplateView):
+    template_name = 'new_comment'
+    s3_client = boto3.client(
+                    's3',
+                    aws_access_key_id=env_info.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=env_info.AWS_SECRET_ACCESS_KEY
+                )
+    def post(self,request, pk):
+        if request.user.is_authenticated:
+            recipe = get_object_or_404(Recipe, pk=pk)
+            comment_form = CommentForm(request.POST, request.FILES)
+            print(request.user)
+            if comment_form.is_valid():
+                comment_form.cleaned_data['recipeId'] = recipe
+                comment_form.cleaned_data['userId'] = request.user
+                comment = comment_form.save(commit=True)
+                # comment.recipeId = recipe
+                # comment.userId = request.user
+                # print(comment)
+                # comment.save()
+                
+                return redirect(recipe.get_absolute_url())
+            else:
+                messages.warning(request, '올바른 파일 형식을 업로드해 주세요')
+                return redirect(recipe.get_absolute_url())
+        else:
+            raise PermissionDenied
+
+class UpdateComment(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().userId:
+            return super(UpdateComment, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+def delete_comment(request,pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    recipe = comment.recipeId
+    if request.user.is_authenticated and request.user == comment.userId:
+        comment.delete()
+        return redirect(recipe.get_absolute_url())
+    else:
+        raise PermissionDenied
+
+
+def alert_message(request, message):
+    messages.warning(request, message)

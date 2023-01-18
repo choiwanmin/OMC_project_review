@@ -2,7 +2,7 @@
 # from . import models
 # import inspect
 # from django.contrib.auth.models import User as auth_user
-# from .models import User
+from .models import User, Comment
 
 # Register your models here.
 #for name, obj in inspect.getmembers(models):
@@ -90,3 +90,4 @@ class UserAdmin(BaseUserAdmin):
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
+admin.site.register(Comment)

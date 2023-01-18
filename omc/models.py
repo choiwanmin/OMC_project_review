@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+import uuid, os
+from pytz import timezone
+import datetime
 
 # Create your models here.
 
@@ -187,6 +190,16 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return f'/recipe/{self.pk}'
 
+
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    today = datetime.datetime.now(timezone('Asia/Seoul'))
+    year = today.strftime('%Y')
+    month = today.strftime('%m')
+    day = today.strftime('%d')
+    return os.path.join(f'media/{year}/{month}/{day}/', filename)
+
 class Comment(models.Model):
     content = models.TextField()
     createdAt = models.DateTimeField(auto_now_add=True, verbose_name='댓글생성시간')
@@ -194,7 +207,10 @@ class Comment(models.Model):
     recipeId = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
     star = models.IntegerField()
-    thumbnail = models.URLField(null=True, blank=True)
+    thumbnail = models.ImageField(null=True, blank=True, upload_to=get_file_path)
+
+    def get_absolute_url(self):
+        return f'{self.recipeId.get_absolute_url()}#comment-{self.pk}'
 
 class Ingredient(models.Model):
     type = models.CharField(max_length=30)

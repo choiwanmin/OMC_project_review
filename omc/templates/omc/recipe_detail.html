@@ -132,5 +132,89 @@
             </div>
         </div>
     </div>
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div id="comment-area" class="col-md-11 col-lg-9 col-xl-8">
+                <!-- Comment Form -->
+                <div class="card my-4">
+                    <h5 class="card-header">Leave a Comment</h5>
+                    <div class="card-body">
+                        {% if user.is_authenticated %}
+                        <form id="comment-form" method="POST" action="{{ recipe.get_absolute_url }}/new_comment/" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ comment_form.as_p }}
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Submit</button>
+                        </form>
+                        {% else %}
+                        <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Log in and leave a comment
+                        </a>
+                        {% endif %}
+                        {% for message in messages %}
+                            <div class="alert {{ message.tags }} alert-auto-dismissible alert-dismissible notification-container text-center" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if recipe.comment_set.exists %}
+                {% for comment in recipe.comment_set.iterator %}
+                <div id="comment-{{ comment.pk }}" class="col-md-11 col-lg-9 col-xl-8">
+                    <div class="media-body">
+                        <h5 style="display: inline-block;"><b style="color: #939B62;">{{ comment.userId.nickname }}</b> &nbsp;&nbsp;</h5>
+                        <div  class="star_rating" style="color:#aaa9a9; width: max-content; position: relative; display: inline-block;">
+                            <div style="width:calc({{ comment.star }}% * 20); padding: 0;position: absolute;display: flex;top: 0;left: 0;overflow: hidden;">
+                                <span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span>
+                            </div>
+                            <div style="padding: 0;">
+                                <span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.8rem; float: right;">
+                            {% if comment.createdAt != comment.modifiedAt %}
+                            <div class="text-muted" style="display: inline-block;">update: {{ comment.modifiedAt }}</div>
+                            {% else %}
+                            <div class="text-muted" style="display: inline-block;">{{ comment.createdAt }}</div>
+                            {% endif %}
+                            <a id="comment-{{ comment.pk }}-update" href="/recipe/update_comment/{{ comment.pk }}" style="text-decoration: none; color: gray;">&nbsp;수정</a>
+                            <span>|</span>
+                            <a href="#" style="text-decoration: none; color: gray;" data-bs-toggle="modal" data-bs-target="#comment-{{ comment.pk }}-delete"> 삭제</a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="comment-{{ comment.pk }}-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">댓글을 삭제하시겠습니까?</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">{{ comment.content | linebreaks }}</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                                            <a role="button" class="btn btn-danger" href="/recipe/delete_comment/{{ comment.pk }}">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if comment.thumbnail %}
+                        <div class="row">
+                            <a class="col-lg-2" href="{{ comment.thumbnail }}"><img src="https://omc-project.s3.ap-northeast-2.amazonaws.com/{{ comment.thumbnail }}" style="width: 100px; height: 100px;"></a>
+                            <div class="col-lg-10">{{ comment.content | linebreaks}}</div>
+                        </div>
+                        {% else %}
+                        <p>{{ comment.content | linebreaks}}</p>
+                        {% endif %}
+                        
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-2" />
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 </section>
 {% endblock content %}

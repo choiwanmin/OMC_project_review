@@ -14,6 +14,7 @@ from pathlib import Path
 import env_info
 import os
 import pymysql
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -153,3 +154,23 @@ pymysql.install_as_MySQLdb()
 
 # auth.user 변경 및 추가
 AUTH_USER_MODEL = 'omc.User'
+
+# alert tag 추가
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
+
+# S3 이용을 위한 setting 추가
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = env_info.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = env_info.AWS_SECRET_ACCESS_KEY
+AWS_QUERYSTRING_AUTH = False
+AWS_STORAGE_BUCKET_NAME = env_info.AWS_STORAGE_BUCKET_NAME
+AWS_S3_REGION_NAME = env_info.AWS_S3_REGION_NAME
+MEDIA_URL = env_info.AWS_S3_DOMAIN_NAME
+MEDIA_ROOT = 'media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
