@@ -24,6 +24,30 @@
             <input type="text" class="form-control" name="email" id="email"
                 value="{{ form.email.value|default_if_none:'' }}">
         </div>
+        <div class="mb-3">
+            <label for="gender">성별</label>
+            <input type="text" class="form-control" name="gender" id="gender"
+                value="">
+                <span style=" font-style: italic; font-weight: bold; font-size: 0.9em; line-height: 1.0em; color: red; font-family: arial;">
+                    ex)남자는 '1'로 혹은 여자는 '2'로 입력
+                </span>
+            </div>
+            <div class="mb-3">
+                <label for="ageGroup">연령대</label>
+                <input type="text" class="form-control" name="ageGroup" id="ageGroup"
+                value="{{ form.ageGroup.value|default_if_none:'' }}">
+                <span style=" font-style: italic; font-weight: bold; font-size: 0.9em; line-height: 1.0em; color: red; font-family: arial;">
+                    ex)10, 20, 30 ...
+                </span>
+            </div>
+            <div class="mb-3">
+                <label for="householdSize">가구원수</label>
+                <input type="text" class="form-control" name="householdSize" id="householdSize"
+                value="{{ form.householdSize.value|default_if_none:'' }}">
+                <span style=" font-style: italic; font-weight: bold; font-size: 0.9em; line-height: 1.0em; color: red; font-family: arial;">
+                    ex)1, 2, 3 ...
+                </span>
+        </div>
         <button type="submit" class="btn btn-primary">생성하기</button>
     </form>
 </div>
