@@ -22,6 +22,5 @@ def run():
     ]
     for idx, t in enumerate(types):
         for user_ing in user_ingredients[idx]:
-            UserIngredient({'type': t, 'name': user_ing}).save()
+            UserIngredient(**{'type': t, 'name': user_ing}).save()
             print(t,user_ing,"saved")
-            print('(\'',t,'\',\'',user_ing,'\'),',sep='')
