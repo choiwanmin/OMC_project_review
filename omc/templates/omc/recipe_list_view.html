@@ -4,14 +4,6 @@
 {% block style %}
 <link href="{% static 'css/recipe_list_view.css' %}" rel="stylesheet" />
 <style>
-    .text-info-list {
-    --bs-text-opacity: 1;
-    color: rgba(var(--bs-info-rgb), var(--bs-text-opacity)) !important;
-    }
-    .text-info-list:hover {
-    --bs-text-opacity: 1;
-    color: rgb(255,255,255) !important;
-    }
     .text-info-active {
     --bs-text-opacity: 1;
     color: rgb(255,255,255) !important;
@@ -200,7 +192,7 @@
                             {% if i == page_obj.number %}
                             <a role="button" class="btn btn-outline-active text-info-active" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
                             {% else %}
-                            <a role="button" class="btn btn-outline-info text-info-list" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
+                            <a role="button" class="btn btn-outline-info" href="/recipe/search/{{ search_word }}/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
                             {% endif %}
                         </li>
                     {% else %}
@@ -208,7 +200,7 @@
                             {% if i == page_obj.number %}
                             <a role="button" class="btn btn-outline-active text-info-active" href="/recipe/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
                             {% else %}
-                            <a role="button" class="btn btn-outline-info text-info-list" href="/recipe/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
+                            <a role="button" class="btn btn-outline-info" href="/recipe/?ordering={{ current_order }}&page={{i}}" style="border-radius: 0; margin: 0 1px;">{{i}}</a>
                             {% endif %}
                         </li>
                     {% endif %}
