@@ -1,11 +1,13 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_list_or_404
 from django.views.generic import ListView, DetailView, TemplateView
 # from omc.signup_form import UserForm
 from django.contrib.auth import authenticate, login
 from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
+from .forms import CommentForm
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 def index(requests):
@@ -60,6 +62,7 @@ class RecipeDetail(DetailView):
             context['category_s'] = CategoryS.objects.get(pk=context['recipe'].categorySId_id)
             context['category_i'] = CategoryI.objects.get(pk=context['recipe'].categoryIId_id)
             context['category_m'] = CategoryM.objects.get(pk=context['recipe'].categoryMId_id)
+        context['comment_form'] = CommentForm
         return context
 
 class RefrigeratorList(TemplateView):
@@ -153,3 +156,21 @@ class RecipeRecommend(ListView):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
         context['recommend'] = Recipe.objects.all()[:5]
         return context
+
+class NewComment(TemplateView):
+    template_name = 'new_comment'
+    def post(self,request, pk):
+        if request.user.is_authenticated:
+            recipe = get_list_or_404(Recipe, pk=pk)[0]
+            print(recipe)
+            
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.recipeId = recipe
+                comment.userId = request.user
+                comment.save()
+                
+                return redirect(recipe.get_absolute_url())
+        else:
+            raise PermissionDenied

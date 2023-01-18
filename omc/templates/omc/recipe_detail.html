@@ -140,9 +140,10 @@
                     <h5 class="card-header">Leave a Comment</h5>
                     <div class="card-body">
                         {% if user.is_authenticated %}
-                        <form>
+                        <form id="comment-form" method="POST" action="{{ recipe.get_absolute_url }}/new_comment/">
+                            {% csrf_token %}
                             <div class="form-group">
-                                <textarea rows="3" class="form-control"></textarea>
+                                {{ comment_form }}
                             </div>
                             <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Submit</button>
                         </form>
@@ -158,13 +159,28 @@
                 {% for comment in recipe.comment_set.iterator %}
                 <div id="comment-{{ comment.pk }}" class="col-md-11 col-lg-9 col-xl-8">
                     <div class="media-body">
-                        <h5 class="mt-0"><b style="color: #939B62;">{{ comment.userId.nickname }}</b> &nbsp;&nbsp;
-                            <samll class="text-muted">{{ comment.createdAt }}</samll>
-                        </h5>
+                        <h5 style="display: inline-block;"><b style="color: #939B62;">{{ comment.userId.nickname }}</b> &nbsp;&nbsp;</h5>
+                        <div  class="star_rating" style="color:#aaa9a9; width: max-content; position: relative; display: inline-block;">
+                            <div style="width:calc({{ comment.star }}% * 20); padding: 0;position: absolute;display: flex;top: 0;left: 0;overflow: hidden;">
+                                <span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2_on.png' %}" alt="" style="height: 14px;"></span>
+                            </div>
+                            <div style="padding: 0;">
+                                <span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span><span><img src="{% static 'assets/icon_star2.png' %}" alt="" style="height: 14px;"></span>
+                            </div>
+                        </div>
+                        <div class="text-muted" style="font-size: 0.8rem; float: right;">{{ comment.createdAt }}</div>
+                        {% if comment.thumbnail %}
+                        <div class="row">
+                            <a class="col-lg-2" href="{{ comment.thumbnail }}"><img src="{{ comment.thumbnail }}" style="width: 100px; height: 100px;"></a>
+                            <div class="col-lg-10">{{ comment.content | linebreaks}}</div>
+                        </div>
+                        {% else %}
                         <p>{{ comment.content | linebreaks}}</p>
+                        {% endif %}
+                        
                     </div>
                     <!-- Divider-->
-                    <hr class="my-4" />
+                    <hr class="my-2" />
                 </div>
                 {% endfor %}
             {% endif %}

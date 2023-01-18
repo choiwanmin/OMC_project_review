@@ -10,4 +10,5 @@ urlpatterns = [
     re_path(r'category/[0-9]{8}/', views.RecipeCategory.as_view(), name='recipe_category'),
     path('category/<int:pk>/', views.RecipeCategory.as_view(), name='recipe_search'),
     path('recommend/', views.RecipeRecommend.as_view(), name='recipe_recommend'),
+    path('<int:pk>/new_comment/', views.NewComment.as_view(), name='new_comment'),
 ]
