@@ -114,7 +114,6 @@ class RecipeSearch(RecipeList):
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         context['search_word'] = q
         return context
-
 class RecipeCategory(RecipeList):
     paginate_by = 40
 
