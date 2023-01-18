@@ -91,7 +91,7 @@ def signup(request):
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend') # 로그인
                 return redirect('/recipe/refrigerator_list_vue/')
             else:
-                return redirect('/recipe/login/')
+                return redirect('/login/')
     else:
         form = UserForm()
     return render(request, 'omc/signup_view.html', {'form': form})

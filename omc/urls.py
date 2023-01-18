@@ -1,5 +1,4 @@
 from django.urls import path, re_path
-from django.contrib.auth import views as auth_views
 from . import views
 
 app_name ="omc"
@@ -14,6 +13,4 @@ urlpatterns = [
     path('<int:pk>/new_comment/', views.NewComment.as_view(), name='new_comment'),
     path('update_comment/<int:pk>/', views.UpdateComment.as_view(), name='update_comment'),
     path('delete_comment/<int:pk>/', views.delete_comment, name='delete_comment'),
-    path('login/', auth_views.LoginView.as_view(template_name='omc/login_view.html'), name='login_view'),
-    path('signup/', views.signup, name='signup_view'),
 ]
