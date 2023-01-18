@@ -23,6 +23,6 @@ urlpatterns = [
     path('', index),
     path('accounts/', include('allauth.urls')),
     path('recipe/', include('omc.urls')),
-    path('login/', auth_views.LoginView.as_view(template_name='omc/login_view.html'), name='login_view'),
+    path('login/', auth_views.LoginView.as_view(template_name='login_view.html'), name='login_view'),
     path('signup/', signup, name='signup_view'),
 ]

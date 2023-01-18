@@ -94,7 +94,7 @@ def signup(request):
                 return redirect('/login/')
     else:
         form = UserForm()
-    return render(request, 'omc/signup_view.html', {'form': form})
+    return render(request, 'signup_view.html', {'form': form})
     
 class RecipeSearch(RecipeList):
     paginate_by = 40
