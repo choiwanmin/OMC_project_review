@@ -35,13 +35,6 @@ Refrigerator List
 {% endblock style %}
 
 {% block content %}
-{%block comment%}
-                <!-- {% for i in ingredients%}
-                <li class="item dropdown-item" v-on:click="addIngredientsFromSearch({{i.type}},{{i.name}})">
-                    <span class="name">{{ i.name }}</span>
-                </li>
-                {% endfor %} -->
-{%endblock comment%}
 <div id="ref_list">
     <div class="searchbox dropdown dropdown-center">
         <h1 class="text-center">냉장고에 있는 재료를 입력하시면 그에 맞는 레시피를 추천해드려요~<br>(멘트 변경 예정)</h1>
@@ -61,19 +54,21 @@ Refrigerator List
     </div>
     <!-- Section-->
     <section class="py-5" >
-        <div class="container py-1" style="padding-left: 15%; padding-right: 15%;" v-for="(ui,index) in userIngredientTypes">
-            <h2 class="fs-4 fw-bold" v-if="addedIngredients[index].length > 0" >[[ui.type]]</h2>
-            <!-- <button class="btn" data-bs-toggle="modal" :data-bs-target="[['#staticBackdrop' + index]]">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button> -->
-            <button class="btn btn-warning position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]">
-                [[ addedIng.name ]]
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
-                    X
-                </span>
-            </button>
-            <hr class="my-4" v-if="addedIngredients[index].length > 0"/>
-        </div>
+        <template v-for="(ui,index) in userIngredientTypes">
+            <div class="container py-1" style="padding-left: 15%; padding-right: 15%;" v-if="addedIngredients[index].length > 0">
+                <h2 class="fs-4 fw-bold">[[ui.type]]</h2>
+                <!-- <button class="btn" data-bs-toggle="modal" :data-bs-target="[['#staticBackdrop' + index]]">
+                    <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
+                </button> -->
+                <button class="btn btn-warning position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]">
+                    [[ addedIng.name ]]
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
+                        X
+                    </span>
+                </button>
+                <hr class="my-4"/>
+            </div>
+        </template>
     
         <div style="text-align: center;">
             <button type="button" class="w-btn-neon2 btn-lg"><a href="{% url 'omc:recipe_list_view' %}" class="text-light fw-bold" style="text-decoration:none ;">요리보기</a></button>
@@ -86,28 +81,6 @@ Refrigerator List
                     <button class="btn">
                         <a href="#!" class="text-primary" @click="resetAddedIngredients()"><i style="font-size: 40pt;" class="bi bi-arrow-clockwise"></i></a>
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true" v-for="(ui, index) in userIngredientTypes" :id="[['staticBackdrop' + index]]">
-        <div class="modal-dialog modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">재료</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" ref="modal">
-                    <button type="button" class="btn btn-outline-warning" style="margin: 10px;" data-bs-toggle="button" v-for="ing in ingredientFilter(ui.type)" ref="ingbtn">
-                        [[ing.name]]
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" v-on:click="notApplyIngredients(index)"  data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" v-on:click="applyIngredients(index)" data-bs-dismiss="modal">적용</button>
                 </div>
             </div>
         </div>

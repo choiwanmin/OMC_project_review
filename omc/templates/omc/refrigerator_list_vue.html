@@ -28,27 +28,11 @@ const refListApp = {
         forceRender(){
             this.searchListKey += 1;
         },
-        applyIngredients(idx) {
-            this.addedIngredients[idx] = []
-            Array.from(this.$refs.modal[idx].getElementsByClassName('btn')).forEach((ing, index) => {
-                if (ing.classList.contains('active')){
-                    this.addedIngredients[idx].push({name: ing.innerText, idx: index})
-                }
-            })
-        },
         removeBtn(idx,idx_added, ingredient){
             this.addedIngredients[idx].splice(idx_added, 1)
             var index = this.userIngredients.findIndex((item) => item.name == ingredient.name)
             document.getElementsByClassName('item')[index].classList.remove('disabled')
             this.$refs.modal[idx].getElementsByClassName('btn')[ingredient.idx].classList.remove('active')
-        },
-        notApplyIngredients(idx){
-            for (let ing of this.$refs.modal[idx].getElementsByClassName('btn')){
-                ing.classList.remove('active')
-            }
-            for (let ing of this.addedIngredients[idx]){
-                this.$refs.modal[idx].getElementsByClassName('btn')[ing.idx].classList.add('active')
-            }
         },
         ingredientFilter(currType){
             return this.userIngredients.filter(i => i.type == currType)
@@ -104,12 +88,30 @@ const refListApp = {
                 }
             }
         },
+        /* deprecated
+        applyIngredients(idx) {
+            this.addedIngredients[idx] = []
+            Array.from(this.$refs.modal[idx].getElementsByClassName('btn')).forEach((ing, index) => {
+                if (ing.classList.contains('active')){
+                    this.addedIngredients[idx].push({name: ing.innerText, idx: index})
+                }
+            })
+        },
+        notApplyIngredients(idx){
+            for (let ing of this.$refs.modal[idx].getElementsByClassName('btn')){
+                ing.classList.remove('active')
+            }
+            for (let ing of this.addedIngredients[idx]){
+                this.$refs.modal[idx].getElementsByClassName('btn')[ing.idx].classList.add('active')
+            }
+        },
+        */
     },
 }
 var v = Vue.createApp(refListApp)
 console.log(v)
 v.mount('#ref_list')
-
+/* move to vue
 function filter(){
     var value, name, item, i;
     var count;
@@ -124,5 +126,5 @@ function filter(){
             item[i].style.display = "none";
         }
     }
-}
+}*/
 </script>
