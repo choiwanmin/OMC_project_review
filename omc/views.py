@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
-from .forms import CommentForm
+from .forms import CommentForm, UserForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 import boto3, uuid
@@ -78,22 +78,23 @@ class RefrigeratorList(TemplateView):
         context['ingredients_types'] = UserIngredient.objects.all().values_list('type').distinct().values('type')
         return context
 
-
-# def signup(request):
-#     if request.method == "POST":
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data.get('username')
-#             raw_password = form.cleaned_data.get('password1')
-#             user = authenticate(username=username, password=raw_password)
-#     # 사용자 인증
-#             login(request, user) # 로그인
-#             return redirect('/')
-#     else:
-#         form = UserForm()
-#     return render(request, 'omc/signup_view.html', {'form': form})
-
+def signup(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            nickname = form.cleaned_data.get('nickname')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(nickname=nickname, password=raw_password)
+            if user:
+    # 사용자 인증
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend') # 로그인
+                return redirect('/recipe/refrigerator_list_vue/')
+            else:
+                return redirect('/login/')
+    else:
+        form = UserForm()
+    return render(request, 'signup_view.html', {'form': form})
     
 class RecipeSearch(RecipeList):
     paginate_by = 40
