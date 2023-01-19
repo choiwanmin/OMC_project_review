@@ -1,65 +1,128 @@
 <script>
-    const refListApp = {
-        delimiters: ['[[',']]'],
-        data() {
-            return {
-                userIngredients:[
-                    {% for i in ingredients %}
-                    {name: "{{i.name}}", type:"{{i.type}}"},
-                    {% endfor %}
-                ],
-                userIngredientTypes:[
-                    {% for i in ingredients_types %}
-                    {type:"{{i.type}}"},
-                    {% endfor %}
-                ],
-                modals:[this.$refs.modals],
-                addedIngredients:[
-                    {% for i in ingredients_types %}
-                    [],
-                    {% endfor %}
-                ]
+const refListApp = {
+    delimiters: ['[[',']]'],
+    data() {
+        return {
+            searchListKey: 0,
+            userIngredients:[
+                {% for i in ingredients %}
+                {name: "{{i.name}}", type:"{{i.type}}"},
+                {% endfor %}
+            ],
+            userIngredientTypes:[
+                {% for i in ingredients_types %}
+                {type:"{{i.type}}"},
+                {% endfor %}
+            ],
+            modals:[this.$refs.modals],
+            addedIngredients:[
+                {% for i in ingredients_types %}
+                [],
+                {% endfor %}
+            ]
+        }
+    },
+    created(){
+    },
+    methods:{
+        forceRender(){
+            this.searchListKey += 1;
+        },
+        applyIngredients(idx) {
+            this.addedIngredients[idx] = []
+            Array.from(this.$refs.modal[idx].getElementsByClassName('btn')).forEach((ing, index) => {
+                if (ing.classList.contains('active')){
+                    this.addedIngredients[idx].push({name: ing.innerText, idx: index})
+                }
+            })
+        },
+        removeBtn(idx,idx_added, ingredient){
+            this.addedIngredients[idx].splice(idx_added, 1)
+            var index = this.userIngredients.findIndex((item) => item.name == ingredient.name)
+            document.getElementsByClassName('item')[index].classList.remove('disabled')
+            this.$refs.modal[idx].getElementsByClassName('btn')[ingredient.idx].classList.remove('active')
+        },
+        notApplyIngredients(idx){
+            for (let ing of this.$refs.modal[idx].getElementsByClassName('btn')){
+                ing.classList.remove('active')
+            }
+            for (let ing of this.addedIngredients[idx]){
+                this.$refs.modal[idx].getElementsByClassName('btn')[ing.idx].classList.add('active')
             }
         },
-        created(){
+        ingredientFilter(currType){
+            return this.userIngredients.filter(i => i.type == currType)
         },
-        methods:{
-            applyIngredients(idx) {
-                this.addedIngredients[idx] = []
-                Array.from(this.$refs.modal[idx].getElementsByClassName('btn')).forEach((ing, index) => {
-                    if (ing.classList.contains('active')){
-                        this.addedIngredients[idx].push({name: ing.innerText, idx: index})
-                    }
-                })
-            },
-            removeBtn(idx,idx_added, ingredient){
-                this.addedIngredients[idx].splice(idx_added, 1)
-                this.$refs.modal[idx].getElementsByClassName('btn')[ingredient.idx].classList.remove('active')
-            },
-            notApplyIngredients(idx){
-                for (let ing of this.$refs.modal[idx].getElementsByClassName('btn')){
+        ingredientCounterFromSearch(currType){
+            var index = this.userIngredientTypes.findIndex((item) => item.type == currType)
+            var item = document.getElementsByClassName("item"+index);
+            var cnt = 0
+            for (let i of item){
+                if (i.style.cssText != "display: none;"){
+                    cnt += 1
+                }
+            }
+            return cnt
+        },
+        resetAddedIngredients(){
+            var reset;
+            reset = confirm('모두 삭제하시겠습니까??')
+            if (reset){
+                var items = document.getElementsByClassName('item')
+                for (let i in this.addedIngredients){
+                    this.addedIngredients[i] = []
+                }
+                for (let i of items){
+                    i.classList.remove('disabled')
+                }
+                for (let ing in this.$refs.ingbtn){
                     ing.classList.remove('active')
                 }
-                for (let ing of this.addedIngredients[idx]){
-                    this.$refs.modal[idx].getElementsByClassName('btn')[ing.idx].classList.add('active')
-                }
-            },
-            ingredientFilter(currType){
-                return this.userIngredients.filter(i => i.type == currType)
-            },
-            resetAddedIngredients(){
-                var reset;
-                reset = confirm('모두 삭제하시겠습니까??')
-                if (reset){
-                    for (let i in this.addedIngredients){
-                        this.addedIngredients[i] = []
-                    }
-                    for (let ing in this.$refs.ingbtn){
-                        ing.classList.remove('active')
-                    }
-                }
-            },
+            }
         },
+        addIngredientsFromSearch(type, name, event){
+            var index = this.userIngredientTypes.findIndex((item) => item.type == type)
+            if (event.target.localName == "li") {
+                event.target.classList.add("disabled")
+            } else {
+                event.target.parentNode.classList.add("disabled")
+            }
+            this.addedIngredients[index].push({name: name, idx: index})
+        },
+        filterFromSearch(){
+            var value, name, item, i;
+            var count;
+            value = document.getElementById("inputValue").value.toUpperCase();
+            item = document.getElementsByClassName("item");
+
+            for(i=0;i<item.length;i++) {
+                name = item[i].getElementsByClassName("name");
+                if(name[0].innerHTML.toUpperCase().indexOf(value) > -1){
+                    item[i].style.display = "flex";
+                } else {
+                    item[i].style.display = "none";
+                }
+            }
+        },
+    },
+}
+var v = Vue.createApp(refListApp)
+console.log(v)
+v.mount('#ref_list')
+
+function filter(){
+    var value, name, item, i;
+    var count;
+    value = document.getElementById("inputValue").value.toUpperCase();
+    item = document.getElementsByClassName("item");
+
+    for(i=0;i<item.length;i++) {
+        name = item[i].getElementsByClassName("name");
+        if(name[0].innerHTML.toUpperCase().indexOf(value) > -1){
+            item[i].style.display = "flex";
+        } else {
+            item[i].style.display = "none";
+        }
     }
-    Vue.createApp(refListApp).mount('#ref_list')
+}
 </script>
