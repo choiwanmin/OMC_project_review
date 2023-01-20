@@ -174,3 +174,9 @@ AWS_S3_REGION_NAME = env_info.AWS_S3_REGION_NAME
 MEDIA_URL = env_info.AWS_S3_DOMAIN_NAME
 MEDIA_ROOT = 'media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+import django
+django.setup()
+from .import model_utils
+
+ENCODER, ONE_HOT_MATRIX = model_utils.get_one_hot_encoder()

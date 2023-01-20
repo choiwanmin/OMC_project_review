@@ -12,6 +12,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import boto3, uuid
 import env_info
 from django.contrib import messages
+from OMC_PJT import settings
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Create your views here.
 def index(requests):
@@ -155,10 +158,26 @@ class RecipeCategory(RecipeList):
 class RecipeRecommend(ListView):
     model = Recipe
     template_name = 'omc/recipe_recommend.html'
+    enc = settings.ENCODER
+    one_hot_vec = settings.ONE_HOT_MATRIX
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        context['recommend'] = Recipe.objects.all()[:5]
+        print(self.get_recommendations(['두부','탄산음료','부추','당면','향신료','표고버섯']))
+        keys = self.get_recommendations(['두부','탄산음료','부추','당면','향신료','표고버섯'])
+        context['recommend'] = list(Recipe.objects.filter(id__in=keys))
+        context['recommend'].sort(key=lambda recipe: keys.index(recipe.id))
+        print(context['recommend'])
         return context
+
+    def get_recommendations(self, ingt, enc=enc, limit=20):
+        user_input = pd.DataFrame(ingt,columns=['new_ing'])
+        input_temp = enc.transform(user_input).toarray().sum(axis=0)
+        cos = cosine_similarity(self.one_hot_vec['vector'].tolist(), input_temp.reshape(1,-1))
+        cos_idx = list(enumerate(cos))
+        cos_idx.sort(key=lambda x: x[1], reverse=True)
+        result = self.one_hot_vec.iloc[[i[0] for i in cos_idx[:limit]],:2]
+        # result['agreement'] = [i[1] for i in cos_idx[:limit]]
+        return result['id'].tolist()
 
 class NewComment(TemplateView):
     template_name = 'new_comment'
