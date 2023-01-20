@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from omc.views import index
+from omc.views import index, signup
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('accounts/', include('allauth.urls')),
     path('recipe/', include('omc.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='login_view.html'), name='login_view'),
+    path('signup/', signup, name='signup_view'),
 ]

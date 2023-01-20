@@ -1,6 +1,7 @@
 from django import forms
-from .models import Comment
+from .models import Comment, User
 from django.core.validators import validate_image_file_extension
+from django.contrib.auth.forms import UserCreationForm
 
 class CommentForm(forms.Form):
     content = forms.CharField()
@@ -16,3 +17,8 @@ class CommentForm(forms.Form):
         if commit:
             self.instance.save()
         return self.instance
+
+class UserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields= ("email", "nickname", "password1", "password2", "gender", "ageGroup", "householdSize")
