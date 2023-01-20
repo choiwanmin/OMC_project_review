@@ -37,7 +37,10 @@ Refrigerator List
 {% block content %}
 <div id="ref_list">
     <div class="searchbox dropdown dropdown-center">
-        <h1 class="text-center">냉장고에 있는 재료를 입력하시면 그에 맞는 레시피를 추천해드려요~<br>(멘트 변경 예정)</h1>
+        <h1 class="text-center">{{user.nickname}}의 냉장고<br></h1>
+        <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+            How To Use?
+        </a>
         <div class="text-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" onclick="document.getElementById('inputValue').focus()">
             <input onkeyup="this.value=this.value.replace(/[^ㄱ-ㅎ|가-힣]/g,'');" @keyup="filterFromSearch();forceRender();" @click="filterFromSearch();forceRender();" type="text" id="inputValue" placeholder="재료 검색" />
         </div>
@@ -57,10 +60,7 @@ Refrigerator List
         <template v-for="(ui,index) in userIngredientTypes">
             <div class="container py-1" style="padding-left: 15%; padding-right: 15%;" v-if="addedIngredients[index].length > 0">
                 <h2 class="fs-4 fw-bold">[[ui.type]]</h2>
-                <!-- <button class="btn" data-bs-toggle="modal" :data-bs-target="[['#staticBackdrop' + index]]">
-                    <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-                </button> -->
-                <button class="btn btn-warning position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]">
+                <button class="btn btn-outline-primary position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]" v-on:click="removeBtn(index, index_added, addedIng)">
                     [[ addedIng.name ]]
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
                         X
@@ -74,6 +74,7 @@ Refrigerator List
             <button type="button" class="w-btn-neon2 btn-lg"><a href="{% url 'omc:recipe_list_view' %}" class="text-light fw-bold" style="text-decoration:none ;">요리보기</a></button>
         </div>
     </section>
+
     <div style="display:scroll; position: fixed; right:0px; bottom:50px">
         <div class="container">
             <div data-toggle="tooltip" title="재료 초기화">
@@ -83,6 +84,18 @@ Refrigerator List
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">어떻게 사용하나요?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div>
+            <b>1.</b> 냉장고에 있는 재료를 입력하세요<br>
+            <b>2.</b> 재료를 입력하고 요리보기 버튼을 눌러보세요<br>
         </div>
     </div>
 </div>
