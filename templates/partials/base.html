@@ -25,10 +25,10 @@
     </head>
     <body>
         {% include 'partials/navbar.html'%}
-
+        <section id="content">
         {% block content %}
         {% endblock content %}
-
+        </section>
         {% include 'partials/footer.html'%}
     </body>
 </html>
