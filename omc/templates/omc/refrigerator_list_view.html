@@ -53,8 +53,8 @@ Refrigerator List
             <ul class="dropdown-menu" style="width: 300px; max-height: 400px; overflow-y: auto;">
                 <template v-for="(t,index) in userIngredientTypes">
                     <h5 class="dropdown-header" v-show="ingredientCounterFromSearch(t.type) > 0" :key="searchListKey">[[ t.type ]]</h5>
-                    <li class="item dropdown-item" :class="`item${index}`" v-for="ing in ingredientFilter(t.type)" v-on:click="addIngredientsFromSearch(ing.type,ing.name,$event);">
-                        <span class="name">[[ ing.name ]]</span>
+                    <li class="item dropdown-item" :class="`item${index}`" v-for="ing in ingredientFilter(t.type)" v-on:click="addIngredientsFromSearch(ing.type,ing.name,$event);" onclick="document.getElementById('inputValue').focus();">
+                        <span class="name" onclick="document.getElementById('inputValue').focus();">[[ ing.name ]]</span>
                     </li>
                 </template>
             </ul>

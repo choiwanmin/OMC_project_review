@@ -165,12 +165,17 @@ class RecipeRecommend(ListView):
     template_name = 'omc/recipe_recommend.html'
     enc = settings.ENCODER
     one_hot_vec = settings.ONE_HOT_MATRIX
+
+    def post(self, request, **kwargs):
+        user_inputs = request.POST.get('selected').split(',')
+        self.object_list = Recipe.objects.all()
+        context = self.get_context_data(user_inputs=user_inputs)
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        # print(self.get_recommendations(['두부','탄산음료','부추','당면','향신료','표고버섯']))
-        # keys = self.get_recommendations(['두부','탄산음료','부추','당면','향신료','표고버섯'])
-        print(self.get_recommendations(['닭고기','바나나','우유','아몬드']))
-        keys = self.get_recommendations(['닭고기','바나나','우유','아몬드'])
+        print(self.get_recommendations(kwargs['user_inputs']))
+        keys = self.get_recommendations(kwargs['user_inputs'], limit=10)
         context['recommend'] = list(Recipe.objects.filter(id__in=keys))
         context['recommend'].sort(key=lambda recipe: keys.index(recipe.id))
         print(context['recommend'])
@@ -194,7 +199,7 @@ class RecipeRecommend(ListView):
         new_input = pd.DataFrame(ingt,columns=['new_ing'])
         total = pd.concat([self.recipe_ingredient,new_input],axis=0,ignore_index=True)
         ingredients_matrix = self.tfidf.fit_transform(total['new_ing'])
-        cos = cosine_similarity(ingredients_matrix[:19935],ingredients_matrix[-1])
+        cos = cosine_similarity(ingredients_matrix[:-1],ingredients_matrix[-1])
         cos_idx = list(enumerate(cos))
         cos_idx.sort(key=lambda x: x[1], reverse=True)
         result = self.recipe_ingredient.iloc[[i[0] for i in cos_idx[:limit]],:2]
