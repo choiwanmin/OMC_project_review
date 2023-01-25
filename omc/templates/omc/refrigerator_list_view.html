@@ -76,7 +76,11 @@ Refrigerator List
         </template>
     
         <div style="text-align: center;">
-            <button type="button" class="w-btn-neon2 btn-lg"><a href="{% url 'omc:recipe_list_view' %}" class="text-light fw-bold" style="text-decoration:none ;">요리보기</a></button>
+            <form action="{% url 'omc:recipe_list_view' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="selected" :value="submitIngredient">
+                <button type="submit" class="w-btn-neon2 btn-lg" v-on:click="submitIngredients()">요리보기</button>
+            </form>
         </div>
     </section>
 

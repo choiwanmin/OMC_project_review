@@ -19,7 +19,8 @@ const refListApp = {
                 {% for i in ingredients_types %}
                 [],
                 {% endfor %}
-            ]
+            ],
+            submitIngredient:[],
         }
     },
     created(){
@@ -88,6 +89,14 @@ const refListApp = {
                 }
             }
         },
+        submitIngredients(){
+            for (var i=0; i<this.addedIngredients.length; i++){
+                for (var ing of this.addedIngredients[i]){
+                    this.submitIngredient.push(ing.name)
+                }
+            }
+            return this.submitIngredient
+        },
         /* deprecated
         applyIngredients(idx) {
             this.addedIngredients[idx] = []
@@ -109,7 +118,6 @@ const refListApp = {
     },
 }
 var v = Vue.createApp(refListApp)
-console.log(v)
 v.mount('#ref_list')
 /* move to vue
 function filter(){
