@@ -174,8 +174,11 @@ class RecipeRecommend(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        print(self.get_recommendations(kwargs['user_inputs']))
-        keys = self.get_recommendations(kwargs['user_inputs'], limit=10)
+        # print(self.get_recommendations(kwargs['user_inputs']))
+        if kwargs.get('user_inputs') is not None:
+            keys = self.get_recommendations(kwargs['user_inputs'], limit=10)
+        else:
+            keys = self.get_recommendations(['닭고기','바나나','우유','아몬드'], limit=10)
         context['recommend'] = list(Recipe.objects.filter(id__in=keys))
         context['recommend'].sort(key=lambda recipe: keys.index(recipe.id))
         print(context['recommend'])
