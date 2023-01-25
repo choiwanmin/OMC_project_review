@@ -179,4 +179,4 @@ import django
 django.setup()
 from .import model_utils
 
-ENCODER, ONE_HOT_MATRIX = model_utils.get_one_hot_encoder()
+ENCODER, ONE_HOT_MATRIX, TFIDF, RECIPE_INGREDIENT = model_utils.get_one_hot_tfidf()
