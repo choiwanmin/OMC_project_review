@@ -270,13 +270,13 @@
     min-height: 50px;
     background: linear-gradient(
         90deg,
-        rgba(129, 230, 217, 1) 0%,
-        rgba(79, 209, 197, 1) 100%
+        rgba(255, 178, 107, 1) 0%,
+        rgba(255, 123, 84, 1) 100%
     );
     border-radius: 1000px;
     color: darkslategray;
     cursor: pointer;
-    box-shadow: 12px 12px 24px rgba(79, 209, 197, 0.64);
+    box-shadow: 12px 12px 24px rgba(255, 123, 84, 0.64);
     font-weight: 700;
     transition: 0.3s;
 }
@@ -290,7 +290,7 @@
     width: 30px;
     height: 30px;
     border-radius: 100%;
-    border: 6px solid #00ffcb;
+    border: 6px solid #FF7B54;
     position: absolute;
     z-index: -1;
     top: 50%;

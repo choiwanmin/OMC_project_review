@@ -20,6 +20,7 @@ def index(requests):
     # recipe = recipe.objects.all().order_by("-")
     return render(requests,"index.html")
 
+
 class RecipeList(ListView):
     model = Recipe
     paginate_by = 40
@@ -53,6 +54,7 @@ class RecipeList(ListView):
         context.update({'pages': pages})
         return context
 
+
 class RecipeDetail(DetailView):
     model = Recipe
     template_name = 'omc/recipe_detail.html'
@@ -71,6 +73,7 @@ class RecipeDetail(DetailView):
         context['comment_form'] = CommentForm
         return context
 
+
 class RefrigeratorList(TemplateView):
     template_name = 'omc/refrigerator_list_view.html'
     
@@ -79,6 +82,7 @@ class RefrigeratorList(TemplateView):
         context['ingredients'] = UserIngredient.objects.all()
         context['ingredients_types'] = UserIngredient.objects.all().values_list('type').distinct().values('type')
         return context
+
 
 def signup(request):
     if request.method == "POST":
@@ -98,6 +102,7 @@ def signup(request):
         form = UserForm()
     return render(request, 'signup_view.html', {'form': form})
     
+
 class RecipeSearch(RecipeList):
     paginate_by = 40
 
@@ -117,6 +122,8 @@ class RecipeSearch(RecipeList):
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         context['search_word'] = q
         return context
+    
+
 class RecipeCategory(RecipeList):
     paginate_by = 40
 
@@ -152,20 +159,23 @@ class RecipeCategory(RecipeList):
                 selected_categorys[category_mapping[key]] = context['category'][category_mapping[key]][value-1].name
         context['selected_category'] = selected_categorys
         return context
-        #redirect(f'/recipe/category/{catt_pk}')
-        # render(request, self.template_name, context)
 
 class RecipeRecommend(ListView):
     model = Recipe
     template_name = 'omc/recipe_recommend.html'
     enc = settings.ENCODER
     one_hot_vec = settings.ONE_HOT_MATRIX
+
+    def post(self, request, **kwargs):
+        user_inputs = request.POST.get('selected').split(',')
+        self.object_list = Recipe.objects.all()
+        context = self.get_context_data(user_inputs=user_inputs)
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        # print(self.get_recommendations(['두부','탄산음료','부추','당면','향신료','표고버섯']))
-        # keys = self.get_recommendations(['두부','탄산음료','부추','당면','향신료','표고버섯'])
-        print(self.get_recommendations(['닭고기','바나나','우유','아몬드']))
-        keys = self.get_recommendations(['닭고기','바나나','우유','아몬드'])
+        print(self.get_recommendations(kwargs['user_inputs']))
+        keys = self.get_recommendations(kwargs['user_inputs'], limit=10)
         context['recommend'] = list(Recipe.objects.filter(id__in=keys))
         context['recommend'].sort(key=lambda recipe: keys.index(recipe.id))
         print(context['recommend'])
@@ -189,7 +199,7 @@ class RecipeRecommend(ListView):
         new_input = pd.DataFrame(ingt,columns=['new_ing'])
         total = pd.concat([self.recipe_ingredient,new_input],axis=0,ignore_index=True)
         ingredients_matrix = self.tfidf.fit_transform(total['new_ing'])
-        cos = cosine_similarity(ingredients_matrix[:19935],ingredients_matrix[-1])
+        cos = cosine_similarity(ingredients_matrix[:-1],ingredients_matrix[-1])
         cos_idx = list(enumerate(cos))
         cos_idx.sort(key=lambda x: x[1], reverse=True)
         result = self.recipe_ingredient.iloc[[i[0] for i in cos_idx[:limit]],:2]
@@ -203,6 +213,7 @@ class NewComment(TemplateView):
                     aws_access_key_id=env_info.AWS_ACCESS_KEY_ID,
                     aws_secret_access_key=env_info.AWS_SECRET_ACCESS_KEY
                 )
+    
     def post(self,request, pk):
         if request.user.is_authenticated:
             recipe = get_object_or_404(Recipe, pk=pk)
@@ -233,6 +244,7 @@ class UpdateComment(LoginRequiredMixin, UpdateView):
             return super(UpdateComment, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
 
 def delete_comment(request,pk):
     comment = get_object_or_404(Comment, pk=pk)

@@ -7,61 +7,113 @@ Refrigerator List
 
 {% block style %}
 <link href="{% static 'css/btnstyles.css' %}" rel="stylesheet" />
+<style>
+.searchbox{
+  width: 90%;
+  margin: 10px auto;
+}
+#inputValue{
+  border: 3px solid;
+  /* background: var(--bs-success); */
+  border-color: var(--bs-primary);
+  padding: 6px;
+  font-size: 18px;
+  width: 80%;
+  /* border-radius: 30px; */
+  color: black;
+}
+#inputValue:focus{
+    outline: none;
+}
+#inputValue{
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    width: 500px;
+    height: 50px;
+}
+.tooltip:checked + .tooltip:focus,
+.tooltip:active + .tooltip:focus,
+.tooltip:active:focus,
+.tooltip.active:focus,
+.tooltip:focus{
+    box-shadow: none;
+}
+</style>
 {% endblock style %}
 
 {% block content %}
 <div id="ref_list">
+    <div class="searchbox dropdown dropdown-center">
+        <h1 class="text-center" style="letter-spacing: 10px;">{{user.nickname}}'s IceBox<br></h1>
+        <div class="text-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" onclick="document.getElementById('inputValue').focus()">
+            <input class="bg-light" onkeyup="this.value=this.value.replace(/[^ㄱ-ㅎ|가-힣]/g,'');" @keyup="filterFromSearch();forceRender();" @click="filterFromSearch();forceRender();" type="text" id="inputValue" placeholder="재료 검색" />
+        </div>
+        <div class="container">
+            <ul class="dropdown-menu" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                <template v-for="(t,index) in userIngredientTypes">
+                    <h5 class="dropdown-header" v-show="ingredientCounterFromSearch(t.type) > 0" :key="searchListKey">[[ t.type ]]</h5>
+                    <li class="item dropdown-item" :class="`item${index}`" v-for="ing in ingredientFilter(t.type)" v-on:click="addIngredientsFromSearch(ing.type,ing.name,$event);" onclick="document.getElementById('inputValue').focus();">
+                        <span class="name" onclick="document.getElementById('inputValue').focus();">[[ ing.name ]]</span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </div>
     <!-- Section-->
     <section class="py-5" >
-        <div style="margin: 30px;" v-for="(ui,index) in userIngredientTypes">
-            <h2 class="fs-4 fw-bold">[[ui.type]]</h2>
-            <button class="btn" data-bs-toggle="modal" :data-bs-target="[['#staticBackdrop' + index]]">
-                <a href="#!" class="text-primary"><i style="font-size: 40pt;" class="bi bi-plus-square"></i></a>
-            </button>
-            <button class="btn btn-warning position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]">
-                [[ addedIng.name ]]
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
-                    X
-                </span>
-            </button>
-            <hr class="my-4"/>
-        </div>
+        <template v-for="(ui,index) in userIngredientTypes">
+            <div class="container py-1" style="padding-left: 15%; padding-right: 15%;" v-if="addedIngredients[index].length > 0">
+                <h2 class="fs-4 fw-bold">[[ui.type]]</h2>
+                <button class="btn btn-outline-primary position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]" v-on:click="removeBtn(index, index_added, addedIng)">
+                    [[ addedIng.name ]]
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
+                        X
+                    </span>
+                </button>
+                <hr class="my-4"/>
+            </div>
+        </template>
     
         <div style="text-align: center;">
-            <button type="button" class="w-btn-neon2 btn-lg"><a href="{% url 'omc:recipe_list_view' %}" class="text-light fw-bold" style="text-decoration:none ;">요리보기</a></button>
+            <form action="{% url 'omc:recipe_recommend' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="selected" :value="submitIngredient">
+                <button type="submit" class="w-btn-neon2 btn-lg" v-on:click="submitIngredients()">요리보기</button>
+            </form>
         </div>
     </section>
+
     <div style="display:scroll; position: fixed; right:0px; bottom:50px">
         <div class="container">
+            <div data-toggle="tooltip" title="how to use?">
+                <div style="margin-left:5px">
+                    <button class="btn" style="padding:0;">
+                        <a class="text-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                            <i style="font-size: 35pt;" class="bi bi-question-circle"></i>
+                        </a>
+                    </button>
+                </div>
+            </div>
             <div data-toggle="tooltip" title="재료 초기화">
-                <div style="margin:30px">
-                    <button class="btn">
-                        <a href="#!" class="text-primary" @click="resetAddedIngredients()"><i style="font-size: 40pt;" class="bi bi-arrow-clockwise"></i></a>
+                <div style="margin-right:30px; margin-top:15px">
+                    <button class="btn" style="padding:0;">
+                        <a class="text-primary" @click="resetAddedIngredients()"><i style="font-size: 40pt;" class="bi bi-arrow-clockwise"></i></a>
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true" v-for="(ui, index) in userIngredientTypes" :id="[['staticBackdrop' + index]]">
-        <div class="modal-dialog modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">재료</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" ref="modal">
-                    <button type="button" class="btn btn-outline-warning" style="margin: 10px;" data-bs-toggle="button" v-for="ing in ingredientFilter(ui.type)" ref="ingbtn">
-                        [[ing.name]]
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" v-on:click="notApplyIngredients(index)"  data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" v-on:click="applyIngredients(index)" data-bs-dismiss="modal">적용</button>
-                </div>
-            </div>
+</div>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">어떻게 사용하나요?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div>
+            <b>1.</b> 냉장고에 있는 재료를 입력하세요<br>
+            <b>2.</b> 재료를 입력하고 요리보기 버튼을 눌러보세요<br>
         </div>
     </div>
 </div>
