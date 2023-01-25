@@ -20,6 +20,7 @@ def index(requests):
     # recipe = recipe.objects.all().order_by("-")
     return render(requests,"index.html")
 
+
 class RecipeList(ListView):
     model = Recipe
     paginate_by = 40
@@ -53,6 +54,7 @@ class RecipeList(ListView):
         context.update({'pages': pages})
         return context
 
+
 class RecipeDetail(DetailView):
     model = Recipe
     template_name = 'omc/recipe_detail.html'
@@ -71,6 +73,7 @@ class RecipeDetail(DetailView):
         context['comment_form'] = CommentForm
         return context
 
+
 class RefrigeratorList(TemplateView):
     template_name = 'omc/refrigerator_list_view.html'
     
@@ -79,6 +82,7 @@ class RefrigeratorList(TemplateView):
         context['ingredients'] = UserIngredient.objects.all()
         context['ingredients_types'] = UserIngredient.objects.all().values_list('type').distinct().values('type')
         return context
+
 
 def signup(request):
     if request.method == "POST":
@@ -98,6 +102,7 @@ def signup(request):
         form = UserForm()
     return render(request, 'signup_view.html', {'form': form})
     
+
 class RecipeSearch(RecipeList):
     paginate_by = 40
 
@@ -117,6 +122,8 @@ class RecipeSearch(RecipeList):
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         context['search_word'] = q
         return context
+    
+
 class RecipeCategory(RecipeList):
     paginate_by = 40
 
@@ -152,8 +159,6 @@ class RecipeCategory(RecipeList):
                 selected_categorys[category_mapping[key]] = context['category'][category_mapping[key]][value-1].name
         context['selected_category'] = selected_categorys
         return context
-        #redirect(f'/recipe/category/{catt_pk}')
-        # render(request, self.template_name, context)
 
 class RecipeRecommend(ListView):
     model = Recipe
@@ -203,6 +208,7 @@ class NewComment(TemplateView):
                     aws_access_key_id=env_info.AWS_ACCESS_KEY_ID,
                     aws_secret_access_key=env_info.AWS_SECRET_ACCESS_KEY
                 )
+    
     def post(self,request, pk):
         if request.user.is_authenticated:
             recipe = get_object_or_404(Recipe, pk=pk)
@@ -233,6 +239,7 @@ class UpdateComment(LoginRequiredMixin, UpdateView):
             return super(UpdateComment, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
 
 def delete_comment(request,pk):
     comment = get_object_or_404(Comment, pk=pk)
