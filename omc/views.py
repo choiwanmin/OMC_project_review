@@ -184,30 +184,15 @@ class RecipeRecommend(ListView):
         print(context['recommend'])
         return context
 
-    # def get_recommendations(self, ingt, enc=enc, limit=20):
-    #     user_input = pd.DataFrame(ingt,columns=['new_ing'])
-    #     input_temp = enc.transform(user_input).toarray().sum(axis=0)
-    #     cos = cosine_similarity(self.one_hot_vec['vector'].tolist(), input_temp.reshape(1,-1))
-    #     cos_idx = list(enumerate(cos))
-    #     cos_idx.sort(key=lambda x: x[1], reverse=True)
-    #     result = self.one_hot_vec.iloc[[i[0] for i in cos_idx[:limit]],:2]
-    #     # result['agreement'] = [i[1] for i in cos_idx[:limit]]
-    #     return result['id'].tolist()
-    
-    tfidf = settings.TFIDF
-    recipe_ingredient = settings.RECIPE_INGREDIENT
-
-    def get_recommendations(self, ingt, tfidf=tfidf, limit=20):
-        ingt = [",".join(ingt)]
-        new_input = pd.DataFrame(ingt,columns=['new_ing'])
-        total = pd.concat([self.recipe_ingredient,new_input],axis=0,ignore_index=True)
-        ingredients_matrix = self.tfidf.fit_transform(total['new_ing'])
-        cos = cosine_similarity(ingredients_matrix[:-1],ingredients_matrix[-1])
+    def get_recommendations(self, ingt, enc=enc, limit=20):
+        user_input = pd.DataFrame(ingt,columns=['new_ing'])
+        input_temp = enc.transform(user_input).toarray().sum(axis=0)
+        cos = cosine_similarity(self.one_hot_vec['vector'].tolist(), input_temp.reshape(1,-1))
         cos_idx = list(enumerate(cos))
         cos_idx.sort(key=lambda x: x[1], reverse=True)
-        result = self.recipe_ingredient.iloc[[i[0] for i in cos_idx[:limit]],:2]
-        # result['agreement'] = [i[1] for i in cos_idx[:limit]]
+        result = self.one_hot_vec.iloc[[i[0] for i in cos_idx[:limit]],:2]
         return result['id'].tolist()
+
 
 class NewComment(TemplateView):
     template_name = 'new_comment'
