@@ -62,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    CHOICE_GENDER=((0, ""), (1, "남자"), (2,"여자"))
-    gender = models.BooleanField(blank=False, default=0, choices=CHOICE_GENDER, verbose_name='gender')
+    CHOICE_GENDER=((None, ""), (True, "남자"), (False,"여자"))
+    gender = models.BooleanField(blank=False, default=None, choices=CHOICE_GENDER, verbose_name='gender')
     CHOICE_AGEGROUP = (('10', '10~19세'), ('20', '20~29세'), ('30', '30~39세'), ('40', '40~49세'), ('50', '50~59세'), ('60', '60~69세'), ('70', '70~79세'), ('80', '80~89세'), ('90', '90~99세'),)
     ageGroup = models.CharField(max_length=2, choices=CHOICE_AGEGROUP, verbose_name='age_group')
     CHOICE_HOUSEHOLDSIZE = (('1', '1인 가구'), ('2', '2인 가구'), ('3', '3인 가구'), ('4', '4인 가구'), ('5', '5인 가구'), ('6', '6인 가구'), ('7', '7인 가구'), ('8', '8인 가구'), ('9', '9인 가구'), ('10', '10인 가구 이상'),)
