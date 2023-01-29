@@ -248,7 +248,6 @@ class UpdateComment(LoginRequiredMixin, UpdateView):
         else:
             raise PermissionDenied
 
-
 def delete_comment(request,pk):
     comment = get_object_or_404(Comment, pk=pk)
     recipe = comment.recipeId

@@ -81,7 +81,7 @@
                 <!-- Post preview-->
                 <div class="post-preview bg-white p-5">
                     <h2 class="post-title" style="font-family: 'Segoe UI'; font-size: 20;"><cite>Recipe</cite></h2><br><br>
-                    <!-- for 문 recipe_order -->
+                    <!-- for 문 recipe_order -- >
                     {% for n in recipe_order %}
                     <div class="row">
                         <div class="col-lg-1" style="padding-right: 0;">
@@ -143,9 +143,17 @@
                         <form id="comment-form" method="POST" action="{{ recipe.get_absolute_url }}/new_comment/" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
-                                {{ comment_form.as_p }}
+                                {{ comment_form.content }}
                             </div>
-                            <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Submit</button>
+                            <div class="form-group">
+                                {{ comment_form.star }}
+                            </div>
+                            <div class="form-group">
+                                {{ comment_form.thumbnail }}
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Submit</button>
+                            </div>
                         </form>
                         {% else %}
                         <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -179,25 +187,27 @@
                             {% else %}
                             <div class="text-muted" style="display: inline-block;">{{ comment.createdAt }}</div>
                             {% endif %}
-                            <a id="comment-{{ comment.pk }}-update" href="/recipe/update_comment/{{ comment.pk }}" style="text-decoration: none; color: gray;">&nbsp;수정</a>
-                            <span>|</span>
-                            <a href="#" style="text-decoration: none; color: gray;" data-bs-toggle="modal" data-bs-target="#comment-{{ comment.pk }}-delete"> 삭제</a>
-                            <!-- Modal -->
-                            <div class="modal fade" id="comment-{{ comment.pk }}-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">댓글을 삭제하시겠습니까?</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">{{ comment.content | linebreaks }}</div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
-                                            <a role="button" class="btn btn-danger" href="/recipe/delete_comment/{{ comment.pk }}">Delete</a>
+                            {% if request.user.is_authenticated and request.user == comment.userId %}
+                                <a id="comment-{{ comment.pk }}-update-btn" href="/recipe/update_comment/{{ comment.pk }}" style="text-decoration: none; color: gray;">&nbsp;수정</a>
+                                <span>|</span>
+                                <a id="comment-{{ comment.pk }}-delete-btn" href="#" style="text-decoration: none; color: gray;" data-bs-toggle="modal" data-bs-target="#comment-{{ comment.pk }}-delete"> 삭제</a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="comment-{{ comment.pk }}-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">댓글을 삭제하시겠습니까?</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">{{ comment.content | linebreaks }}</div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                                                <a role="button" class="btn btn-danger" href="/recipe/delete_comment/{{ comment.pk }}">Delete</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                         {% if comment.thumbnail %}
                         <div class="row">
@@ -207,7 +217,6 @@
                         {% else %}
                         <p>{{ comment.content | linebreaks}}</p>
                         {% endif %}
-                        
                     </div>
                     <!-- Divider-->
                     <hr class="my-2" />
