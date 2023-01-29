@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 # from omc.signup_form import UserForm
 from django.contrib.auth import authenticate, login
-from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment
+from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment, Icebox
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
 from .forms import CommentForm, UserForm
@@ -76,7 +76,18 @@ class RecipeDetail(DetailView):
 
 class RefrigeratorList(TemplateView):
     template_name = 'omc/refrigerator_list_view.html'
-    
+
+    def get(self, request):
+        if not request.user.is_anonymous:
+            context = self.get_context_data()
+            icebox, created = Icebox.objects.get_or_create(userId_id=request.user.id, defaults={'userId': request.user})
+            context['icebox'] = icebox
+            context['exist_ingredients'] = icebox.userIngredientId.all()
+            context['created'] = created
+        else:
+            return redirect('/login/')
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super(RefrigeratorList, self).get_context_data()
         context['ingredients'] = UserIngredient.objects.all()
@@ -168,6 +179,12 @@ class RecipeRecommend(ListView):
 
     def post(self, request, **kwargs):
         user_inputs = request.POST.get('selected').split(',')
+        if not request.user.is_anonymous:
+            icebox = Icebox.objects.get(userId_id=request.user.id)
+            icebox.userIngredientId.clear()
+            for input in user_inputs:
+                input_ing = UserIngredient.objects.get(name=input)
+                icebox.userIngredientId.add(input_ing)
         self.object_list = Recipe.objects.all()
         context = self.get_context_data(user_inputs=user_inputs)
         return render(request, self.template_name, context)
@@ -217,7 +234,6 @@ class NewComment(TemplateView):
         if request.user.is_authenticated:
             recipe = get_object_or_404(Recipe, pk=pk)
             comment_form = CommentForm(request.POST, request.FILES)
-            print(request.user)
             if comment_form.is_valid():
                 comment_form.cleaned_data['recipeId'] = recipe
                 comment_form.cleaned_data['userId'] = request.user

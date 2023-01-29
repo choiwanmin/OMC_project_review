@@ -17,7 +17,13 @@ const refListApp = {
             modals:[this.$refs.modals],
             addedIngredients:[
                 {% for i in ingredients_types %}
-                [],
+                [
+                    {% for ing in exist_ingredients%}
+                    {% if i.type == ing.type%}
+                    {name: "{{ing.name}}", idx: {{forloop.parentloop.counter0}} },
+                    {% endif%}
+                    {% endfor %}
+                ],
                 {% endfor %}
             ],
             submitIngredient:[],
@@ -29,7 +35,7 @@ const refListApp = {
         forceRender(){
             this.searchListKey += 1;
         },
-        removeBtn(idx,idx_added, ingredient){
+        removeBtn(idx, idx_added, ingredient){
             this.addedIngredients[idx].splice(idx_added, 1)
             var index = this.userIngredients.findIndex((item) => item.name == ingredient.name)
             document.getElementsByClassName('item')[index].classList.remove('disabled')
@@ -135,4 +141,21 @@ function filter(){
         }
     }
 }*/
+function addExistIngredients(exist_ingredient){
+    var items = document.getElementsByClassName('item')
+    for (let item of items){
+        if (item.innerText == exist_ingredient){
+            item.classList.add("disabled")
+        }
+    }
+}
+{% for ing in exist_ingredients %}
+addExistIngredients("{{ing.name}}")
+{% endfor %}
+
+{% if created %}
+const bsOffcanvas = new bootstrap.Offcanvas('#offcanvasExample')
+bsOffcanvas.show()
+{% endif %}
+
 </script>
