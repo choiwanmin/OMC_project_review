@@ -65,7 +65,7 @@ Refrigerator List
         <template v-for="(ui,index) in userIngredientTypes">
             <div class="container py-1" style="padding-left: 15%; padding-right: 15%;" v-if="addedIngredients[index].length > 0">
                 <h2 class="fs-4 fw-bold">[[ui.type]]</h2>
-                <button class="btn btn-outline-primary position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]" v-on:click="removeBtn(index, index_added, addedIng)">
+                <button class="btn btn-outline-primary position-relative" style="margin: 10px;" v-for="(addedIng,index_added) in addedIngredients[index]" >
                     [[ addedIng.name ]]
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" v-on:click="removeBtn(index, index_added, addedIng)">
                         X
@@ -79,12 +79,12 @@ Refrigerator List
             <form action="{% url 'omc:recipe_recommend' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="selected" :value="submitIngredient">
-                <button type="submit" class="w-btn-neon2 btn-lg" v-on:click="submitIngredients()">요리보기</button>
+                <button type="submit" class="w-btn-neon2 btn-lg text-light" v-on:click="submitIngredients()">요리보기</button>
             </form>
         </div>
     </section>
 
-    <div style="display:scroll; position: fixed; right:0px; bottom:50px">
+    <div style="display:scroll; position: fixed; right:0px; bottom:60px">
         <div class="container">
             <div data-toggle="tooltip" title="how to use?">
                 <div style="margin-left:5px">
@@ -112,8 +112,9 @@ Refrigerator List
     </div>
     <div class="offcanvas-body">
         <div>
-            <b>1.</b> 냉장고에 있는 재료를 입력하세요<br>
-            <b>2.</b> 재료를 입력하고 요리보기 버튼을 눌러보세요<br>
+            <b>1.</b> 냉장고에 있는 재료를 검색해서 넣어주세요!<br>
+            <img class="img-fluid" src="{% static 'assets/help1.png' %}">
+            <b>2.</b> 재료를 입력하고 <img class="img-fluid" src="{% static 'assets/help2.png' %}" style="height: 1.5em;"> 버튼을 눌러보세요~~<br>
         </div>
     </div>
 </div>
