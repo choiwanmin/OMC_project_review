@@ -191,7 +191,26 @@ class RecipeRecommend(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        # print(self.get_recommendations(kwargs['user_inputs']))
+        spring = Recipe.objects.filter(recipehashtag__description__contains='봄').distinct().order_by('-viewCount')
+        summer = Recipe.objects.filter(recipehashtag__description__contains='여름').distinct().order_by('-viewCount')
+        autumn = Recipe.objects.filter(recipehashtag__description__contains='가을').distinct().order_by('-viewCount')
+        winter = Recipe.objects.filter(recipehashtag__description__contains='겨울').distinct().order_by('-viewCount')
+        context['seasons'] = {
+            '봄' : spring,
+            '여름' : summer,
+            '가을' : autumn,
+            '겨울' : winter,
+        }
+        baby = Recipe.objects.filter(
+            Q(recipehashtag__description__contains='아이') | Q(recipehashtag__description__contains='아기')
+            ).distinct().order_by('-viewCount')
+        all_recipe = Recipe.objects.all().count() - baby.count()
+        print(all_recipe)
+        context['baby_chart'] = { 
+            '아이' : baby.count(),
+            '기타' : all_recipe
+            }
+        context['baby'] = baby
         if kwargs.get('user_inputs') is not None:
             keys = self.get_recommendations(kwargs['user_inputs'], limit=50)
         else:
