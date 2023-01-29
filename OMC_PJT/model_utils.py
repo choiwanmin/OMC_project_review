@@ -6,11 +6,9 @@ import numpy as np
 import pandas as pd
 import json
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-
-def get_one_hot_tfidf():
+def get_one_hot_encoder():
     data_recp = Recipe.objects.filter(id__lt=20000).values_list('id','name')
     data_irdn = Ingredient.objects.filter(recipeId_id__lt=20000).values_list('name','recipeId_id')
     df_recp = pd.DataFrame.from_records(data=data_recp,columns=['id','recipe_name'])
@@ -35,16 +33,4 @@ def get_one_hot_tfidf():
     one_hot_df['vector'] = one_hot_df[columns].values.tolist()
     one_hot_vec = one_hot_df.loc[:,['id','vector']]
     
-    tfidf = TfidfVectorizer()
-    agg_dict = {
-    'recipe_name' : [('recipe_name', lambda x: x.drop_duplicates())],
-    'name' : [('name', lambda x: ','.join(str(i) if i is not None else ' ' for i in x))],
-    'new_ing' : [('new_ing', lambda x: ','.join(str(i) if i is not None else ' ' for i in x))]
-    }
-    tmp = df_join.groupby('id').agg(agg_dict)
-    tmp.columns = tmp.columns.droplevel()
-    df_join2 = tmp.reset_index()
-    
-    recipe_ingredient = df_join2
-
-    return enc, one_hot_vec, tfidf, recipe_ingredient
+    return enc, one_hot_vec
