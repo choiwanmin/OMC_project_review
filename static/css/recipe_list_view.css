@@ -1,0 +1,25 @@
+@media (prefers-reduced-motion: no-preference) {
+    :root {
+    scroll-behavior: smooth;
+    }
+    }
+@media (min-width: 576px) {
+    div.card-body.p-4 div.text-center div.row div div.star_rating {left:80%;}
+    body section.category div.card {margin-left: auto; margin-right: auto; margin-top: 1.5rem;}
+}
+@media (min-width: 768px) {
+    div.card-body.p-4 div.text-center div.row div div.star_rating {left:60%;} 
+    body section.category div.card {margin-left: auto; margin-right: auto; margin-top: 1.5rem;}
+}
+@media (min-width: 992px) {
+    div.card-body.p-4 div.text-center div.row div div.star_rating {left:95%;} 
+    body section.category div.card {margin-left: auto; margin-right: auto; margin-top: 1.5rem;}
+}
+@media (min-width: 1200px) {
+    div.card-body.p-4 div.text-center div.row div div.star_rating {left:75%;} 
+    body section.category div.card {margin-left: auto; margin-right: auto; margin-top: 1.5rem;}
+}
+@media (min-width: 1400px) {
+    div.card-body.p-4 div.text-center div.row div div.star_rating {left:100%;} 
+    body section.category div.card {margin-left: auto; margin-right: auto; margin-top: 1.5rem;}
+}

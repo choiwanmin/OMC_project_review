@@ -1,0 +1,84 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block style %}
+<style>
+    section.bg-sec{
+        position:relative;
+        width: 100%;
+        height: 100%;
+    }
+    section.bg-sec::before{
+        content:"";
+        width: 100%;
+        height: 100%;
+        background-image: url({% static 'assets/spaghetti.jpg' %});
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        filter:brightness(50%);
+    }
+    .a-recommend {
+        color: #939B62;
+        font-size: 25px;
+    }
+    .a-recommend:hover {
+        color: #939B62;
+        font-weight: bold;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+
+<div style="min-height: calc(100vh - 160px)">
+<!-- Header-->
+    <header class="bg-light"> 
+        <div class="container px-lg-5 ">
+            <div class="p-2 p-lg-3  rounded-3 text-center">
+                <div class="m-4 m-lg-5 row">
+                    <div class="col-5" style="margin: auto;"></br>
+                        <h1 class="display-5 text-primary">오늘의 메뉴 추천</h1>
+                        <h5 style="margin-top: 3rem;">어떤 요리를 해야할지 모르겠다면</h5>
+                        <h5>OMC에서 레시피를 추천 받으세요</h5></br>
+                        <!--  text-light -->
+                        <div style="vertical-align: middle;">
+                            <a class="a-recommend" href="{% url 'omc:recipe_recommend' %}">GO&nbsp;<i class="bi bi-chevron-double-right"></i></a>
+                        </div>
+                    </div>
+                    <img src="{% static 'assets/tomatoes-321671_1920.jpg' %}" class="col-7" style="width:50%; border-radius: 50px;">
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Page Content-->
+    <section class="py-5 bg-sec">
+        <div class="container px-lg-5">
+            <!-- Page Features-->
+            <div class="row gx-lg-5">
+                <div class="col-lg-6 col-xxl-6 mt-4 mb-3">
+                    <div class="card border-0 h-100">
+                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-basket2"></i></div>
+                            <h2 class="fs-4 fw-bold">나만의 냉장고</h2><br>
+                            <p class="mb-0">냉장고에 있는 재료를 입력하여 한 눈에 관리</p><br><br>
+                            <a class="btn btn-primary btn-lg" href="{% url 'omc:refrigerator_view' %}">냉장고 채우기</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xxl-6 mt-4 mb-3">
+                    <div class="card bg-light border-0 h-100">
+                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <h2 class="fs-4 fw-bold">레시피 검색</h2><br>
+                            <p class="mb-0">세상의 모든 레시피가 이곳에!</p><br><br>
+                            <a class="btn btn-primary btn-lg" href="{% url 'omc:recipe_list_view' %}">레시피 보러가기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock content %}

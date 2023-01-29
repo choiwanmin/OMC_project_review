@@ -1,0 +1,117 @@
+<style>
+    .text-info-list {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-info-rgb), var(--bs-text-opacity)) !important;
+    }
+    .text-info-list:hover {
+    --bs-text-opacity: 1;
+    color: rgb(255,255,255) !important;
+    }
+</style>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-info text-info-list" data-bs-toggle="modal" data-bs-target="#measureModal" style="display: inline-block; float: right;">
+    계량법 안내
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="measureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel"><b>계량법 안내</b></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped" style="font-size: 0.8rem; vertical-align: middle;">
+                    <tbody>
+                        <tr>
+                            <td><b>1큰술(1T, 1Ts)<br>= 1숟가락</b></td>
+                            <td style="text-align: right;">15ml = 3t<br>(계량스푼이 없는 경우 밥숟가락으로 볼록하게 가득 담으면 1큰술)</td>
+                        </tr>
+                        <tr>
+                            <td><b>1작은술(1t, 1ts)</b></td>
+                            <td style="text-align: right;">5ml<br>(티스푼으로는 2스푼이 1작은술)</td>
+                        </tr>
+                        <tr>
+                            <td><b>1컵(1Cup, 1C)</b></td>
+                            <td style="text-align: right;">200ml = 16T(한국,중국,일본)<br>(미국 및 서양의 경우 1C가 240~250ml이므로 계량컵 구매 사용시 주의)</td>
+                        </tr>
+                        <tr>
+                            <td><b>1종이컵</b></td>
+                            <td style="text-align: right;">180ml</td>
+                        </tr>
+                        <tr>
+                            <td><b>1oz</b></td>
+                            <td style="text-align: right;">28.3g</td>
+                        </tr>
+                        <tr>
+                            <td><b>1파운드(lb)</b></td>
+                            <td style="text-align: right;">약 0.453 킬로그램(kg)</td>
+                        </tr>
+                        <tr>
+                            <td><b>1갤런(gallon)</b></td>
+                            <td style="text-align: right;">약 3.78 리터(ℓ)</td>
+                        </tr>
+                        <tr>
+                            <td><b>1꼬집</b></td>
+                            <td style="text-align: right;">약 2g 정도이며 '약간'이라고 표현하기도 함</td>
+                        </tr>
+                        <tr>
+                            <td><b>조금</b></td>
+                            <td style="text-align: right;">약간의 2~3배</td>
+                        </tr>
+                        <tr>
+                            <td><b>적당량</b></td>
+                            <td style="text-align: right;">기호에 따라 마음대로 조절해서 넣으란 표현</td>
+                        </tr>
+                        <tr>
+                            <td><b>1줌</b></td>
+                            <td style="text-align: right;">한손 가득 넘치게 쥐어진 정도<br>(예시 : 멸치 1줌 = 국멸치인 경우 12~15마리, 나물 1줌은 50g)</td>
+                        </tr>
+                        <tr>
+                            <td><b>크게 1줌 = 2줌</b></td>
+                            <td style="text-align: right;">1줌의 두배</td>
+                        </tr>
+                        <tr>
+                            <td><b>1주먹</b></td>
+                            <td style="text-align: right;">여자 어른의 주먹크기, 고기로는 100g</td>
+                        </tr>
+                        <tr>
+                            <td><b>1토막</b></td>
+                            <td style="text-align: right;">2~3cm두께 정도의 분량</td>
+                        </tr>
+                        <tr>
+                            <td><b>마늘 1톨</b></td>
+                            <td style="text-align: right;">깐 마늘 한쪽</td>
+                        </tr>
+                        <tr>
+                            <td><b>생강 1쪽</b></td>
+                            <td style="text-align: right;">마늘 1톨의 크기와 비슷</td>
+                        </tr>
+                        <tr>
+                            <td><b>생강 1톨</b></td>
+                            <td style="text-align: right;">아기 손바닥만한 크기의 통생강 1개</td>
+                        </tr>
+                        <tr>
+                            <td><b>고기 1근</b></td>
+                            <td style="text-align: right;">600g</td>
+                        </tr>
+                        <tr>
+                            <td><b>채소 1근</b></td>
+                            <td style="text-align: right;">400g</td>
+                        </tr>
+                        <tr>
+                            <td><b>채소 1봉지</b></td>
+                            <td style="text-align: right;">200g 정도</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin: auto;">닫기</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>

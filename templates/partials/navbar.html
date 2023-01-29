@@ -1,0 +1,77 @@
+{% load socialaccount %}
+<!-- Responsive navbar-->
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light py-3">
+        <div class="container px-lg-5 ">
+            <a class="navbar-brand text-primary" href="/"><span class="fw-bold h3">OMC</span></a>
+            <form class="d-flex justify-content-center">
+                <input id="search-input" class="form-control" type="text" placeholder="검색어를 입력하세요" aria-label="Search" size="40" style="margin: 5px 0;">
+                <button class="search-button" type="button" onclick="searchPost()"><i class="bi bi-search"></i></button>
+                <!-- <button class="navbar-brand search-button" type="button" onclick="searchPost()"><span>Search</span></button> -->
+            </form>
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="background-color: #FF7B54;"><span class="navbar-toggler-icon"></span></button> -->
+            <div class="navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="btn dropdown-toggle text-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="float: right;">
+                            {{ user.nickname }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/accounts/logout/">Log Out</a></li>
+                            <li><a class="dropdown-item" href="/recipe/refrigerator/">나의 냉장고</a></li>
+                            <li><a class="dropdown-item" href="/recipe/">레시피 보러가기</a></li>
+                            <li><a class="dropdown-item" href="/">레시피 추천받기</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li type="button" class="login-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <span>Login</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="d-grid gap-2">
+                <a role= "button" class="btn btn-outline-dark btn-block btn-sm" href="/login/">login</a>
+                <a role= "button" class="btn btn-outline-dark btn-block btn-sm" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i>&nbsp&nbsp Google login</a>
+                <a role= "button" class="btn btn-outline-dark btn-block btn-sm" href="/signup/">Sign up</a>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script>
+    function searchPost() {
+        let searchValue = document.getElementById('search-input').value.trim();
+        if (searchValue.length > 1) {
+            location.href = '/recipe/search/' + searchValue + '/';
+        }
+        else {
+            alert('검색어('+searchValue+')가 너무 짧습니다.');
+        }
+    };
+    document.getElementById('search-input').addEventListener('keyup',function(event)
+    {
+        if (event.key == 'Enter'){
+            searchPost()
+        }
+    });
+</script>
+
+
