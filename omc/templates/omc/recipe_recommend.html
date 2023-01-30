@@ -19,7 +19,7 @@
     color: #7f8656;
     font-weight: bold;
     }
-    .nav-link:focus {
+    .nav-link:focus, .active-nav {
         color: #7f8656;
         font-weight: bold;
         border-bottom: none;
@@ -81,12 +81,12 @@
 {% block content %}
 <div class="recommend-container" style="text-align: center;">
     <div id="nav-tab" class="row">
-        <a class="nav-link col" aria-current="page" data-tab-section="tab-section-1" tabindex="-1">추천 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-2" tabindex="-1">봄 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-3" tabindex="-1">여름 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-4" tabindex="-1">가을 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-5" tabindex="-1">겨울 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-6" tabindex="-1">아이 인기 레시피</a>
+        <a class="nav-link col active-nav" aria-current="page" data-tab-section="tab-section-1" tabindex="-1" onclick="addActiveClass(this);">추천 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-2" tabindex="-1" onclick="addActiveClass(this);">봄 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-3" tabindex="-1" onclick="addActiveClass(this);">여름 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-4" tabindex="-1" onclick="addActiveClass(this);">가을 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-5" tabindex="-1" onclick="addActiveClass(this);">겨울 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-6" tabindex="-1" onclick="addActiveClass(this);">아이 인기 레시피</a>
     </div>
 </div>
 <!-- 추천 레시피 -->
@@ -445,5 +445,15 @@
             $section.setAttribute('hidden', true);
         }});
     });
+    function addActiveClass(item){
+        var navLinks = document.getElementsByClassName("nav-link")
+        for (var nav of navLinks){
+            if (nav == item){
+                nav.classList.add('active-nav')
+            } else {
+                nav.classList.remove('active-nav')
+            }
+        }
+    }
 </script>
 {% endblock vuejs %}
