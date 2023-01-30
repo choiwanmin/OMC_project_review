@@ -43,10 +43,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="d-grid gap-2">
-                <a role= "button" class="btn btn-outline-dark btn-block btn-sm" href="/login/">login</a>
-                <a role= "button" class="btn btn-outline-dark btn-block btn-sm" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i>&nbsp&nbsp Google login</a>
-                <a role= "button" class="btn btn-outline-dark btn-block btn-sm" href="/signup/">Sign up</a>
+            <div class="row py-3" style="align-items: center;">
+                <a role= "button" class="col btn btn-outline-dark btn-block btn-sm mx-3" href="/login/">login</a>
+                <a role= "button" class="col btn btn-outline-dark btn-block btn-sm mx-3" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i>&nbsp&nbsp Google login</a>
+                <a role= "button" class="col btn btn-outline-dark btn-block btn-sm mx-3" href="/signup/">Sign up</a>
             </div>
         </div>
         <div class="modal-footer">
