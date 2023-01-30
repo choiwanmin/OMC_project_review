@@ -5,63 +5,455 @@
     Recipe Recommend
 {% endblock title %}
 
+{% block style %}
+<style>
+    .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #939B62;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    border-bottom: 2px solid #939B62;
+    }
+    .nav-link:hover {
+    color: #7f8656;
+    font-weight: bold;
+    }
+    .nav-link:focus, .active-nav {
+        color: #7f8656;
+        font-weight: bold;
+        border-bottom: none;
+        border-left: 2px solid #939B62;
+        border-right: 2px solid #939B62;
+        border-top: 2px solid #939B62;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    .recommend-container {
+    width: 100%;
+    padding-right: var(--bs-gutter-x, 0.75rem);
+    padding-left: var(--bs-gutter-x, 0.75rem);
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    }
+    @media (min-width: 576px) {
+    .recommend-container {
+    max-width: 540px;
+    }
+    }
+    @media (min-width: 768px) {
+    .recommend-container {
+    max-width: 700px;
+    }
+    }
+    @media (min-width: 992px) {
+    .recommend-container {
+    max-width: 780px;
+    }
+    }
+    @media (min-width: 1200px) {
+    .recommend-container {
+    max-width: 900px;
+    }
+    }
+    @media (min-width: 1400px) {
+    .recommend-container {
+    max-width: 1100px;
+    }
+    }
+    .p-info {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 20px;
+    }
+    .chart {
+        text-align: center;
+    }
+    .chart-div {
+        margin: 0 auto 20px;
+        display: inline-block;
+    }
+</style>
+{% endblock style %}
+
 {% block content %}
-<div style="background-image: url({% static 'assets/spaghetti.jpg' %}); height:600px;">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
-        <div class="carousel-indicators">
-            {% for i in recommend %}
-                {% if forloop.counter0 == 0 %}
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                {% else %}
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}"
-                    aria-label="Slide {{forloop.counter}}"></button>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="carousel-inner" style="transform: translate(280px,50px);background-color: white; width: 1000px; height: 500px;">
-            {% for recipe in recommend %}
-                {% if forloop.counter0 == 0 %}
-                <div class="carousel-item active">
-                    <div class="row">
-                        <img src="{{ recipe.thumbnail }}" class="d-block col-md" alt="..." style="height: 500px; max-width: 600px;">
-                        <div class="col-md" style="text-align: center; margin-top: 18%;">
-                            <h2 style="color: black;word-break: keep-all;"><b>{{ recipe.name }}</b></h2>
-                            <div>
-                                <i class="bi bi-people-fill" style="color: #38D0D7;"></i><span>&nbsp;{{ recipe.amount }}&nbsp;</span>
-                                <i class="bi bi-alarm-fill" style="color: #38D0D7;"></i><span>&nbsp;{{ recipe.time }}&nbsp;</span>
-                                <i class="bi bi-question-square-fill" style="color: #38D0D7;"></i><span>&nbsp;{{ recipe.level }}&nbsp;</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="carousel-item">
-                    <div class="row">
-                        <img src="{{ recipe.thumbnail }}" class="d-block col-md" alt="..." style="height: 500px; max-width: 600px;">
-                        <div class="col-md" style="text-align: center; margin-top: 18%;">
-                            <h2 style="color: black;word-break: keep-all;"><b>{{ recipe.name }}</b></h2>
-                            <div>
-                                <i class="bi bi-people-fill" style="color: #38D0D7;"></i><span>&nbsp;{{ recipe.amount }}&nbsp;</span>
-                                <i class="bi bi-alarm-fill" style="color: #38D0D7;"></i><span>&nbsp;{{ recipe.time }}&nbsp;</span>
-                                <i class="bi bi-question-square-fill" style="color: #38D0D7;"></i><span>&nbsp;{{ recipe.level }}&nbsp;</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+<div class="recommend-container" style="text-align: center;">
+    <div id="nav-tab" class="row">
+        <a class="nav-link col active-nav" aria-current="page" data-tab-section="tab-section-1" tabindex="-1" onclick="addActiveClass(this);">추천 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-2" tabindex="-1" onclick="addActiveClass(this);">봄 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-3" tabindex="-1" onclick="addActiveClass(this);">여름 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-4" tabindex="-1" onclick="addActiveClass(this);">가을 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-5" tabindex="-1" onclick="addActiveClass(this);">겨울 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-6" tabindex="-1" onclick="addActiveClass(this);">아이 인기 레시피</a>
     </div>
 </div>
+<!-- 추천 레시피 -->
+<section id="tab-section-1" class="tab-section">
+    <div class="recommend-container bg-white p-3">
+        {% if user.is_authenticated is False %}
+        <div class="my-5" style="text-align: center;">
+            <p class="p-info">로그인 또는 회원가입 후</p>
+            <p class="p-info">냉장고 재료를 입력하시면</p>
+            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p><br>
+            <li type="button" class="login-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <span>Login</span>
+            </li>
+        </div>
+        {% elif icebox_ingr %}
+        <div>
+            {% for recipe in recommend %}
+            <div class="row">
+                <div class="col-3">
+                    <a href="{{ recipe.get_absolute_url }}"><img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 200px; height: 200px; object-fit:cover;" src="{{ recipe.thumbnail }}"/></a>
+                </div>
+                <div class="col-9" style="margin: auto;">
+                    {% if forloop.counter < 4 %}
+                    <div><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                    {% endif %}
+                    <div class="my-3"><a class="text-info" href="{{ recipe.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ recipe.name }}</a></div>
+                    <p title="{{ recipe.description }}" style="word-break: keep-all;">{{ recipe.description | truncatechars:80}}</p>
+                    <!-- <p title="{{ recipe.description }}" style="word-break: keep-all;">{{ recipe.description | truncatechars:100}}</p> -->
+                    <div class="row mt-3" style="color: rgb(163, 163, 163);">
+                        <span>
+                            {% if recipe.amount != None %}
+                            <span><i style="font-size: 20px;" class="bi bi-people-fill"></i>&nbsp;{{ recipe.amount }}&nbsp;&nbsp;</span>
+                            {% endif %}
+                            {% if recipe.time != None %}
+                            <span><i style="font-size: 20px;" class="bi bi-hourglass-split"></i>&nbsp;{{ recipe.time }}&nbsp;&nbsp;</span>
+                            {% endif %}
+                            {% if recipe.level != None %}
+                            <span><i style="font-size: 20px;" class="bi bi-star-fill"></i>&nbsp;{{ recipe.level }}&nbsp;&nbsp;</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter != 10 %}
+            <hr>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <!-- 로그인 안했을 때 -> 냉장고 재료 없을 때로 변경해야됨 -->
+        {% elif icebox_exist is True %}
+        <div class="my-5" style="text-align: center;">
+            <p class="p-info">냉장고 재료를 입력하시면</p>
+            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p><br>
+            <a class="btn btn-outline-info" href="{% url 'omc:refrigerator_view' %}">냉장고 채우기</a>
+        </div>
+        {% elif icebox_exist is False %}
+        <div class="my-5" style="text-align: center;">
+            <p class="p-info">나만의 냉장고를 활용하여</p>
+            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p><br>
+            <a class="btn btn-outline-info" href="{% url 'omc:refrigerator_view' %}">냉장고 채우기</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<!-- 봄 인기 레시피 -->
+<section id="tab-section-2" class="tab-section" hidden>
+    <div class="recommend-container bg-white p-3">
+        <div class="chart">
+            <div class="chart-div" id="donutchart1"></div>
+        </div>
+        {% for season in seasons.values %}
+            {% if forloop.counter == 1 %}
+            {% for rank in season %}
+                {% if forloop.counter0 < 10 %}
+                <div class="row">
+                    <div class="col-3">
+                        <a href="{{ rank.get_absolute_url }}"><img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 200px; height: 200px; object-fit:cover;" src="{{ rank.thumbnail }}"/></a>
+                    </div>
+                    <div class="col-9" style="margin: auto;">
+                        {% if forloop.counter < 4 %}
+                        <div style="font-weight: bold;"><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                        {% endif %}
+                        <div class="my-3"><a class="text-info" href="{{ rank.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ rank.name }}</a></div>
+                        <p title="{{ rank.description }}" style="word-break: keep-all;">{{ rank.description | truncatechars:80}}</p>
+                        <div class="row mt-3" style="color: rgb(163, 163, 163);">
+                            <span>
+                                {% if rank.amount != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-people-fill"></i>&nbsp;{{ rank.amount }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.time != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-hourglass-split"></i>&nbsp;{{ rank.time }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.level != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-star-fill"></i>&nbsp;{{ rank.level }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if forloop.counter < 10 %}
+                <hr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+<!-- 여름 인기 레시피 -->
+<section id="tab-section-3" class="tab-section" hidden>
+    <div class="recommend-container bg-white p-3">
+        <div class="chart">
+            <div class="chart-div" id="donutchart2"></div>
+        </div>
+        {% for season in seasons.values %}
+            {% if forloop.counter == 2 %}
+            {% for rank in season %}
+                {% if forloop.counter0 < 10 %}
+                <div class="row">
+                    <div class="col-3">
+                        <a href="{{ rank.get_absolute_url }}"><img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 200px; height: 200px; object-fit:cover;" src="{{ rank.thumbnail }}"/></a>
+                    </div>
+                    <div class="col-9" style="margin: auto;">
+                        {% if forloop.counter < 4 %}
+                        <div><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                        {% endif %}
+                        <div class="my-3"><a class="text-info" href="{{ rank.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ rank.name }}</a></div>
+                        <p title="{{ rank.description }}" style="word-break: keep-all;">{{ rank.description | truncatechars:80}}</p>
+                        <div class="row mt-3" style="color: rgb(163, 163, 163);">
+                            <span>
+                                {% if rank.amount != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-people-fill"></i>&nbsp;{{ rank.amount }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.time != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-hourglass-split"></i>&nbsp;{{ rank.time }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.level != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-star-fill"></i>&nbsp;{{ rank.level }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if forloop.counter < 10 %}
+                <hr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+<!-- 가을 인기 레시피 -->
+<section id="tab-section-4" class="tab-section" hidden>
+    <div class="recommend-container bg-white p-3">
+        <div class="chart">
+            <div class="chart-div" id="donutchart3"></div>
+        </div>
+        {% for season in seasons.values %}
+            {% if forloop.counter == 3 %}
+            {% for rank in season %}
+                {% if forloop.counter0 < 10 %}
+                <div class="row">
+                    <div class="col-3">
+                        <a href="{{ rank.get_absolute_url }}"><img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 200px; height: 200px; object-fit:cover;" src="{{ rank.thumbnail }}"/></a>
+                    </div>
+                    <div class="col-9" style="margin: auto;">
+                        {% if forloop.counter < 4 %}
+                        <div><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                        {% endif %}
+                        <div class="my-3"><a class="text-info" href="{{ rank.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ rank.name }}</a></div>
+                        <p title="{{ rank.description }}" style="word-break: keep-all;">{{ rank.description | truncatechars:80}}</p>
+                        <div class="row mt-3" style="color: rgb(163, 163, 163);">
+                            <span>
+                                {% if rank.amount != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-people-fill"></i>&nbsp;{{ rank.amount }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.time != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-hourglass-split"></i>&nbsp;{{ rank.time }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.level != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-star-fill"></i>&nbsp;{{ rank.level }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if forloop.counter < 10 %}
+                <hr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+<!-- 겨울 인기 레시피 -->
+<section id="tab-section-5" class="tab-section" hidden>
+    <div class="recommend-container bg-white p-3">
+        <div class="chart">
+            <div class="chart-div" id="donutchart4"></div>
+        </div>
+        {% for season in seasons.values %}
+            {% if forloop.counter == 4 %}
+            {% for rank in season %}
+                {% if forloop.counter0 < 10 %}
+                <div class="row">
+                    <div class="col-3">
+                        <a href="{{ rank.get_absolute_url }}"><img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 200px; height: 200px; object-fit:cover;" src="{{ rank.thumbnail }}"/></a>
+                    </div>
+                    <div class="col-9" style="margin: auto;">
+                        {% if forloop.counter < 4 %}
+                        <div><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                        {% endif %}
+                        <div class="my-3"><a class="text-info" href="{{ rank.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ rank.name }}</a></div>
+                        <p title="{{ rank.description }}" style="word-break: keep-all;">{{ rank.description | truncatechars:80}}</p>
+                        <div class="row mt-3" style="color: rgb(163, 163, 163);">
+                            <span>
+                                {% if rank.amount != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-people-fill"></i>&nbsp;{{ rank.amount }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.time != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-hourglass-split"></i>&nbsp;{{ rank.time }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if rank.level != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-star-fill"></i>&nbsp;{{ rank.level }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if forloop.counter < 10 %}
+                <hr>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+<!-- 아이 인기 레시피 -->
+<section id="tab-section-6" class="tab-section" hidden>
+    <div class="recommend-container bg-white p-3">
+        <div class="chart">
+            <div class="chart-div" id="pacman"></div>
+        </div>
+        {% for baby in baby %}
+            {% if forloop.counter0 < 10 %}
+                <div class="row">
+                    <div class="col-3">
+                        <a href="{{ baby.get_absolute_url }}"><img class="img-fluid rounded-3 mb-4 mb-lg-0 img-thumbnail" style="width: 200px; height: 200px; object-fit:cover;" src="{{ baby.thumbnail }}"/></a>
+                    </div>
+                    <div class="col-9" style="margin: auto;">
+                        {% if forloop.counter < 4 %}
+                        <div><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                        {% endif %}
+                        <div class="my-3"><a class="text-info" href="{{ baby.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ baby.name }}</a></div>
+                        <p title="{{ baby.description }}" style="word-break: keep-all;">{{ baby.description | truncatechars:80}}</p>
+                        <div class="row mt-3" style="color: rgb(163, 163, 163);">
+                            <span>
+                                {% if baby.amount != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-people-fill"></i>&nbsp;{{ baby.amount }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if baby.time != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-hourglass-split"></i>&nbsp;{{ baby.time }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                                {% if baby.level != None %}
+                                <span><i style="font-size: 20px;" class="bi bi-star-fill"></i>&nbsp;{{ baby.level }}&nbsp;&nbsp;</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if forloop.counter < 10 %} <hr> {% endif %}
+        {% endfor %}
+    </div>
+</section>
 {% endblock content %}
+{% block vuejs %}
+<script>
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart1);
+    google.charts.setOnLoadCallback(drawChart2);
+    function drawChart1() {
+        var data = google.visualization.arrayToDataTable([
+            ['season','count'],
+            {% for name, season in seasons.items %}
+            ['{{ name | safe }}', {{ season.count }}],
+            {% endfor %}
+        ]);
+
+        var options = {
+            pieHole: 0.5,
+            colors: ['rgb(255, 123, 84)','rgb(255, 178, 107)','rgb(255, 213, 111)','rgb(147, 155, 98)'],
+            chartArea: {
+            height: '100%',
+            width: '100%',
+            },
+            pieSliceTextStyle : {color : 'transparent'},
+            legend: {
+            position: 'labeled'
+            }
+        };
+
+        var chart1 = new google.visualization.PieChart(document.getElementById('donutchart1'));
+        chart1.draw(data, options);
+        var chart2 = new google.visualization.PieChart(document.getElementById('donutchart2'));
+        chart2.draw(data, options);
+        var chart3 = new google.visualization.PieChart(document.getElementById('donutchart3'));
+        chart3.draw(data, options);
+        var chart4 = new google.visualization.PieChart(document.getElementById('donutchart4'));
+        chart4.draw(data, options);
+    }
+    function drawChart2() {
+        var data = google.visualization.arrayToDataTable([
+            ['baby','count'],
+            {% for name,baby in baby_chart.items %}
+            ['{{ name }}',{{ baby }}],
+            {% endfor %}
+        ]);
+
+        var options = {
+            pieHole: 0.5,
+            pieStartAngle: 135,
+            slices: {
+                0: { color: 'rgb(147, 155, 98)' },
+                1: { color: '#ced4da' }
+            },
+            chartArea: {
+            height: '100%',
+            width: '100%',
+            },
+            pieSliceTextStyle : {color : 'transparent'},
+            legend: {
+            position: 'labeled'
+            }
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('pacman'));
+        chart.draw(data, options);
+    }
+    const nav = document.querySelector('#nav-tab');
+    const sections = document.querySelectorAll('.tab-section');
+    nav.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('nav-link')) {
+        return;
+        }
+    
+        const focusedTabId = e.target.dataset.tabSection;
+
+        sections.forEach(($section) => {
+        if ($section.id === focusedTabId) {
+            $section.removeAttribute('hidden');
+        } else {
+            $section.setAttribute('hidden', true);
+        }});
+    });
+    function addActiveClass(item){
+        var navLinks = document.getElementsByClassName("nav-link")
+        for (var nav of navLinks){
+            if (nav == item){
+                nav.classList.add('active-nav')
+            } else {
+                nav.classList.remove('active-nav')
+            }
+        }
+    }
+</script>
+{% endblock vuejs %}

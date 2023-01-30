@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 # from omc.signup_form import UserForm
 from django.contrib.auth import authenticate, login
-from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment
+from .models import Recipe, CategoryT, CategoryS, CategoryI, CategoryM, RecipeOrder, Ingredient, RecipeHashTag, UserIngredient, Comment, Icebox
 # from .forms import CategoryForm
 from django.core.paginator import Paginator
 from .forms import CommentForm, UserForm
@@ -14,6 +14,7 @@ from django.contrib import messages
 from OMC_PJT import settings
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+from django.db.models import Q
 
 # Create your views here.
 def index(requests):
@@ -76,7 +77,18 @@ class RecipeDetail(DetailView):
 
 class RefrigeratorList(TemplateView):
     template_name = 'omc/refrigerator_list_view.html'
-    
+
+    def get(self, request):
+        if not request.user.is_anonymous:
+            context = self.get_context_data()
+            icebox, created = Icebox.objects.get_or_create(userId_id=request.user.id, defaults={'userId': request.user})
+            context['icebox'] = icebox
+            context['exist_ingredients'] = icebox.userIngredientId.all()
+            context['created'] = created
+        else:
+            return redirect('/login/')
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super(RefrigeratorList, self).get_context_data()
         context['ingredients'] = UserIngredient.objects.all()
@@ -166,33 +178,71 @@ class RecipeRecommend(ListView):
     enc = settings.ENCODER
     one_hot_vec = settings.ONE_HOT_MATRIX
 
+    def get(self, request, **kwargs):
+        self.object_list = Recipe.objects.all()
+        if request.user.is_authenticated:
+            try:
+                icebox = Icebox.objects.get(userId_id=request.user.id)
+                user_ingredients = icebox.userIngredientId.all()
+                user_inputs = [ user_ingr.name for user_ingr in user_ingredients ]
+                context = self.get_context_data(user_inputs=user_inputs)
+                context['icebox_exist'] = True
+                context['icebox_ingr'] = (len(user_ingredients) > 0)
+            except Exception as e:
+                context = self.get_context_data()
+                context['icebox_exist'] = False
+                context['icebox_ingr'] = False
+        else:
+            context = self.get_context_data()
+            context['icebox_exist'] = False
+        return render(request, self.template_name, context)
+
     def post(self, request, **kwargs):
         user_inputs = request.POST.get('selected').split(',')
+        if user_inputs == ['']:
+            user_inputs = []
+            icebox_ingr = False
+        if not request.user.is_anonymous:
+            icebox = Icebox.objects.get(userId_id=request.user.id)
+            icebox.userIngredientId.clear()
+            for input in user_inputs:
+                try:
+                    input_ing = UserIngredient.objects.get(name=input)
+                    icebox.userIngredientId.add(input_ing)
+                    icebox_ingr = True
+                except:
+                    icebox_ingr = False
         self.object_list = Recipe.objects.all()
         context = self.get_context_data(user_inputs=user_inputs)
+        context['icebox_exist'] = True
+        context['icebox_ingr'] = icebox_ingr
         return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        # print(self.get_recommendations(kwargs['user_inputs']))
-        if kwargs.get('user_inputs') is not None:
+        spring = Recipe.objects.filter(recipehashtag__description__contains='봄').distinct().order_by('-viewCount')
+        summer = Recipe.objects.filter(recipehashtag__description__contains='여름').distinct().order_by('-viewCount')
+        autumn = Recipe.objects.filter(recipehashtag__description__contains='가을').distinct().order_by('-viewCount')
+        winter = Recipe.objects.filter(recipehashtag__description__contains='겨울').distinct().order_by('-viewCount')
+        context['seasons'] = {
+            '봄' : spring,
+            '여름' : summer,
+            '가을' : autumn,
+            '겨울' : winter,
+        }
+        baby = Recipe.objects.filter(
+            Q(recipehashtag__description__contains='아이') | Q(recipehashtag__description__contains='아기')
+            ).distinct().order_by('-viewCount')
+        all_recipe = Recipe.objects.all().count() - baby.count()
+        context['baby_chart'] = { 
+            '아이' : baby.count(),
+            '기타' : all_recipe
+            }
+        context['baby'] = baby
+
+        if kwargs.get('user_inputs') is not None and len(kwargs.get('user_inputs')) > 0:
             keys = self.get_recommendations(kwargs['user_inputs'], limit=50)
-        else:
-            keys = self.get_recommendations(['닭고기','바나나','우유','아몬드'], limit=50)
-        recipe_list = Recipe.objects.filter(id__in=keys)
-        categoryT_list = list(recipe_list.values_list('categoryTId',flat=True).distinct())
-        recipe_list = list(recipe_list)
-        recipe_list.sort(key=lambda recipe: keys.index(recipe.id))
-        context['recommend'] = []
-        for recipe in recipe_list:
-            if recipe.categoryTId_id in categoryT_list:
-                context['recommend'].append(recipe)
-                categoryT_list.remove(recipe.categoryTId_id)
-        for recipe in recipe_list:
-            if len(context['recommend']) >= 10:
-                break
-            if recipe not in context['recommend']:
-                context['recommend'].append(recipe)
+            context['recommend'] = self.get_filtered_recommendations(keys)
         return context
 
     def get_recommendations(self, ingt, enc=enc, limit=20):
@@ -203,7 +253,23 @@ class RecipeRecommend(ListView):
         cos_idx.sort(key=lambda x: x[1], reverse=True)
         result = self.one_hot_vec.iloc[[i[0] for i in cos_idx[:limit]],:2]
         return result['id'].tolist()
-
+    
+    def get_filtered_recommendations(self, keys):
+        recipe_list = Recipe.objects.filter(id__in=keys)
+        categoryT_list = list(recipe_list.values_list('categoryTId',flat=True).distinct())
+        recipe_list = list(recipe_list)
+        recipe_list.sort(key=lambda recipe: keys.index(recipe.id))
+        recommend_list = []
+        for recipe in recipe_list:
+            if recipe.categoryTId_id in categoryT_list:
+                recommend_list.append(recipe)
+                categoryT_list.remove(recipe.categoryTId_id)
+        for recipe in recipe_list:
+            if len(recommend_list) >= 10:
+                break
+            if recipe not in recommend_list:
+                recommend_list.append(recipe)
+        return recommend_list
 
 class NewComment(TemplateView):
     template_name = 'new_comment'
@@ -217,7 +283,6 @@ class NewComment(TemplateView):
         if request.user.is_authenticated:
             recipe = get_object_or_404(Recipe, pk=pk)
             comment_form = CommentForm(request.POST, request.FILES)
-            print(request.user)
             if comment_form.is_valid():
                 comment_form.cleaned_data['recipeId'] = recipe
                 comment_form.cleaned_data['userId'] = request.user

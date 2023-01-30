@@ -120,7 +120,7 @@ class Icebox(models.Model):
     userIngredientId = models.ManyToManyField(UserIngredient, blank=True, related_name='userIngredient_iceboxes')
     
     def __str__(self):
-        return f'{self.userId} || {self.userIngredientId} || {self.createAt}'
+        return f'{self.userId} || {self.userIngredientId}'
 
 
 class UserCustomIngredient(models.Model):
