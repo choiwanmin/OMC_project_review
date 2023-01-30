@@ -17,6 +17,7 @@ class CommentForm(forms.Form):
     # star = forms.IntegerField(max_value=5,min_value=0)
     star = forms.IntegerField(required=True,
         # label='',
+        max_value=5,
         min_value=0,
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
