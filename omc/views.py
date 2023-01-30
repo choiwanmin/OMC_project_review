@@ -14,6 +14,7 @@ from django.contrib import messages
 from OMC_PJT import settings
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+from django.db.models import Q
 
 # Create your views here.
 def index(requests):
@@ -191,7 +192,36 @@ class RecipeRecommend(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(RecipeRecommend, self).get_context_data(**kwargs)
-        # print(self.get_recommendations(kwargs['user_inputs']))
+        spring = Recipe.objects.filter(recipehashtag__description__contains='봄').distinct().order_by('-viewCount')
+        summer = Recipe.objects.filter(recipehashtag__description__contains='여름').distinct().order_by('-viewCount')
+        autumn = Recipe.objects.filter(recipehashtag__description__contains='가을').distinct().order_by('-viewCount')
+        winter = Recipe.objects.filter(recipehashtag__description__contains='겨울').distinct().order_by('-viewCount')
+        context['seasons'] = {
+            '봄' : spring,
+            '여름' : summer,
+            '가을' : autumn,
+            '겨울' : winter,
+        }
+        baby = Recipe.objects.filter(
+            Q(recipehashtag__description__contains='아이') | Q(recipehashtag__description__contains='아기')
+            ).distinct().order_by('-viewCount')
+        all_recipe = Recipe.objects.all().count() - baby.count()
+        context['baby_chart'] = { 
+            '아이' : baby.count(),
+            '기타' : all_recipe
+            }
+        context['baby'] = baby
+
+        if self.request.user.is_authenticated:
+            print(self.request.user.id)
+            try:
+                icebox = Icebox.objects.get(userId_id=self.request.user.id)
+                context['icebox_exist'] = True
+                if len(icebox.userIngredientId.all()) > 0:
+                    context['icebox_ingr'] = True
+            except:
+                context['icebox_exist'] = False
+
         if kwargs.get('user_inputs') is not None:
             keys = self.get_recommendations(kwargs['user_inputs'], limit=50)
         else:
