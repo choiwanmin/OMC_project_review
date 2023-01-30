@@ -178,16 +178,41 @@ class RecipeRecommend(ListView):
     enc = settings.ENCODER
     one_hot_vec = settings.ONE_HOT_MATRIX
 
+    def get(self, request, **kwargs):
+        self.object_list = Recipe.objects.all()
+        if request.user.is_authenticated:
+            try:
+                icebox = Icebox.objects.get(userId_id=request.user.id)
+                user_ingredients = icebox.userIngredientId.all()
+                user_inputs = [ user_ingr.name for user_ingr in user_ingredients ]
+                context = self.get_context_data(user_inputs=user_inputs)
+                context['icebox_exist'] = True
+                context['icebox_ingr'] = (len(user_ingredients) > 0)
+            except Exception as e:
+                context = self.get_context_data()
+                context['icebox_exist'] = False
+                context['icebox_ingr'] = False
+        return render(request, self.template_name, context)
+
     def post(self, request, **kwargs):
         user_inputs = request.POST.get('selected').split(',')
+        if user_inputs == ['']:
+            user_inputs = []
+            icebox_ingr = False
         if not request.user.is_anonymous:
             icebox = Icebox.objects.get(userId_id=request.user.id)
             icebox.userIngredientId.clear()
             for input in user_inputs:
-                input_ing = UserIngredient.objects.get(name=input)
-                icebox.userIngredientId.add(input_ing)
+                try:
+                    input_ing = UserIngredient.objects.get(name=input)
+                    icebox.userIngredientId.add(input_ing)
+                    icebox_ingr = True
+                except:
+                    icebox_ingr = False
         self.object_list = Recipe.objects.all()
         context = self.get_context_data(user_inputs=user_inputs)
+        context['icebox_exist'] = True
+        context['icebox_ingr'] = icebox_ingr
         return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
@@ -212,34 +237,9 @@ class RecipeRecommend(ListView):
             }
         context['baby'] = baby
 
-        if self.request.user.is_authenticated:
-            print(self.request.user.id)
-            try:
-                icebox = Icebox.objects.get(userId_id=self.request.user.id)
-                context['icebox_exist'] = True
-                if len(icebox.userIngredientId.all()) > 0:
-                    context['icebox_ingr'] = True
-            except:
-                context['icebox_exist'] = False
-
-        if kwargs.get('user_inputs') is not None:
+        if kwargs.get('user_inputs') is not None and len(kwargs.get('user_inputs')) > 0:
             keys = self.get_recommendations(kwargs['user_inputs'], limit=50)
-        else:
-            keys = self.get_recommendations(['닭고기','바나나','우유','아몬드'], limit=50)
-        recipe_list = Recipe.objects.filter(id__in=keys)
-        categoryT_list = list(recipe_list.values_list('categoryTId',flat=True).distinct())
-        recipe_list = list(recipe_list)
-        recipe_list.sort(key=lambda recipe: keys.index(recipe.id))
-        context['recommend'] = []
-        for recipe in recipe_list:
-            if recipe.categoryTId_id in categoryT_list:
-                context['recommend'].append(recipe)
-                categoryT_list.remove(recipe.categoryTId_id)
-        for recipe in recipe_list:
-            if len(context['recommend']) >= 10:
-                break
-            if recipe not in context['recommend']:
-                context['recommend'].append(recipe)
+            context['recommend'] = self.get_filtered_recommendations(keys)
         return context
 
     def get_recommendations(self, ingt, enc=enc, limit=20):
@@ -250,7 +250,23 @@ class RecipeRecommend(ListView):
         cos_idx.sort(key=lambda x: x[1], reverse=True)
         result = self.one_hot_vec.iloc[[i[0] for i in cos_idx[:limit]],:2]
         return result['id'].tolist()
-
+    
+    def get_filtered_recommendations(self, keys):
+        recipe_list = Recipe.objects.filter(id__in=keys)
+        categoryT_list = list(recipe_list.values_list('categoryTId',flat=True).distinct())
+        recipe_list = list(recipe_list)
+        recipe_list.sort(key=lambda recipe: keys.index(recipe.id))
+        recommend_list = []
+        for recipe in recipe_list:
+            if recipe.categoryTId_id in categoryT_list:
+                recommend_list.append(recipe)
+                categoryT_list.remove(recipe.categoryTId_id)
+        for recipe in recipe_list:
+            if len(recommend_list) >= 10:
+                break
+            if recipe not in recommend_list:
+                recommend_list.append(recipe)
+        return recommend_list
 
 class NewComment(TemplateView):
     template_name = 'new_comment'
