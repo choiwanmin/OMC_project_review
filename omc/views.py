@@ -192,6 +192,9 @@ class RecipeRecommend(ListView):
                 context = self.get_context_data()
                 context['icebox_exist'] = False
                 context['icebox_ingr'] = False
+        else:
+            context = self.get_context_data()
+            context['icebox_exist'] = False
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
