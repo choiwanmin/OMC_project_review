@@ -68,41 +68,40 @@
     margin-bottom: 0.5rem;
     font-size: 20px;
     }
+    .chart {
+        text-align: center;
+    }
+    .chart-div {
+        margin: 0 auto 20px;
+        display: inline-block;
+    }
 </style>
 {% endblock style %}
 
 {% block content %}
 <div class="recommend-container" style="text-align: center;">
     <div id="nav-tab" class="row">
-        <a class="nav-link col" aria-current="page" data-tab-section="tab-section-1">추천 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-2">봄 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-3">여름 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-4">가을 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-5">겨울 인기 레시피</a>
-        <a class="nav-link col" data-tab-section="tab-section-6">아이 인기 레시피</a>
+        <a class="nav-link col" aria-current="page" data-tab-section="tab-section-1" tabindex="-1">추천 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-2" tabindex="-1">봄 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-3" tabindex="-1">여름 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-4" tabindex="-1">가을 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-5" tabindex="-1">겨울 인기 레시피</a>
+        <a class="nav-link col" data-tab-section="tab-section-6" tabindex="-1">아이 인기 레시피</a>
     </div>
 </div>
 <!-- 추천 레시피 -->
 <section id="tab-section-1" class="tab-section">
     <div class="recommend-container bg-white p-3">
         {% if user.is_authenticated is False %}
-        <div style="text-align: center;">
+        <div class="my-5" style="text-align: center;">
             <p class="p-info">로그인 또는 회원가입 후</p>
             <p class="p-info">냉장고 재료를 입력하시면</p>
-            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p>
+            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p><br>
             <li type="button" class="login-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <span>Login</span>
             </li>
         </div>
-        <!-- 로그인 안했을 때 -> 냉장고 재료 없을 때로 변경해야됨 -->
-        {% else %}
-        <div style="text-align: center;">
-            <p class="p-info">냉장고 재료를 입력하시면</p>
-            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p>
-            <a class="btn btn-outline-info" href="{% url 'omc:refrigerator_view' %}">냉장고 채우기</a>
-        </div>
-        {% endif %}
-        {% if user.is_authenticated %}
+        {% elif icebox_ingr %}
         <div>
             {% for recipe in recommend %}
             <div class="row">
@@ -136,13 +135,28 @@
             {% endif %}
             {% endfor %}
         </div>
+        <!-- 로그인 안했을 때 -> 냉장고 재료 없을 때로 변경해야됨 -->
+        {% elif icebox_exist is True %}
+        <div class="my-5" style="text-align: center;">
+            <p class="p-info">냉장고 재료를 입력하시면</p>
+            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p><br>
+            <a class="btn btn-outline-info" href="{% url 'omc:refrigerator_view' %}">냉장고 채우기</a>
+        </div>
+        {% elif icebox_exist is False %}
+        <div class="my-5" style="text-align: center;">
+            <p class="p-info">나만의 냉장고를 활용하여</p>
+            <p class="p-info">추천 레시피를 제공 받을 수 있습니다.</p><br>
+            <a class="btn btn-outline-info" href="{% url 'omc:refrigerator_view' %}">냉장고 채우기</a>
+        </div>
         {% endif %}
     </div>
 </section>
 <!-- 봄 인기 레시피 -->
 <section id="tab-section-2" class="tab-section" hidden>
     <div class="recommend-container bg-white p-3">
-        <div id="donutchart1" style="width: 500px; height: 300px; margin-left: auto; margin-right: auto;"></div>
+        <div class="chart">
+            <div class="chart-div" id="donutchart1"></div>
+        </div>
         {% for season in seasons.values %}
             {% if forloop.counter == 1 %}
             {% for rank in season %}
@@ -153,7 +167,7 @@
                     </div>
                     <div class="col-9" style="margin: auto;">
                         {% if forloop.counter < 4 %}
-                        <div><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
+                        <div style="font-weight: bold;"><i class="fa-solid fa-medal"></i>&nbsp;BEST {{ forloop.counter }}</div>
                         {% endif %}
                         <div class="my-3"><a class="text-info" href="{{ rank.get_absolute_url }}" style="font-size: 25px;color: black; letter-spacing: 1px;">{{ rank.name }}</a></div>
                         <p title="{{ rank.description }}" style="word-break: keep-all;">{{ rank.description | truncatechars:80}}</p>
@@ -184,7 +198,9 @@
 <!-- 여름 인기 레시피 -->
 <section id="tab-section-3" class="tab-section" hidden>
     <div class="recommend-container bg-white p-3">
-        <div id="donutchart2" style="width: 500px; height: 300px; margin-left: auto; margin-right: auto;"></div>
+        <div class="chart">
+            <div class="chart-div" id="donutchart2"></div>
+        </div>
         {% for season in seasons.values %}
             {% if forloop.counter == 2 %}
             {% for rank in season %}
@@ -226,7 +242,9 @@
 <!-- 가을 인기 레시피 -->
 <section id="tab-section-4" class="tab-section" hidden>
     <div class="recommend-container bg-white p-3">
-        <div id="donutchart3" style="width: 500px; height: 300px; margin-left: auto; margin-right: auto;"></div>
+        <div class="chart">
+            <div class="chart-div" id="donutchart3"></div>
+        </div>
         {% for season in seasons.values %}
             {% if forloop.counter == 3 %}
             {% for rank in season %}
@@ -268,7 +286,9 @@
 <!-- 겨울 인기 레시피 -->
 <section id="tab-section-5" class="tab-section" hidden>
     <div class="recommend-container bg-white p-3">
-        <div id="donutchart4" style="width: 500px; height: 300px; margin-left: auto; margin-right: auto;"></div>
+        <div class="chart">
+            <div class="chart-div" id="donutchart4"></div>
+        </div>
         {% for season in seasons.values %}
             {% if forloop.counter == 4 %}
             {% for rank in season %}
@@ -309,8 +329,10 @@
 </section>
 <!-- 아이 인기 레시피 -->
 <section id="tab-section-6" class="tab-section" hidden>
-    <div class="recommend-container bg-white">
-        <div id="pacman" style="width: 500px; height: 300px; margin-left: auto; margin-right: auto;"></div>
+    <div class="recommend-container bg-white p-3">
+        <div class="chart">
+            <div class="chart-div" id="pacman"></div>
+        </div>
         {% for baby in baby %}
             {% if forloop.counter0 < 10 %}
                 <div class="row">
@@ -359,7 +381,15 @@
 
         var options = {
             pieHole: 0.5,
-            colors: ['rgb(255, 123, 84)','rgb(255, 178, 107)','rgb(255, 213, 111)','rgb(147, 155, 98)']
+            colors: ['rgb(255, 123, 84)','rgb(255, 178, 107)','rgb(255, 213, 111)','rgb(147, 155, 98)'],
+            chartArea: {
+            height: '100%',
+            width: '100%',
+            },
+            pieSliceTextStyle : {color : 'transparent'},
+            legend: {
+            position: 'labeled'
+            }
         };
 
         var chart1 = new google.visualization.PieChart(document.getElementById('donutchart1'));
@@ -380,10 +410,19 @@
         ]);
 
         var options = {
+            pieHole: 0.5,
             pieStartAngle: 135,
             slices: {
                 0: { color: 'rgb(147, 155, 98)' },
                 1: { color: '#ced4da' }
+            },
+            chartArea: {
+            height: '100%',
+            width: '100%',
+            },
+            pieSliceTextStyle : {color : 'transparent'},
+            legend: {
+            position: 'labeled'
             }
         };
 
@@ -398,7 +437,6 @@
         }
     
         const focusedTabId = e.target.dataset.tabSection;
-        console.log(focusedTabId)
 
         sections.forEach(($section) => {
         if ($section.id === focusedTabId) {
