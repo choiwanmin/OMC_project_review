@@ -107,7 +107,11 @@
 
 ## 기타
 > ### DB ERD
-![image](https://user-images.githubusercontent.com/24910571/218047981-f60b46b5-cd9c-4691-8272-c5bfa0e10f72.png)
+
+|![image](https://user-images.githubusercontent.com/24910571/218047981-f60b46b5-cd9c-4691-8272-c5bfa0e10f72.png)|
+|:--:|
 > ### UI Flow
-![image](https://user-images.githubusercontent.com/24910571/218040627-71731674-4b7a-46ee-b502-83bd7959dd89.png)
+
+|![image](https://user-images.githubusercontent.com/24910571/218040627-71731674-4b7a-46ee-b502-83bd7959dd89.png)|
+|:--:|
 
