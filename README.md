@@ -62,7 +62,8 @@
 * One-Hot Encoding
 * Helmert Encoding
 * 위 3가지 방식을 통해 레시피가 가지고 있는 재료 데이터를 모두 벡터화함. 또한 사용자의 입력 재료도 벡터화함
-|![image](https://user-images.githubusercontent.com/24910571/218041578-f5c456e2-18a0-4421-94c2-e2272b0efb0a.png)| |
+
+|![image](https://user-images.githubusercontent.com/24910571/218041578-f5c456e2-18a0-4421-94c2-e2272b0efb0a.png)|
 |---|
 |위처럼 벡터화된 입력 데이터와 레시피 데이터를 cos similiraty 계산을 통해 유사한 레시피를 추천해줌.|
 * 성능평가
