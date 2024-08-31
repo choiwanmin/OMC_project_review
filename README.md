@@ -73,7 +73,8 @@
 * 그래도 One-Hot 인코딩 방식이 일치도가 높게 나와 서비스에는 해당 인코딩 방식을 사용하는 것으로 채택
 
 ## 프로젝트 아키텍쳐
-![image](https://user-images.githubusercontent.com/24910571/218040503-db638de6-4452-4762-a0c5-9482e34f55f4.png)
+|![image](https://user-images.githubusercontent.com/24910571/218040503-db638de6-4452-4762-a0c5-9482e34f55f4.png)|
+|:--:|
 
 ## 클라이언트 화면 UI
 *※ 2023/01/31 기준 데이터 UI*
