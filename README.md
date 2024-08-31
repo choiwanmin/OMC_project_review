@@ -77,7 +77,7 @@
 ![image](https://user-images.githubusercontent.com/24910571/218040503-db638de6-4452-4762-a0c5-9482e34f55f4.png)
 
 ## 클라이언트 화면 UI
-*※ 2023/01/31 기준 웹 스크래핑 데이터*
+*※ 2023/01/31 기준 데이터*
 |유저의 냉장고 페이지 구현|추천 페이지 1 구현|추천 페이지 2 구현|
 |:--:|:--:|:--:|
 |![image](https://user-images.githubusercontent.com/24910571/218040698-94748133-04b9-4a47-b0ac-99d4e3891aac.png)|![image](https://user-images.githubusercontent.com/24910571/218040717-beac1c49-c996-4539-a0ef-88a671cfc298.png)|![image](https://user-images.githubusercontent.com/24910571/218040751-1a64ab25-11fe-40dc-bd7a-037905eb2c47.png)|
