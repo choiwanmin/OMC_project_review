@@ -3,7 +3,7 @@
 
 ## 목차
 * [프로젝트 소개](#프로젝트-소개)
-* [기술 스택 & 개발 환경](#기술-스택--개발-환경)
+* [기술 스택](#기술-스택)
 * [주요 기능](#주요-기능)
 * [작업 내용](#작업-내용)
 * [프로젝트 아키텍쳐](#프로젝트-아키텍쳐)
@@ -23,19 +23,18 @@
   * 서비스 타겟은 요리에 대한 지식이 부족한 사용자,<br>특히 그 중 평균적으로 요리 경험이 부족한 2030세대를 비롯한 1인가구
 * 개인 목표 : 기술적으로 DB 및 DBMS에 중심을 두고 프로젝트 참여를 목표
 
-## 기술 스택 & 개발 환경
-> ### 기술 스택
-|기술 스택|사용 버전|
+## 기술 스택
+|구분|사용 기술|
 |:---|:---|
-|    |    |
-
-<br/>
-
-> ### 개발 환경
-
-|개발 환경|사용 프로그램|
-|:---|:---|
-|    |    |
+|Front-End|`HTML`, `CSS`, `Javascript`, `Bootstrap`|
+|Back-End|`python(3.8.10)`, `django(4.1.3)`, `beautifulsoup4(4.11.1)`|
+|Data Analysis|`Pandas`, `Numpy`, `Matplotlib`|
+|DBMS|`AWS RDS(MySQL)`|
+|Storage|`AWS S3`|
+|Server|`AWS EC2(Ubuntu)`, `Nginx-Gunicorn`|
+|IDE|`VS code`, `Vim`, `DBeaver`, `cmder`, `Google Colaboratory`|
+|SCM|`Git & Github`|
+|Etc.|`Notion`, `Slack`, `Google Drive`|
 
 ## 주요 기능
 * 회원가입 및 로그인
