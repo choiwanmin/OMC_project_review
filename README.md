@@ -57,7 +57,7 @@
 * 그 외에 82cook은 레시피 공유보다는 요리 커뮤니티의 성격이 강했고, 네이버 블로그 같은 곳에서<br>가져오는 레시피는 일정한 기재 패턴이 존재하지 않아 데이터 수집에 부적합하다고 판단
 
 > ### 추천 알고리즘
-#### 알고리즘 구현
+#### <U>알고리즘 구현</U>
 * TF-IDF
 * One-Hot Encoding
 * Helmert Encoding
@@ -66,7 +66,7 @@
 |![image](https://user-images.githubusercontent.com/24910571/218041578-f5c456e2-18a0-4421-94c2-e2272b0efb0a.png)|
 |:--:|
 |위처럼 벡터화된 입력 데이터와 레시피 데이터를 cos similiraty 계산을 통해 유사한 레시피를 추천해줌|
-#### 성능평가
+#### <U>성능평가</U>
 * 성능은 재료의 일치도를 기준으로 평가하였음<br>(사용자가 입력한 냉장고 재료를 가장 많이 사용하는 방식이 좋은 방식이라고 생각)
 
 |![image](https://user-images.githubusercontent.com/24910571/218041734-3be9c58c-6ec4-4a2b-8596-e0b6bd9531a1.png)|
