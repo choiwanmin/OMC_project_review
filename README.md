@@ -27,7 +27,7 @@
 |구분|사용 기술|
 |:---|:---|
 |Front-End|`HTML`, `CSS`, `Javascript`, `Bootstrap`|
-|Back-End|`python(3.8.10)`, `django(4.1.3)`, `beautifulsoup4(4.11.1)`|
+|Back-End|`python(3.8.10)`, `django(4.1.4)`, `beautifulsoup4(4.11.1)`|
 |Data Analysis|`Pandas`, `Numpy`, `Matplotlib`|
 |DBMS|`AWS RDS(MySQL)`|
 |Storage|`AWS S3`|
