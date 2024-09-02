@@ -108,14 +108,33 @@
 ## 기타
 > ### DB ERD
 
+<details>
+<summary>DB ERD 보기</summary>
+<div markdown="1">
+
 |![image](https://user-images.githubusercontent.com/24910571/218047981-f60b46b5-cd9c-4691-8272-c5bfa0e10f72.png)|
 |:--:|
+
+</div>
+</details>
+
 > ### UI Flow
+
+<details>
+<summary>UI Flow 보기</summary>
+<div markdown="1">
 
 |![image](https://user-images.githubusercontent.com/24910571/218040627-71731674-4b7a-46ee-b502-83bd7959dd89.png)|
 |:--:|
 
+</div>
+</details>
+
 > ### 프로젝트 구조
+
+<details>
+<summary>프로젝트 구조 보기</summary>
+<div markdown="1">
 ```
 📦omc_pjt
 ┣ 📂venv_omcpjt
@@ -188,4 +207,6 @@
 ┃ ┣ 📜README.md
 ┃ ┗ 📜req.txt
 ```
+</div>
+</details>
 
