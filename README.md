@@ -1,4 +1,4 @@
-# OMC_Project (오메추 - 오늘의 메뉴 추천~)
+# OMC_Project<br/>(오메추 - 오늘의 메뉴 추천~)
 *※ 기존에 수행한 https://github.com/choiwanmin/OMC_project 프로젝트를 정비 및 정리*
 
 ## 목차
