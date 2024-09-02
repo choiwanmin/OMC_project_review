@@ -135,6 +135,7 @@
 <details>
 <summary>프로젝트 구조 보기</summary>
 <div markdown="1">
+ 
 ```
 📦omc_pjt
 ┣ 📂venv_omcpjt
@@ -207,6 +208,7 @@
 ┃ ┣ 📜README.md
 ┃ ┗ 📜req.txt
 ```
+
 </div>
 </details>
 
