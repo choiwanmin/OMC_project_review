@@ -72,7 +72,7 @@ ROOT_URLCONF = 'OMC_PJT.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,7 +91,13 @@ WSGI_APPLICATION = 'OMC_PJT.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = env_info.DATABASES
+# DATABASES = env_info.DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
@@ -129,7 +135,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static_/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_/')
+
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static/')
 ]
@@ -152,7 +160,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/'
 
 # RDS
-pymysql.install_as_MySQLdb()
+# pymysql.install_as_MySQLdb()
 
 # auth.user 변경 및 추가
 AUTH_USER_MODEL = 'omc.User'
@@ -167,15 +175,15 @@ MESSAGE_TAGS = {
 }
 
 # S3 이용을 위한 setting 추가
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = env_info.AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY = env_info.AWS_SECRET_ACCESS_KEY
-AWS_QUERYSTRING_AUTH = False
-AWS_STORAGE_BUCKET_NAME = env_info.AWS_STORAGE_BUCKET_NAME
-AWS_S3_REGION_NAME = env_info.AWS_S3_REGION_NAME
-MEDIA_URL = env_info.AWS_S3_DOMAIN_NAME
-MEDIA_ROOT = 'media/'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_ACCESS_KEY_ID = env_info.AWS_ACCESS_KEY_ID
+# AWS_SECRET_ACCESS_KEY = env_info.AWS_SECRET_ACCESS_KEY
+# AWS_QUERYSTRING_AUTH = False
+# AWS_STORAGE_BUCKET_NAME = env_info.AWS_STORAGE_BUCKET_NAME
+# AWS_S3_REGION_NAME = env_info.AWS_S3_REGION_NAME
+# MEDIA_URL = env_info.AWS_S3_DOMAIN_NAME
+# MEDIA_ROOT = 'media/'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 import django
 django.setup()
