@@ -115,3 +115,77 @@
 |![image](https://user-images.githubusercontent.com/24910571/218040627-71731674-4b7a-46ee-b502-83bd7959dd89.png)|
 |:--:|
 
+> ### 프로젝트 구조
+```
+📦omc_pjt
+ ┣ 📂venv_omcpjt
+ ┃ ┣ 📂Include
+ ┃ ┣ 📂Lib
+ ┃ ┃ ┗ 📂site-packages
+ ┃ ┣ 📂Scripts
+ ┣ 📂OMC_project_review
+ ┃ ┣ 📂.git
+ ┃ ┣ 📂omc
+ ┃ ┃ ┣ 📂migrations
+ ┃ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┃ ┣ 📂templates
+ ┃ ┃ ┃ ┗ 📂omc
+ ┃ ┃ ┃ ┃ ┣ 📜comment_form.html
+ ┃ ┃ ┃ ┃ ┣ 📜recipe_detail.html
+ ┃ ┃ ┃ ┃ ┣ 📜recipe_list_view.html
+ ┃ ┃ ┃ ┃ ┣ 📜recipe_recommend.html
+ ┃ ┃ ┃ ┃ ┣ 📜refrigerator_list_view.html
+ ┃ ┃ ┃ ┃ ┗ 📜refrigerator_list_vue.html
+ ┃ ┃ ┣ 📜admin.py
+ ┃ ┃ ┣ 📜apps.py
+ ┃ ┃ ┣ 📜forms.py
+ ┃ ┃ ┣ 📜models.py
+ ┃ ┃ ┣ 📜tests.py
+ ┃ ┃ ┣ 📜urls.py
+ ┃ ┃ ┣ 📜views.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂OMC_PJT
+ ┃ ┃ ┣ 📜asgi.py
+ ┃ ┃ ┣ 📜mapping.json
+ ┃ ┃ ┣ 📜model_utils.py
+ ┃ ┃ ┣ 📜settings.py
+ ┃ ┃ ┣ 📜urls.py
+ ┃ ┃ ┣ 📜version.md
+ ┃ ┃ ┣ 📜wsgi.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂scripts
+ ┃ ┃ ┣ 📂jsons
+ ┃ ┃ ┃ ┣ 📂category
+ ┃ ┃ ┃ ┗ 📂page
+ ┃ ┃ ┣ 📂search_app
+ ┃ ┃ ┃ ┗ 📜create_bulk.py
+ ┃ ┃ ┣ 📜category_add_scraper.py
+ ┃ ┃ ┣ 📜category_scraper.py
+ ┃ ┃ ┣ 📜combine_json_page.py
+ ┃ ┃ ┣ 📜load_json_category.py
+ ┃ ┃ ┣ 📜load_json_page.py
+ ┃ ┃ ┣ 📜recipe_scraper.py
+ ┃ ┃ ┣ 📜recipe_scraper_single_page_from_json.py
+ ┃ ┃ ┗ 📜user_ingredient_add.py
+ ┃ ┣ 📂static
+ ┃ ┃ ┣ 📂assets
+ ┃ ┃ ┣ 📂css
+ ┃ ┃ ┗ 📂js
+ ┃ ┣ 📂templates
+ ┃ ┃ ┣ 📂partials
+ ┃ ┃ ┃ ┣ 📜base.html
+ ┃ ┃ ┃ ┣ 📜footer.html
+ ┃ ┃ ┃ ┣ 📜measure.html
+ ┃ ┃ ┃ ┗ 📜navbar.html
+ ┃ ┃ ┣ 📜form_errors.html
+ ┃ ┃ ┣ 📜index.html
+ ┃ ┃ ┣ 📜login_view.html
+ ┃ ┃ ┗ 📜signup_view.html
+ ┃ ┣ 📜.gitignore
+ ┃ ┣ 📜db.sqlite3
+ ┃ ┣ 📜env_info.py
+ ┃ ┣ 📜manage.py
+ ┃ ┣ 📜README.md
+ ┃ ┗ 📜req.txt
+```
+
