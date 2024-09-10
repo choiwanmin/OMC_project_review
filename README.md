@@ -99,7 +99,7 @@
 </div>
 </details>
 
-> ### 나만의 냉장고
+> ### 나만의 냉장고 페이지
 
 <details>
 <summary>나만의 냉장고 페이지 보기</summary>
@@ -112,7 +112,7 @@
 </div>
 </details>
 
-> ### 레시피 상세
+> ### 레시피 상세 페이지
 
 <details>
 <summary>레시피 상세 페이지 보기</summary>
@@ -125,7 +125,7 @@
 </div>
 </details>
 
-> ### 레시피 검색
+> ### 레시피 검색 페이지
 
 <details>
 <summary>레시피 검색 페이지 보기</summary>
