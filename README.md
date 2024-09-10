@@ -84,9 +84,9 @@
 <summary>메인 관련 페이지 보기</summary>
 <div markdown="1">
  
- |메인||
- |:---:|:---:|
- |![pd_omcpjt_ui (2)](https://github.com/user-attachments/assets/bc0b4b07-a07f-40c5-996b-faf9868e6ba6)||
+ |메인|
+ |:---:|
+ |![pd_omcpjt_ui (2)](https://github.com/user-attachments/assets/bc0b4b07-a07f-40c5-996b-faf9868e6ba6)|
 
  |오늘의 메뉴 추천|오늘의 메뉴 추천(봄 인기 레시피)|오늘의 메뉴 추천(아이 인기 레시피)|
  |:---:|:---:|:---:|
