@@ -77,9 +77,67 @@
 
 ## 클라이언트 화면 UI
 *※ 2023/01/31 기준 데이터 UI*
-|유저의 냉장고 페이지 구현|추천 페이지 1 구현|추천 페이지 2 구현|
-|:--:|:--:|:--:|
-|![image](https://user-images.githubusercontent.com/24910571/218040698-94748133-04b9-4a47-b0ac-99d4e3891aac.png)|![image](https://user-images.githubusercontent.com/24910571/218040717-beac1c49-c996-4539-a0ef-88a671cfc298.png)|![image](https://user-images.githubusercontent.com/24910571/218040751-1a64ab25-11fe-40dc-bd7a-037905eb2c47.png)|
+
+> ### 메인 관련 페이지
+
+<details>
+<summary>메인 관련 페이지 보기</summary>
+<div markdown="1">
+ 
+ |메인||
+ |:---:|:---:|
+ |![pd_omcpjt_ui (2)](https://github.com/user-attachments/assets/bc0b4b07-a07f-40c5-996b-faf9868e6ba6)||
+
+ |오늘의 메뉴 추천|오늘의 메뉴 추천(봄 인기 레시피)|오늘의 메뉴 추천(아이 인기 레시피)|
+ |:---:|:---:|:---:|
+ |![pd_omcpjt_ui (4)](https://github.com/user-attachments/assets/dc067c8a-88bd-401c-9675-43312094bd86)|![pd_omcpjt_ui (5)](https://github.com/user-attachments/assets/83c47364-ccc3-40f1-ab45-5dc6b87eef95)|![pd_omcpjt_ui (3)](https://github.com/user-attachments/assets/efbad051-af5e-4b2b-9fec-734ad35c5e2b)|
+
+ |회원가입 페이지 이동|회원가입 페이지|로그인 페이지|로그인 후 페이지|
+ |:---:|:---:|:---:|:---:|
+ |![pd_omcpjt_ui (7)](https://github.com/user-attachments/assets/0d8e08d2-c674-4d3a-b591-73419d9434f0)|![pd_omcpjt_ui (9)](https://github.com/user-attachments/assets/0568fac7-afe5-400e-a727-94753a92cb5c)|![pd_omcpjt_ui (10)](https://github.com/user-attachments/assets/c976a98d-5a19-4c71-b761-a8d0c8f19018)|![pd_omcpjt_ui (11)](https://github.com/user-attachments/assets/8496fd63-8158-4e0e-99ff-26181c9a121c)|
+
+</div>
+</details>
+
+> ### 나만의 냉장고
+
+<details>
+<summary>나만의 냉장고 페이지 보기</summary>
+<div markdown="1">
+
+ |오늘의 메뉴 추천(추천 레시피)|냉장고 채우기1|냉장고 채우기2|냉장고 채우기3|냉장고 기반 추천 레시피)|
+ |:---:|:---:|:---:|:---:|:---:|
+ |![pd_omcpjt_ui (13)](https://github.com/user-attachments/assets/b90acb0d-0007-4e63-b9c9-6f4195251ff5)|![pd_omcpjt_ui (14)](https://github.com/user-attachments/assets/1d086910-fa3f-401a-994d-739b2ff3a588)|![pd_omcpjt_ui (15)](https://github.com/user-attachments/assets/55d7eeb2-5f1b-415d-b98e-f633f23c653d)|![pd_omcpjt_ui (16)](https://github.com/user-attachments/assets/0dbb5e79-5024-45b0-8ace-cb15ea32f92e)|![pd_omcpjt_ui (17)](https://github.com/user-attachments/assets/b32984ce-a149-42d2-82bb-233c2da28dd9)|
+
+</div>
+</details>
+
+> ### 레시피 상세
+
+<details>
+<summary>레시피 상세 페이지 보기</summary>
+<div markdown="1">
+
+ |레시피 상세|레시피 상세 댓글 작성1|레시피 상세 댓글 작성2|
+ |:---:|:---:|:---:|
+ |![pd_omcpjt_ui (18)](https://github.com/user-attachments/assets/d431cc1b-2ab4-4b77-8ada-bb0ce1947236)|![pd_omcpjt_ui (19)](https://github.com/user-attachments/assets/f1b68d01-d5bb-449a-bdc8-9482216d37da)|![pd_omcpjt_ui (20)](https://github.com/user-attachments/assets/d9fefd37-5d0b-4318-a774-c5b039224d9e)|
+
+</div>
+</details>
+
+> ### 레시피 검색
+
+<details>
+<summary>레시피 검색 페이지 보기</summary>
+<div markdown="1">
+
+ |레시피 검색|레시피 카테고리 검색1|레시피 카테고리 검색2|레시피 검색어 결과|
+ |:---:|:---:|:---:|:---:|
+ |![pd_omcpjt_ui (21)](https://github.com/user-attachments/assets/e2f97b66-5bae-4908-aada-7b3cabc7f9fa)|![pd_omcpjt_ui (23)](https://github.com/user-attachments/assets/1059ac7a-29a3-4db4-bad7-1f8de96b104f)|![pd_omcpjt_ui (24)](https://github.com/user-attachments/assets/008867f6-94c1-43be-911f-0519f4c3fc55)|![pd_omcpjt_ui (1)](https://github.com/user-attachments/assets/e4f436ef-cac6-4da7-b018-371a3d0d6dfa)|
+
+</div>
+</details>
+
 
 ## 기대효과
 > ### 서비스 측면
